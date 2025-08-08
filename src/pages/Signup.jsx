@@ -2,7 +2,8 @@ import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { supabase } from "../../supabase/supabaseClient";
 import { useAuth } from "../../provider/AuthContext";
-import { FiMail, FiLock, FiUser, FiArrowLeft, FiCheckCircle } from "react-icons/fi";
+import { FiMail, FiLock, FiUser, FiArrowLeft, FiCheckCircle, FiZap } from "react-icons/fi";
+import { motion } from "framer-motion";
 
 export const Signup = () => {
   const [email, setEmail] = useState("");
@@ -43,14 +44,14 @@ export const Signup = () => {
 
       setSuccess({
         title: "Confirm Your Email",
-        message: `A confirmation link has been sent to ${email}. Please check your inbox.`,
+        message: `A confirmation link has been sent to ${email}. Get ready to join the TestMancer quest!`,
         instructions: [
           "Open your email inbox.",
-          "Find the message from SnapTest.",
-          "Click on the confirmation link provided.",
-          "Please note: Email delivery may take up to a few minutes, especially for Gmail users."
+          "Find the message from TestMancer.",
+          "Click on the confirmation link to activate your account.",
+          "Note: It may take a few minutes to arrive."
         ],
-        note: "If you do not see the email, check your Spam or Promotions folder. Be patient — it may take a few minutes to arrive."
+        note: "Check your Spam or Promotions folder if you don’t see the email. Your adventure awaits!"
       });
     } catch (err) {
       console.error("Signup error caught:", err);
@@ -60,36 +61,75 @@ export const Signup = () => {
     }
   };
 
+  // Animation variants
+  const containerVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: "easeOut" } }
+  };
+
+  const iconVariants = {
+    initial: { scale: 1, rotate: 0 },
+    hover: { scale: 1.2, rotate: 10, transition: { duration: 0.3 } }
+  };
+
   return (
-    <section className="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-50 to-white px-4">
-      <div className="max-w-4xl w-full flex flex-col md:flex-row rounded-2xl overflow-hidden shadow-xl">
-        
+    <section className="min-h-screen flex items-center justify-center bg-gradient-to-br from-teal-50 to-teal-200 px-4">
+      <motion.div
+        className="max-w-4xl w-full flex flex-col md:flex-row rounded-2xl overflow-hidden shadow-2xl bg-white/10 backdrop-blur-lg border border-teal-200/30"
+        variants={containerVariants}
+        initial="hidden"
+        animate="visible"
+      >
         {/* Decorative Side Panel */}
-        <div className="w-full md:w-2/5 bg-gradient-to-br from-indigo-600 to-indigo-800 p-10 flex flex-col justify-between relative">
-          <div className="absolute top-10 left-10 w-20 h-20 rounded-full bg-indigo-500/20"></div>
-          <div className="absolute bottom-20 right-10 w-32 h-32 rounded-full bg-indigo-400/10"></div>
+        <div className="w-full md:w-2/5 bg-gradient-to-br from-teal-500 to-teal-700 p-10 flex flex-col justify-between relative overflow-hidden">
+          <motion.div
+            className="absolute top-10 left-10 w-24 h-24 rounded-full bg-teal-400/30"
+            animate={{ scale: [1, 1.2, 1], opacity: [0.3, 0.5, 0.3] }}
+            transition={{ repeat: Infinity, duration: 3, ease: "easeInOut" }}
+          />
+          <motion.div
+            className="absolute bottom-20 right-10 w-32 h-32 rounded-full bg-teal-300/20"
+            animate={{ scale: [1, 1.15, 1], opacity: [0.2, 0.4, 0.2] }}
+            transition={{ repeat: Infinity, duration: 4, ease: "easeInOut" }}
+          />
           
           <div className="relative z-10">
-            <Link to="/" className="inline-flex items-center gap-2 text-indigo-200 hover:text-white mb-10">
+            <Link 
+              to="/" 
+              className="inline-flex items-center gap-2 text-teal-100 hover:text-white mb-10 text-lg font-semibold"
+            >
               <FiArrowLeft className="text-sm" />
               Back to Home
             </Link>
-            <h2 className="text-3xl font-bold text-white mb-4">Create Your Account</h2>
-            <p className="text-indigo-200 max-w-xs">
-              Join SnapTest to transform your study materials into interactive practice questions and track your progress.
+            <motion.h2
+              className="text-4xl font-extrabold text-white mb-4 flex items-center gap-2"
+              initial={{ x: -20, opacity: 0 }}
+              animate={{ x: 0, opacity: 1 }}
+              transition={{ delay: 0.2 }}
+            >
+              <FiZap className="text-yellow-300 animate-pulse" />
+              Join TestMancer!
+            </motion.h2>
+            <p className="text-teal-100 max-w-xs text-lg">
+              Create your account to start crushing quizzes, earning badges, and leveling up your skills! 🚀
             </p>
           </div>
           
           <div className="relative z-10">
             <div className="flex items-center gap-3 mb-4">
-              <div className="w-10 h-10 rounded-full bg-indigo-500/30 flex items-center justify-center">
-                <FiUser className="text-white text-xl" />
-              </div>
-              <p className="text-indigo-200">Already have an account?</p>
+              <motion.div
+                className="w-12 h-12 rounded-full bg-teal-400/40 flex items-center justify-center"
+                variants={iconVariants}
+                initial="initial"
+                whileHover="hover"
+              >
+                <FiUser className="text-white text-2xl" />
+              </motion.div>
+              <p className="text-teal-100 text-lg">Already a TestMancer?</p>
             </div>
             <Link 
               to="/login" 
-              className="inline-flex items-center gap-2 bg-white/10 hover:bg-white/20 text-white font-medium rounded-full px-6 py-3 transition-all duration-300 backdrop-blur-sm"
+              className="inline-flex items-center gap-2 bg-teal-600/80 hover:bg-teal-700 text-white font-semibold rounded-full px-6 py-3 transition-all duration-300 backdrop-blur-sm transform hover:scale-105"
             >
               Login Now
               <FiArrowLeft className="text-sm transform rotate-180" />
@@ -98,110 +138,146 @@ export const Signup = () => {
         </div>
         
         {/* Signup Form */}
-        <div className="w-full md:w-3/5 bg-white p-10">
+        <div className="w-full md:w-3/5 bg-white/10 backdrop-blur-lg p-10 border border-teal-200/20">
           <div className="text-center mb-10">
-            <div className="bg-gradient-to-br from-indigo-500 to-indigo-700 rounded-2xl p-4 inline-flex items-center justify-center">
+            <motion.div
+              className="bg-gradient-to-br from-teal-400 to-teal-600 rounded-2xl p-4 inline-flex items-center justify-center"
+              variants={iconVariants}
+              initial="initial"
+              whileHover="hover"
+            >
               <FiUser className="text-white text-3xl" />
-            </div>
-            <h2 className="text-3xl font-bold text-gray-900 mt-6 mb-2">Sign Up for SnapTest</h2>
-            <p className="text-gray-600">Create your account to get started</p>
+            </motion.div>
+            <motion.h2
+              className="text-3xl font-extrabold text-gray-900 mt-6 mb-2"
+              initial={ { opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.3 }}
+            >
+              Sign Up for TestMancer
+            </motion.h2>
+            <p className="text-gray-500">Start your learning adventure!</p>
           </div>
 
           {/* Error Message */}
           {error && (
-            <div className="mb-6 p-4 bg-red-50 text-red-700 rounded-lg text-center">
+            <motion.div
+              className="mb-6 p-4 bg-red-50/80 text-red-700 rounded-lg text-center backdrop-blur-sm"
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3 }}
+            >
               {error}
-            </div>
+            </motion.div>
           )}
 
           {/* Success Message */}
           {success ? (
-            <div className="bg-indigo-50 rounded-2xl p-8 mb-6 border border-indigo-200">
+            <motion.div
+              className="bg-teal-50/80 rounded-2xl p-8 mb-6 border border-teal-200/30 backdrop-blur-sm"
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.4 }}
+            >
               <div className="flex flex-col items-center text-center">
-                <div className="w-16 h-16 rounded-full bg-indigo-100 flex items-center justify-center mb-4">
-                  <FiCheckCircle className="text-indigo-600 text-3xl" />
-                </div>
-                <h3 className="text-xl font-bold text-indigo-800 mb-2">{success.title}</h3>
-                <p className="text-indigo-700 mb-4">{success.message}</p>
+                <motion.div
+                  className="w-16 h-16 rounded-full bg-teal-100 flex items-center justify-center mb-4"
+                  variants={iconVariants}
+                  initial="initial"
+                  animate="hover"
+                >
+                  <FiCheckCircle className="text-teal-600 text-3xl" />
+                </motion.div>
+                <h3 className="text-xl font-bold text-teal-800 mb-2">{success.title}</h3>
+                <p className="text-teal-700 mb-4">{success.message}</p>
 
-                <div className="bg-white p-5 rounded-xl w-full max-w-md mb-5">
+                <div className="bg-white/20 p-5 rounded-xl w-full max-w-md mb-5 backdrop-blur-sm">
                   <ul className="space-y-3">
                     {success.instructions.map((step, index) => (
                       <li key={index} className="flex items-start">
                         <div className="flex-shrink-0">
-                          <div className="w-6 h-6 rounded-full bg-indigo-100 flex items-center justify-center">
-                            <span className="text-indigo-600 text-sm font-bold">{index + 1}</span>
+                          <div className="w-6 h-6 rounded-full bg-teal-100 flex items-center justify-center">
+                            <span className="text-teal-600 text-sm font-bold">{index + 1}</span>
                           </div>
                         </div>
-                        <p className="ml-3 text-left text-indigo-700">{step}</p>
+                        <p className="ml-3 text-left text-teal-700">{step}</p>
                       </li>
                     ))}
                   </ul>
                 </div>
 
-                <p className="text-sm text-indigo-600 mb-6">{success.note}</p>
+                <p className="text-sm text-teal-600 mb-6">{success.note}</p>
 
                 <div className="flex flex-col sm:flex-row gap-4">
                   <button
                     onClick={() => window.location.reload()}
-                    className="px-5 py-2.5 text-indigo-600 font-medium bg-indigo-50 rounded-full hover:bg-indigo-100 transition"
+                    className="px-5 py-2.5 text-teal-600 font-medium bg-teal-50 rounded-full hover:bg-teal-100 transition"
                   >
                     Return to Signup
                   </button>
                   <button
                     onClick={async () => {
                       console.log("Resend confirmation for:", email);
-                      const { error: resendError } = await supabase.auth.resendVerificationEmail({ email });
+                      const { error: resendError } = await supabase.auth.resend({
+                        type: "signup",
+                        email
+                      });
                       if (resendError) {
                         console.error("Resend error:", resendError);
                         setError(resendError.message);
                       }
                     }}
-                    className="px-5 py-2.5 text-white font-medium bg-indigo-600 rounded-full hover:bg-indigo-700 transition"
+                    className="px-5 py-2.5 text-white font-medium bg-teal-600 rounded-full hover:bg-teal-700 transition"
                   >
                     Resend Confirmation
                   </button>
                 </div>
               </div>
-            </div>
+            </motion.div>
           ) : (
             <form onSubmit={handleSignup} className="space-y-6">
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <FiMail className="text-gray-400 text-xl" />
+                  <motion.div variants={iconVariants} initial="initial" whileHover="hover">
+                    <FiMail className="text-teal-300 text-xl" />
+                  </motion.div>
                 </div>
                 <input
                   id="email"
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full pl-12 pr-4 py-3 border-0 border-b-2 border-gray-200 focus:border-indigo-600 focus:outline-none focus:ring-0"
-                  placeholder="Enter your email"
+                  className="w-full pl-12 pr-4 py-3 bg-white/20 border border-teal-300/50 focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500/50 rounded-lg backdrop-blur-sm transition-all duration-300"
+                  placeholder="Your email"
                   required
                 />
               </div>
 
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <FiLock className="text-gray-400 text-xl" />
+                  <motion.div variants={iconVariants} initial="initial" whileHover="hover">
+                    <FiLock className="text-teal-300 text-xl" />
+                  </motion.div>
                 </div>
                 <input
                   id="password"
                   type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full pl-12 pr-4 py-3 border-0 border-b-2 border-gray-200 focus:border-indigo-600 focus:outline-none focus:ring-0"
+                  className="w-full pl-12 pr-4 py-3 bg-white/20 border border-teal-300/50 focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500/50 rounded-lg backdrop-blur-sm transition-all duration-300"
                   placeholder="Create a password"
                   required
                   minLength={6}
                 />
               </div>
-              <p className="text-xs text-gray-500 -mt-4">Minimum 6 characters</p>
+              <p className="text-xs text-gray-400 -mt-4">Minimum 6 characters</p>
 
-              <button
+              <motion.button
                 type="submit"
                 disabled={loading}
-                className="w-full flex items-center justify-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white py-4 rounded-full font-medium transition-all duration-300 transform hover:-translate-y-0.5 disabled:bg-indigo-400 disabled:transform-none"
+                className="w-full flex items-center justify-center gap-2 bg-teal-500 hover:bg-teal-600 text-white py-4 rounded-full font-semibold transition-all duration-300 transform hover:scale-105 disabled:bg-teal-300 disabled:transform-none"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
               >
                 {loading ? (
                   <>
@@ -212,21 +288,21 @@ export const Signup = () => {
                     Creating Account...
                   </>
                 ) : (
-                  "Sign Up"
+                  "Join the Quest"
                 )}
-              </button>
+              </motion.button>
             </form>
           )}
 
           {!success && (
             <div className="mt-8 text-center">
-              <p className="text-gray-600 text-sm">
-                By signing up, you agree to our <a href="terms-policy" className="text-indigo-600 hover:underline">Terms</a> and <a href="terms-policy" className="text-indigo-600 hover:underline">Privacy Policy</a>
+              <p className="text-gray-400 text-sm">
+                By signing up, you agree to our <a href="/terms-policy" className="text-teal-400 hover:underline">Terms</a> and <a href="/terms-policy" className="text-teal-400 hover:underline">Privacy Policy</a>
               </p>
             </div>
           )}
         </div>
-      </div>
+      </motion.div>
     </section>
   );
 };

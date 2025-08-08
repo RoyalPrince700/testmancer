@@ -69,7 +69,64 @@ const WelcomeCard = () => {
 
   const firstName = userData?.full_name?.split(" ")[0] || "Champion";
 
-  if (loading) return null;
+  if (loading) {
+    return (
+      <div className="flex flex-col sm:flex-row justify-between items-center gap-4 mb-8 bg-gradient-to-r from-indigo-50 to-purple-50 p-4 rounded-2xl shadow-sm border border-indigo-100">
+        {/* Placeholder for User Info */}
+        <div className="flex items-center gap-4">
+          <div className="w-14 h-14 rounded-full bg-gray-200"></div>
+          <div className="space-y-2">
+            <div className="h-7 w-36 bg-gray-200 rounded"></div>
+            <div className="h-4 w-48 bg-gray-200 rounded"></div>
+          </div>
+        </div>
+
+        {/* Placeholder for Stats */}
+        <div className="flex flex-wrap justify-center gap-3">
+          {[...Array(4)].map((_, i) => (
+            <div
+              key={i}
+              className="flex items-center gap-2 bg-white px-3 py-1 rounded-full shadow-sm"
+            >
+              <div className="w-4 h-4 bg-gray-200 rounded"></div>
+              <div className="h-4 w-8 bg-gray-200 rounded"></div>
+              <div className="h-4 w-12 bg-gray-200 rounded"></div>
+            </div>
+          ))}
+        </div>
+
+        <style jsx>{`
+          .animate-shimmer {
+            position: relative;
+            overflow: hidden;
+          }
+          .animate-shimmer::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+              90deg,
+              transparent,
+              rgba(255, 255, 255, 0.3),
+              transparent
+            );
+            animation: shimmer 1.5s infinite;
+          }
+          @keyframes shimmer {
+            0% {
+              left: -100%;
+            }
+            100% {
+              left: 100%;
+            }
+          }
+        `}</style>
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col sm:flex-row justify-between items-center gap-4 mb-8 bg-gradient-to-r from-indigo-50 to-purple-50 p-4 rounded-2xl shadow-sm border border-indigo-100">

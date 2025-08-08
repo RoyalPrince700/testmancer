@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { Link } from "react-router-dom"; 
+import { Link } from "react-router-dom";
 import {
   FiBook,
   FiDivide,
@@ -35,7 +35,7 @@ const SnaptestLoader = () => {
     })
   };
 
-  const text = "Snaptest";
+  const text = "TestMancer";
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-b from-gray-50 to-white" aria-live="polite" aria-label="Loading Snaptest progress">
@@ -381,7 +381,7 @@ const PostUtme = () => {
                   </div>
 
                   <div className="flex justify-center">
-                    <button className="bg-gradient-to-r from-pink-500 to-pink-600 text-white font-semibold rounded-full px-6 py-2 hover:scale-105 hover:shadow-lg transition-all">
+                    <button className={`bg-gradient-to-r ${s.color} text-white font-semibold rounded-full px-6 py-2 hover:scale-105 hover:shadow-lg transition-all`}>
                       {userData?.full_name ? "Continue Journey" : "Start Practice"} 🚀
                     </button>
                   </div>

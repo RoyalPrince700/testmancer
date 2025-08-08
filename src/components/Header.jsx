@@ -67,7 +67,7 @@ useEffect(() => {
         <div className="lg:hidden flex items-center justify-between py-4 px-4">
           <button
             onClick={() => setMobileMenuOpen(true)}
-            className="text-indigo-600 focus:outline-none"
+            className="text-teal-600 focus:outline-none"
           >
             <FiMenu className="w-6 h-6" />
           </button>
@@ -85,21 +85,21 @@ useEffect(() => {
                   <img src={LOGO} alt="SnapTest" className="h-5 w-18" />
                 </Link>
                 <nav className="flex gap-6 text-gray-600 items-center">
-                  <Link to="/how-it-works" className="hover:text-indigo-600 transition-colors">
+                  <Link to="/how-it-works" className="hover:text-teal-600 transition-colors">
                     How It Works
                   </Link>
-                   <Link to="/about-us" className="hover:text-indigo-600 transition-colors">
+                   <Link to="/about-us" className="hover:text-teal-600 transition-colors">
                     About Us
                   </Link>
-                    <Link to="/post-utme" className="hover:text-indigo-600 transition-colors">
+                    <Link to="/post-utme" className="hover:text-teal-600 transition-colors">
                     PostUtme
                   </Link>
-                   <Link to="/quiz-hub" className="hover:text-indigo-600 transition-colors">
+                   <Link to="/quiz-hub" className="hover:text-teal-600 transition-colors">
                     Quiz Hub
                   </Link>
                   
                   {isAuthenticated && (
-                    <Link to="/my-questions" className="hover:text-indigo-600 transition-colors">
+                    <Link to="/my-questions" className="hover:text-teal-600 transition-colors">
                       My Questions
                     </Link>
                   )}
@@ -108,10 +108,10 @@ useEffect(() => {
                   {isAuthenticated && isAdmin && (
                     <Link 
                       to="/admin" 
-                      className="hover:text-indigo-600 transition-colors flex items-center gap-1"
+                      className="hover:text-teal-600 transition-colors flex items-center gap-1"
                     >
                       <span>Admin</span>
-                      <span className="w-2 h-2 bg-indigo-600 rounded-full"></span>
+                      <span className="w-2 h-2 bg-teal-600 rounded-full"></span>
                     </Link>
                   )}
                 </nav>
@@ -122,7 +122,7 @@ useEffect(() => {
                   
                     <button
                       onClick={handleLogout}
-                      className="bg-indigo-600 px-4 py-1.5 rounded-lg text-white font-medium hover:shadow-md transition-all"
+                      className="bg-teal-600 px-4 py-1.5 rounded-lg text-white font-medium hover:shadow-md transition-all"
                     >
                       Logout 
                     </button>
@@ -130,7 +130,7 @@ useEffect(() => {
                 ) : (
                   <Link
                     to="/login"
-                    className="px-4 py-1.5 rounded-lg border border-indigo-600 text-indigo-600 font-medium hover:bg-indigo-50 transition-colors"
+                    className="px-4 py-1.5 rounded-lg border border-teal-600 text-teal-600 font-medium hover:bg-teal-50 transition-colors"
                   >
                     Login
                   </Link>
@@ -163,7 +163,7 @@ useEffect(() => {
               </Link>
               <button
                 onClick={() => setMobileMenuOpen(false)}
-                className="text-indigo-600 focus:outline-none"
+                className="text-teal-600 focus:outline-none"
               >
                 <FiX className="w-6 h-6" />
               </button>
@@ -173,28 +173,28 @@ useEffect(() => {
             <nav className="flex flex-col gap-3 px-6 py-6 text-gray-700">
               <Link
                 to="/how-it-works"
-                className="hover:text-indigo-600 py-2 border-b"
+                className="hover:text-teal-600 py-2 border-b"
                 onClick={() => setMobileMenuOpen(false)}
               >
                 How It Works
               </Link>
                 <Link
                 to="/about-us"
-                className="hover:text-indigo-600 py-2 border-b"
+                className="hover:text-teal-600 py-2 border-b"
                 onClick={() => setMobileMenuOpen(false)}
               >
                 About Us
               </Link>
                 <Link
                 to="/post-utme"
-                className="hover:text-indigo-600 py-2 border-b"
+                className="hover:text-teal-600 py-2 border-b"
                 onClick={() => setMobileMenuOpen(false)}
               >
                 PostUtme
               </Link>
                <Link
                 to="/quiz-hub"
-                className="hover:text-indigo-600 py-2 border-b"
+                className="hover:text-teal-600 py-2 border-b"
                 onClick={() => setMobileMenuOpen(false)}
               >
                 Quiz Hub
@@ -205,7 +205,7 @@ useEffect(() => {
                 <>
                   <Link
                     to="/my-questions"
-                    className="hover:text-indigo-600 py-2 border-b"
+                    className="hover:text-teal-600 py-2 border-b"
                     onClick={() => setMobileMenuOpen(false)}
                   >
                     My Questions
@@ -215,11 +215,11 @@ useEffect(() => {
                   {isAdmin && (
                     <Link
                       to="/admin"
-                      className="hover:text-indigo-600 py-2 border-b flex items-center gap-2"
+                      className="hover:text-teal-600 py-2 border-b flex items-center gap-2"
                       onClick={() => setMobileMenuOpen(false)}
                     >
                       Admin Dashboard
-                      <span className="w-2 h-2 bg-indigo-600 rounded-full"></span>
+                      <span className="w-2 h-2 bg-teal-600 rounded-full"></span>
                     </Link>
                   )}
                   
@@ -233,7 +233,7 @@ useEffect(() => {
               ) : (
                 <Link
                   to="/login"
-                  className="mt-4 px-4 py-2 rounded-lg border border-indigo-600 text-indigo-600 font-medium hover:bg-indigo-50 text-left"
+                  className="mt-4 px-4 py-2 rounded-lg border border-teal-600 text-teal-600 font-medium hover:bg-teal-50 text-left"
                   onClick={() => setMobileMenuOpen(false)}
                 >
                   Login

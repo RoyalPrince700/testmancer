@@ -11,6 +11,7 @@
     "tailwind": "npx tailwindcss -i ./src/index.css -o ./dist/output.css --watch"
   },
   "dependencies": {
+    "@heroicons/react": "^2.2.0",
     "@supabase/supabase-js": "^2.53.0",
     "@tanstack/react-query": "^5.83.1",
     "crypto-js": "^4.2.0",
