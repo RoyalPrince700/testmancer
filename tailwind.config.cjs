@@ -9,10 +9,11 @@ module.exports = {
       animation: {
         float: 'float 6s ease-in-out infinite',
       },
-      keyframes: {
-        float: {
-          '0%, 100%': { transform: 'translateY(0) rotate(0deg)' },
-          '50%': { transform: 'translateY(-20px) rotate(10deg)' },
+     colors: {
+        brand: {
+          teal: '#00CED1',       // Vibrant teal
+          funPink: '#FF4081',    // Electric pink (close to Tailwind's fuchsia-500)
+          coral: '#FF6B6B',      // Coral (close to Tailwind's rose-500)
         },
       },
     },

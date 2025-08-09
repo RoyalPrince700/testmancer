@@ -42,6 +42,7 @@ import Subjunctive from './pages/subjects/english/Subjunctive';
 import Errors from './pages/subjects/english/Errors';
 import Real from './pages/subjects/english/Real';
 import Question from './pages/subjects/english/QuestionTags';
+import QuizConcord from './pages/quiz/QuizConcord';
 
 const ProtectedRoute = ({ children }) => {
   const { user, loading } = useAuth();
@@ -70,6 +71,7 @@ const PublicRoute = ({ children }) => {
 function App() {
   return (
     <AuthProvider>
+      
       <BrowserRouter>
         <ScrollToTop />
         <Header />
@@ -119,7 +121,8 @@ function App() {
           {/* Quiz */}
           <Route path="/quiz-hub" element={<ProtectedRoute><QuizHub /></ProtectedRoute>} />
           <Route path="/quiz-hub/english" element={<ProtectedRoute><EnglishQuiz /></ProtectedRoute>} />
-          <Route path="/quiz-hub/english/quiz-tenses" element={<ProtectedRoute><QuizTenses /></ProtectedRoute>} />
+          <Route path="/quiz-hub/english/quiz-tenses" element={<ProtectedRoute><QuizTenses  subtopic="tenses_quiz"/></ProtectedRoute>} />
+          <Route path="/quiz-hub/english-quiz/concord-quiz" element={<ProtectedRoute><QuizConcord subtopic="concord_quiz"/></ProtectedRoute>} />
 
 
 

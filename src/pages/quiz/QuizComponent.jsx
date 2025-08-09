@@ -4,10 +4,8 @@ import { FiArrowLeft, FiArrowRight, FiAward, FiCheck, FiX, FiBarChart2, FiHelpCi
 import { motion } from "framer-motion";
 import { useAuth } from "../../../provider/AuthContext";
 import { supabase } from "../../../supabase/supabaseClient";
-import questions from "../../data/tensesQuestions";
 
-export const QuizTenses = ({ moduleId, subject, topic, subtopic, backPath }) => {
-  console.log("QuizTenses component received subtopic:", subtopic);
+const QuizComponent = ({ quizId, subject, topic, subtopic, backPath, questions }) => {
   const navigate = useNavigate();
   const { user, isAuthenticated } = useAuth();
   const [currentQuestion, setCurrentQuestion] = useState(0);
@@ -36,7 +34,7 @@ export const QuizTenses = ({ moduleId, subject, topic, subtopic, backPath }) => 
           .from('postutme_quiz_progress')
           .select('completed, attempts, best_score')
           .eq('user_id', user.id)
-          .eq('quiz_id', subtopic)
+          .eq('quiz_id', quizId)
           .single();
 
         if (quizError && !quizError.message.includes('No rows found')) {
@@ -67,7 +65,7 @@ export const QuizTenses = ({ moduleId, subject, topic, subtopic, backPath }) => 
     };
 
     fetchUserData();
-  }, [isAuthenticated, user, subtopic]);
+  }, [isAuthenticated, user, quizId]);
 
   const handleAnswer = (answer) => {
     setSelectedAnswer(answer);
@@ -81,7 +79,6 @@ export const QuizTenses = ({ moduleId, subject, topic, subtopic, backPath }) => 
     };
     setUserAnswers(currentAnswers);
 
-    // Update score
     let newScore = score;
     if (wasCorrect) newScore -= 1;
     if (answer.correct) newScore += 1;
@@ -96,19 +93,18 @@ export const QuizTenses = ({ moduleId, subject, topic, subtopic, backPath }) => 
       setSelectedAnswer(null);
       setShowHint(false);
     } else {
-      setWasFirstAttempt(isFirstAttempt); // Store whether this was first attempt
+      setWasFirstAttempt(isFirstAttempt);
 
       if (isAuthenticated && user) {
         try {
           const pointsToAward = isFirstAttempt ? score : 0;
-          const isQuizCompleted = true;
+          const isQuizCompleted = score / questions.length >= 0.7;
 
-          // Save quiz attempt
           await supabase
             .from('quiz_attempts')
             .insert({
               user_id: user.id,
-              quiz_id: subtopic,
+              quiz_id: quizId,
               score: score,
               total_questions: questions.length,
               points_earned: pointsToAward,
@@ -116,12 +112,11 @@ export const QuizTenses = ({ moduleId, subject, topic, subtopic, backPath }) => 
               is_first_attempt: isFirstAttempt,
             });
 
-          // Update quiz progress
           const { data: existingProgress } = await supabase
             .from('postutme_quiz_progress')
             .select('attempts, best_score')
             .eq('user_id', user.id)
-            .eq('quiz_id', subtopic)
+            .eq('quiz_id', quizId)
             .single();
 
           const currentAttempts = existingProgress?.attempts || 0;
@@ -132,7 +127,7 @@ export const QuizTenses = ({ moduleId, subject, topic, subtopic, backPath }) => 
             .upsert(
               {
                 user_id: user.id,
-                quiz_id: subtopic,
+                quiz_id: quizId,
                 completed: isQuizCompleted,
                 first_completed_at: isQuizCompleted && !isCompleted ? new Date().toISOString() : undefined,
                 last_attempt_at: new Date().toISOString(),
@@ -144,13 +139,11 @@ export const QuizTenses = ({ moduleId, subject, topic, subtopic, backPath }) => 
               }
             );
 
-          // Update local state
           if (isFirstAttempt && pointsToAward > 0) {
             setTotalPoints((prev) => prev + pointsToAward);
             setPointsAwarded(pointsToAward);
           }
 
-          // Fetch updated leaderboard data
           let retryCount = 0;
           const maxRetries = 3;
           let leaderboardData = null;
@@ -221,13 +214,12 @@ export const QuizTenses = ({ moduleId, subject, topic, subtopic, backPath }) => 
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-indigo-50 to-white">
-      {/* Result Popup */}
       {showResult && !showPreview && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
           <motion.div
             initial={{ scale: 0.9, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
-            className="bg-white rounded-2xl shadow-xl p-6 max-w-md W-full relative"
+            className="bg-white rounded-2xl shadow-xl p-6 max-w-md w-full relative"
           >
             <button
               onClick={() => setShowResult(false)}
@@ -295,7 +287,6 @@ export const QuizTenses = ({ moduleId, subject, topic, subtopic, backPath }) => 
         </div>
       )}
 
-      {/* Preview Page */}
       {showPreview && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
           <motion.div
@@ -348,10 +339,8 @@ export const QuizTenses = ({ moduleId, subject, topic, subtopic, backPath }) => 
         </div>
       )}
 
-      {/* Main Quiz Interface */}
       {!showResult && !showPreview && (
-        <div className="container mx-auto px-4 py-8 cair max-w-4xl">
-          {/* Notification for Previous Attempts */}
+        <div className="container mx-auto px-4 py-8 max-w-4xl">
           {!isFirstAttempt && (
             <motion.div
               initial={{ opacity: 0, y: -20 }}
@@ -365,14 +354,13 @@ export const QuizTenses = ({ moduleId, subject, topic, subtopic, backPath }) => 
             </motion.div>
           )}
 
-          {/* Header */}
           <div className="flex flex-col sm:flex-row justify-between items-center gap-4 mb-8">
             <div className="flex items-center gap-4">
-              <Link to='/quiz-hub/english/' className="text-indigo-600 hover:text-indigo-800 flex items-center gap-1">
+              <Link to={backPath} className="text-indigo-600 hover:text-indigo-800 flex items-center gap-1">
                 <FiArrowLeft />
               </Link>
               <h1 className="text-2xl font-bold text-gray-900">
-                Tenses Quiz: {subtopic}
+                {topic} Quiz: {subtopic}
               </h1>
             </div>
 
@@ -388,7 +376,6 @@ export const QuizTenses = ({ moduleId, subject, topic, subtopic, backPath }) => 
             </div>
           </div>
 
-          {/* Progress Bar */}
           <div className="mb-8">
             <div className="flex justify-between text-sm mb-1">
               <span className="text-gray-600">
@@ -407,7 +394,6 @@ export const QuizTenses = ({ moduleId, subject, topic, subtopic, backPath }) => 
             </div>
           </div>
 
-          {/* Question Card */}
           <motion.div
             key={currentQuestion}
             initial={{ opacity: 0, y: 20 }}
@@ -436,7 +422,6 @@ export const QuizTenses = ({ moduleId, subject, topic, subtopic, backPath }) => 
               ))}
             </div>
 
-            {/* Hint */}
             {showHint && (
               <motion.div
                 initial={{ opacity: 0, height: 0 }}
@@ -450,7 +435,6 @@ export const QuizTenses = ({ moduleId, subject, topic, subtopic, backPath }) => 
             )}
           </motion.div>
 
-          {/* Navigation */}
           <div className="flex justify-between items-center">
             <button
               onClick={prevQuestion}
@@ -494,4 +478,4 @@ export const QuizTenses = ({ moduleId, subject, topic, subtopic, backPath }) => 
   );
 };
 
-export default QuizTenses;
+export default QuizComponent;

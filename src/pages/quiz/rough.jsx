@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { FiAward, FiZap, FiBarChart2, FiUser } from "react-icons/fi";
-import { useAuth } from "../../provider/AuthContext";
-import { supabase } from "../../supabase/supabaseClient";
+import { useAuth } from "../../../provider/AuthContext";
+import { supabase } from "../../../supabase/supabaseClient";
 
 const WelcomeCard = () => {
   const { user, isAuthenticated } = useAuth();
