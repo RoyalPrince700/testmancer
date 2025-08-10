@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import { FiArrowLeft, FiLogOut, FiEdit, FiUser, FiChevronRight } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "../../supabase/supabaseClient"; // adjust path if needed
-import { avatarList } from "../path/to/avatarList"; // import your avatar list array
+import { avatarList } from "../components/avatarList"; // import your avatar list array
 
 export const Profile = ({ logout }) => {
   const navigate = useNavigate();

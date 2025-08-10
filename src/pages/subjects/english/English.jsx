@@ -40,7 +40,10 @@ const English = () => {
   const [userData, setUserData] = useState(null);
   const [showLockedModal, setShowLockedModal] = useState(null);
 
-  // Derived user progress from completedSubtopics
+  // NEW: popup states
+  const [showUnlockPopup, setShowUnlockPopup] = useState(null);
+  const [showBadgePopup, setShowBadgePopup] = useState(null);
+
   const userProgress = useMemo(() => {
     const completed = Object.values(completedSubtopics)
       .flat()
@@ -48,18 +51,15 @@ const English = () => {
     return { completed, total: 21 };
   }, [completedSubtopics]);
 
-  // Determine if a topic is unlocked
   const isTopicUnlocked = useCallback((index) => {
-    if (index === 0) return true; // First topic is always unlocked
+    if (index === 0) return true;
     const prevTopic = ENGLISH_TOPICS[index - 1];
     const prevProgress = calculateProgress(prevTopic.id);
     return prevProgress.completed === prevProgress.total;
   }, [completedSubtopics]);
 
-  // Fetch user profile data
   useEffect(() => {
     if (!user) return;
-    
     const fetchUserProfile = async () => {
       try {
         const { data, error } = await supabase
@@ -67,35 +67,23 @@ const English = () => {
           .select("*")
           .eq("id", user.id)
           .single();
-
-        if (error) {
-          console.error("Error fetching profile:", error.message);
-        } else {
-          setUserData(data);
-        }
+        if (!error) setUserData(data);
       } catch (err) {
         console.error("Unexpected error:", err.message);
       }
     };
-
     fetchUserProfile();
   }, [user]);
 
-  // Fetch user progress from Supabase
   const fetchUserProgress = useCallback(async () => {
     if (!user?.id) return;
-    
     setLoading(true);
-    
     try {
-      const { data: progressData, error: progressError } = await supabase
+      const { data: progressData } = await supabase
         .from('postutme_progress')
         .select('*')
         .eq('user_id', user.id)
         .eq('subject', 'English');
-      
-      if (progressError) throw progressError;
-      
       const newCompleted = {
         grammatical: Array(9).fill(false),
         vocabulary: Array(5).fill(false),
@@ -103,7 +91,6 @@ const English = () => {
         oral: Array(2).fill(false),
         modifiers: Array(3).fill(false)
       };
-      
       if (progressData) {
         progressData.forEach(item => {
           const topicIndex = ENGLISH_TOPICS.findIndex(t => t.id === item.topic);
@@ -117,28 +104,21 @@ const English = () => {
           }
         });
       }
-      
       setCompletedSubtopics(newCompleted);
-      
-      const { count: badgeCount, error: badgeError } = await supabase
+
+      const { count: badgeCount } = await supabase
         .from('postutme_badges')
         .select('*', { count: 'exact' })
         .eq('user_id', user.id)
         .eq('subject', 'English');
-      
-      if (badgeError) throw badgeError;
       setBadgeCount(badgeCount || 0);
-      
-      const { data: streakData, error: streakError } = await supabase
+
+      const { data: streakData } = await supabase
         .from('user_activity')
         .select('streak')
         .eq('user_id', user.id)
         .single();
-      
-      if (!streakError) {
-        setStreak(streakData?.streak || 0);
-      }
-      
+      setStreak(streakData?.streak || 0);
     } catch (error) {
       console.error("Error fetching user progress:", error);
     } finally {
@@ -152,6 +132,10 @@ const English = () => {
 
   const toggleCard = (index) => {
     if (isTopicUnlocked(index)) {
+      // Show unlock popup if first time expanding an unlocked topic with no completed subtopics
+      if (expandedCard !== index && !completedSubtopics[ENGLISH_TOPICS[index].id].some(Boolean)) {
+        setShowUnlockPopup(index);
+      }
       setExpandedCard(expandedCard === index ? null : index);
     } else {
       setShowLockedModal(index);
@@ -162,20 +146,17 @@ const English = () => {
     const topic = ENGLISH_TOPICS.find(t => t.id === category);
     const subtopic = topic.subtopics[index];
     const isCurrentlyCompleted = completedSubtopics[category][index];
-    
     try {
       if (isCurrentlyCompleted) {
-        const { error } = await supabase
+        await supabase
           .from('postutme_progress')
           .delete()
           .eq('user_id', user.id)
           .eq('subject', 'English')
           .eq('topic', category)
           .eq('subtopic', subtopic.name);
-        
-        if (error) throw new Error(`Failed to delete progress: ${error.message}`);
       } else {
-        const { error } = await supabase
+        await supabase
           .from('postutme_progress')
           .insert([{
             user_id: user.id,
@@ -186,41 +167,29 @@ const English = () => {
             completed_at: new Date().toISOString(),
             points_earned: 3
           }]);
-        
-        if (error) throw new Error(`Failed to insert progress: ${error.message}`);
       }
-      
-      // Update local state
+
       setCompletedSubtopics(prev => ({
         ...prev,
-        [category]: prev[category].map((val, i) => 
+        [category]: prev[category].map((val, i) =>
           i === index ? !val : val
         )
       }));
-      
-      // Calculate new completed count for badge check
+
       const newCompletedCount = isCurrentlyCompleted 
         ? userProgress.completed - 1 
         : userProgress.completed + 1;
-      
-      // Check and award badge only when all subtopics are completed
+
+      // Badge logic
       if (!isCurrentlyCompleted && newCompletedCount === 21) {
-        const { data: existingBadges, error: badgeError } = await supabase
+        const { data: existingBadges } = await supabase
           .from('postutme_badges')
           .select('id')
           .eq('user_id', user.id)
           .eq('subject', 'English')
           .eq('badge_type', 'bronze');
-        
-        if (badgeError) {
-          console.error('Badge query error:', badgeError.message);
-          throw new Error(`Failed to query badges: ${badgeError.message}`);
-        }
-        
-        console.log('Existing badges:', existingBadges); // Debug log
-        
         if (!existingBadges?.length) {
-          const { error: insertError } = await supabase
+          await supabase
             .from('postutme_badges')
             .insert([{
               user_id: user.id,
@@ -229,31 +198,20 @@ const English = () => {
               topic: category,
               earned_at: new Date().toISOString()
             }]);
-          
-          if (insertError) {
-            console.error('Badge insertion error:', insertError.message);
-            throw new Error(`Failed to insert badge: ${insertError.message}`);
-          }
-          console.log('Badge inserted successfully');
           setBadgeCount(prev => prev + 1);
-        } else {
-          console.log('Badge already exists, skipping insertion');
+          setShowBadgePopup({
+            type: 'bronze',
+            message: `🎉 Congratulations ${firstName}! You've earned the Bronze Badge in English!`
+          });
         }
       }
-      
-      // Refresh badge count to ensure consistency
-      const { count: updatedBadgeCount, error: countError } = await supabase
+
+      const { count: updatedBadgeCount } = await supabase
         .from('postutme_badges')
         .select('*', { count: 'exact' })
         .eq('user_id', user.id)
         .eq('subject', 'English');
-      
-      if (countError) {
-        console.error('Badge count error:', countError.message);
-      } else {
-        setBadgeCount(updatedBadgeCount || 0);
-      }
-      
+      setBadgeCount(updatedBadgeCount || 0);
     } catch (error) {
       console.error('Error in toggleSubTopic:', error.message);
     }
@@ -273,117 +231,71 @@ const English = () => {
     }
   };
 
-  const closeLockedModal = () => {
-    setShowLockedModal(null);
-  };
-
+  const closeLockedModal = () => setShowLockedModal(null);
   const firstName = userData?.full_name?.split(' ')[0] || 'Champion';
 
-  // Locked Topic Modal Component
+  // Components
   const LockedTopicModal = ({ topicIndex }) => {
     const prevTopic = ENGLISH_TOPICS[topicIndex - 1];
     return (
-      <motion.div
-        initial={{ opacity: 0, scale: 0.8 }}
-        animate={{ opacity: 1, scale: 1 }}
-        exit={{ opacity: 0, scale: 0.8 }}
-        transition={{ duration: 0.3, type: 'spring', stiffness: 120 }}
-        className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50"
-      >
-        <div className="bg-white rounded-2xl p-6 max-w-md mx-auto text-center shadow-lg" role="dialog" aria-modal="true">
-          <motion.div
-            animate={{ rotate: [0, 10, -10, 0] }}
-            transition={{ repeat: 2, duration: 0.5 }}
-            className="text-4xl mb-4"
-          >
-            🔒
-          </motion.div>
-          <h3 className="text-xl font-bold text-gray-800 mb-3">
-            Whoa, {firstName}! This Topic is Locked! 🚀
-          </h3>
-          <p className="text-gray-500 mb-4">
-            You need to conquer <span className="font-semibold text-teal-500">{prevTopic.title}</span> first to unlock this adventure! Keep pushing, champ!
-          </p>
-          <button
-            onClick={closeLockedModal}
-            className="bg-gradient-to-r from-teal-400 to-teal-600 text-white font-medium rounded-full px-6 py-2 hover:shadow-lg hover:scale-105 transition-all"
-          >
-            Got It!
-          </button>
+      <motion.div initial={{ opacity: 0, scale: 0.8 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.8 }} transition={{ duration: 0.3, type: 'spring', stiffness: 120 }} className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+        <div className="bg-white rounded-2xl p-6 max-w-md mx-auto text-center shadow-lg">
+          <div className="text-4xl mb-4">🔒</div>
+          <h3 className="text-xl font-bold text-gray-800 mb-3">Whoa, {firstName}! This Topic is Locked! 🚀</h3>
+          <p className="text-gray-500 mb-4">You need to conquer <span className="font-semibold text-teal-500">{prevTopic.title}</span> first to unlock this adventure! Keep pushing, champ!</p>
+          <button onClick={closeLockedModal} className="bg-gradient-to-r from-teal-400 to-teal-600 text-white font-medium rounded-full px-6 py-2">Got It!</button>
         </div>
       </motion.div>
     );
   };
 
-  if (loading || !userData) {
-    return (
-     <TestMancerLoader />
-    );
-  }
+  const UnlockPopup = ({ topicIndex, onClose }) => (
+    <motion.div initial={{ opacity: 0, scale: 0.8 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.8 }} className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+      <div className="bg-white rounded-2xl p-6 max-w-md mx-auto text-center shadow-lg">
+        <h3 className="text-2xl font-bold text-green-600 mb-3">🔥 New Topic Unlocked!</h3>
+        <p className="mb-4">Well done, {firstName}! You’ve unlocked <b>{ENGLISH_TOPICS[topicIndex].title}</b>. Keep up the momentum!</p>
+        <button onClick={onClose} className="bg-green-500 text-white px-6 py-2 rounded-full">Let’s Go 🚀</button>
+      </div>
+    </motion.div>
+  );
+
+  const BadgePopup = ({ badge, onClose }) => (
+    <motion.div initial={{ opacity: 0, y: -50 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -50 }} className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+      <div className="bg-white rounded-2xl p-6 max-w-md mx-auto text-center shadow-lg">
+        <div className="text-5xl mb-3">🏅</div>
+        <h3 className="text-xl font-bold text-yellow-600 mb-3">Badge Earned!</h3>
+        <p className="mb-4">{badge.message}</p>
+        <button onClick={onClose} className="bg-yellow-500 text-white px-6 py-2 rounded-full">Awesome! 🎯</button>
+      </div>
+    </motion.div>
+  );
+
+  if (loading || !userData) return <TestMancerLoader />;
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white">
       <div className="container mx-auto px-4 py-8 max-w-6xl">
-        {/* <WelcomeCard /> */}
-
-        <motion.div
-          initial={{ y: -20, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ duration: 0.5 }}
-          className="text-center mb-12"
-        >
+        <motion.div initial={{ y: -20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ duration: 0.5 }} className="text-center mb-12">
           <div className="inline-flex items-center gap-2 bg-yellow-100 text-yellow-800 px-4 py-2 rounded-full mb-6 font-medium">
             <FiZap className="text-yellow-500 animate-pulse" />
             We Make Learning Fun & Rewarding!
           </div>
-
           <h1 className="text-4xl md:text-5xl font-extrabold text-gray-800 mb-3">
-            {firstName ? (
-              <span>
-                🚀 Hey {firstName}, Master English Grammar!
-              </span>
-            ) : (
-              <span>🚀 English Language Mastery</span>
-            )}
+            🚀 Hey {firstName}, Master English Grammar!
           </h1>
-          
           <p className="text-lg text-gray-500 max-w-2xl mx-auto">
-            {firstName 
-              ? `Earn badges and climb the leaderboard, ${firstName}!` 
-              : "Earn badges and climb the leaderboard!"}
+            Earn badges and climb the leaderboard, {firstName}!
           </p>
         </motion.div>
 
-        {/* {firstName && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.3 }}
-            className="bg-gradient-to-r from-teal-400 to-teal-600 rounded-2xl p-6 text-white text-center mb-10 max-w-2xl mx-auto"
-          >
-            <h2 className="text-2xl font-bold mb-3">
-              {firstName}, You're Making Great Progress! 🔥
-            </h2>
-            <p className="text-teal-100">
-              Keep going to unlock more badges and climb the English leaderboard!
-            </p>
-          </motion.div>
-        )} */}
-
         <ProgressCard userProgress={userProgress} badgeCount={badgeCount} streak={streak} />
 
-        <motion.div 
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.3 }}
-          className="space-y-8"
-        >
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.3 }} className="space-y-8">
           {ENGLISH_TOPICS.map((topic, index) => {
             const progress = calculateProgress(topic.id);
             const IconComponent = Icons[topic.icon];
             const isTopicCompleted = progress.completed === progress.total;
             const isUnlocked = isTopicUnlocked(index);
-            
             return (
               <EnglishCard
                 key={index}
@@ -401,25 +313,9 @@ const English = () => {
             );
           })}
         </motion.div>
-        
-        <motion.div 
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.5 }}
-          className="mt-16"
-        >
-        
-          
-      
-        </motion.div>
-        
+
         {firstName && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.5 }}
-            className="mt-12 text-center"
-          >
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5 }} className="mt-12 text-center">
             <h3 className="text-xl font-bold text-gray-800 mb-4">
               Keep Going, {firstName}! ✨
             </h3>
@@ -433,6 +329,12 @@ const English = () => {
         <AnimatePresence>
           {showLockedModal !== null && (
             <LockedTopicModal topicIndex={showLockedModal} />
+          )}
+          {showUnlockPopup !== null && (
+            <UnlockPopup topicIndex={showUnlockPopup} onClose={() => setShowUnlockPopup(null)} />
+          )}
+          {showBadgePopup && (
+            <BadgePopup badge={showBadgePopup} onClose={() => setShowBadgePopup(null)} />
           )}
         </AnimatePresence>
       </div>

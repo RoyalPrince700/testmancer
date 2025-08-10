@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { supabase } from "../../supabase/supabaseClient";
 import { useAuth } from "../../provider/AuthContext";
 import { FiMail, FiLock, FiUser, FiArrowLeft, FiCheckCircle, FiZap } from "react-icons/fi";
+import { FcGoogle } from "react-icons/fc";
 import { motion } from "framer-motion";
 
 export const Signup = () => {
@@ -20,6 +21,28 @@ export const Signup = () => {
       navigate("/", { replace: true });
     }
   }, [user, navigate]);
+
+  const handleGoogleSignup = async () => {
+    setLoading(true);
+    setError(null);
+
+    try {
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: "google",
+        options: {
+          redirectTo: `${window.location.origin}/`
+        }
+      });
+
+      if (error) throw error;
+
+      // Success handling is managed by Supabase redirect
+    } catch (err) {
+      console.error("Google signup error:", err);
+      setError(err.message || "Failed to sign in with Google. Please try again.");
+      setLoading(false);
+    }
+  };
 
   const handleSignup = async (e) => {
     e.preventDefault();
@@ -258,68 +281,91 @@ export const Signup = () => {
               </div>
             </motion.div>
           ) : (
-            <form onSubmit={handleSignup} className="space-y-6">
-              <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <motion.div variants={iconVariants} initial="initial" whileHover="hover">
-                    <FiMail className="text-teal-500 text-xl" />
-                  </motion.div>
-                </div>
-                <input
-                  id="email"
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="w-full pl-12 pr-4 py-3 bg-white/20 border border-teal-300/30 focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500/50 rounded-lg transition-all duration-300"
-                  placeholder="Your email"
-                  required
-                />
-              </div>
-
-              <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <motion.div variants={iconVariants} initial="initial" whileHover="hover">
-                    <FiLock className="text-teal-400 text-xl" />
-                  </motion.div>
-                </div>
-                <input
-                  id="password"
-                  type="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  className="w-full pl-12 pr-4 py-3 bg-white/20 border border-teal-300/30 focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500/50 rounded-lg transition-all duration-300"
-                  placeholder="Create a password"
-                  required
-                  minLength={6}
-                />
-              </div>
-              <p className="text-xs text-gray-500 -mt-4">Minimum 6 characters</p>
-
+            <div className="space-y-6">
+              {/* Google Sign-In Button */}
               <motion.button
-                type="submit"
+                onClick={handleGoogleSignup}
                 disabled={loading}
-                className="w-full flex items-center justify-center gap-2 bg-teal-500 hover:bg-teal-600 text-white py-4 rounded-full font-semibold transition-all duration-300 backdrop-blur-md disabled:bg-teal-300 disabled:cursor-not-allowed"
+                className="w-full flex items-center justify-center gap-2 bg-white border border-gray-300 hover:bg-gray-50 text-gray-800 py-4 rounded-full font-semibold transition-all duration-300 backdrop-blur-md disabled:bg-gray-200 disabled:cursor-not-allowed"
                 variants={buttonVariants}
                 initial="initial"
                 whileHover={!loading ? "hover" : ""}
                 whileTap={!loading ? "tap" : ""}
               >
-                {loading ? (
-                  <>
-                    <svg className="animate-spin -ml-1 mr-2 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                      <circle className="opacity-100" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                    </svg>
-                    Creating Account...
-                  </>
-                ) : (
-                  <>
-                    <FiZap className="text-yellow-300" />
-                    Join the Quest
-                  </>
-                )}
+                <FcGoogle className="text-xl" />
+                Sign up with Google
               </motion.button>
-            </form>
+
+              <div className="flex items-center justify-center">
+                <div className="h-px bg-gray-300 w-full"></div>
+                <span className="px-4 text-gray-500">or</span>
+                <div className="h-px bg-gray-300 w-full"></div>
+              </div>
+
+              {/* Email/Password Form */}
+              <form onSubmit={handleSignup} className="space-y-6">
+                <div className="relative">
+                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <motion.div variants={iconVariants} initial="initial" whileHover="hover">
+                      <FiMail className="text-teal-500 text-xl" />
+                    </motion.div>
+                  </div>
+                  <input
+                    id="email"
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    className="w-full pl-12 pr-4 py-3 bg-white/20 border border-teal-300/30 focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500/50 rounded-lg transition-all duration-300"
+                    placeholder="Your email"
+                    required
+                  />
+                </div>
+
+                <div className="relative">
+                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <motion.div variants={iconVariants} initial="initial" whileHover="hover">
+                      <FiLock className="text-teal-400 text-xl" />
+                    </motion.div>
+                  </div>
+                  <input
+                    id="password"
+                    type="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    className="w-full pl-12 pr-4 py-3 bg-white/20 border border-teal-300/30 focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500/50 rounded-lg transition-all duration-300"
+                    placeholder="Create a password"
+                    required
+                    minLength={6}
+                  />
+                </div>
+                <p className="text-xs text-gray-500 -mt-4">Minimum 6 characters</p>
+
+                <motion.button
+                  type="submit"
+                  disabled={loading}
+                  className="w-full flex items-center justify-center gap-2 bg-teal-500 hover:bg-teal-600 text-white py-4 rounded-full font-semibold transition-all duration-300 backdrop-blur-md disabled:bg-teal-300 disabled:cursor-not-allowed"
+                  variants={buttonVariants}
+                  initial="initial"
+                  whileHover={!loading ? "hover" : ""}
+                  whileTap={!loading ? "tap" : ""}
+                >
+                  {loading ? (
+                    <>
+                      <svg className="animate-spin -ml-1 mr-2 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <circle className="opacity-100" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                      </svg>
+                      Creating Account...
+                    </>
+                  ) : (
+                    <>
+                      <FiZap className="text-yellow-300" />
+                      Join the Quest
+                    </>
+                  )}
+                </motion.button>
+              </form>
+            </div>
           )}
 
           {!success && (

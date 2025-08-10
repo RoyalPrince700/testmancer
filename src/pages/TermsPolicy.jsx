@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { FiShield, FiFileText, FiLock, FiUser, FiDatabase, FiMail, FiCheck, FiAward, FiBook, FiBarChart2 } from 'react-icons/fi';
+import { FiShield, FiFileText,FiArrowRight , FiLock, FiUser, FiDatabase, FiMail, FiCheck, FiAward, FiBook, FiBarChart2 } from 'react-icons/fi';
 import { motion } from 'framer-motion';
 
 const TermsPolicy = () => {

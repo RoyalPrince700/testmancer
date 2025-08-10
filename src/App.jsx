@@ -43,6 +43,7 @@ import Errors from './pages/subjects/english/Errors';
 import Real from './pages/subjects/english/Real';
 import Question from './pages/subjects/english/QuestionTags';
 import QuizConcord from './pages/quiz/QuizConcord';
+import Profile from './pages/Profile';
 
 const ProtectedRoute = ({ children }) => {
   const { user, loading } = useAuth();
@@ -99,6 +100,7 @@ function App() {
           <Route path="/text-preview" element={<ProtectedRoute><TextPreviewPage /></ProtectedRoute>} />
           <Route path="/my-questions" element={<ProtectedRoute><MyQuestionsPage /></ProtectedRoute>} />
 
+          <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
           {/* Nested Subject Routes under /post-utme */}
         <Route path="/post-utme" element={<ProtectedRoute><PostUtme /></ProtectedRoute>} />
 

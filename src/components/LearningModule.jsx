@@ -6,7 +6,8 @@ import {
   FiAward, 
   FiCheck, 
   FiX,
-  FiBarChart2
+  FiBarChart2,
+  FiClock
 } from "react-icons/fi";
 import { motion } from "framer-motion";
 import { useAuth } from "../../provider/AuthContext";
@@ -36,9 +37,27 @@ const LearningModule = ({
   const [pointsAwarded, setPointsAwarded] = useState(0);
   const [isMarkingComplete, setIsMarkingComplete] = useState(false);
   const [showSparkles, setShowSparkles] = useState(false);
+  const [wasCompletedOnLoad, setWasCompletedOnLoad] = useState(false);
+  const [timeSpentOnPage, setTimeSpentOnPage] = useState(0);
+  const [showTimeWarning, setShowTimeWarning] = useState(false);
+  const minimumTimeRequired = 15; // Minimum seconds required per page
 
   // Create a ref for the content container
   const contentRef = useRef(null);
+
+  // Timer effect
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setTimeSpentOnPage(prev => prev + 1);
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, [currentPage]);
+
+  // Reset timer when page changes
+  useEffect(() => {
+    setTimeSpentOnPage(0);
+  }, [currentPage]);
 
   // Fetch user progress and gems (points in backend)
   useEffect(() => {
@@ -47,7 +66,17 @@ const LearningModule = ({
     const fetchUserData = async () => {
       setIsLoading(true);
       try {
-        // Check if module is completed
+        // First, always fetch the leaderboard stats
+        const { data: leaderboardData } = await supabase
+          .from('leaderboard')
+          .select('total_points, rank')
+          .eq('user_id', user.id)
+          .single();
+
+        setTotalPoints(leaderboardData?.total_points || 0);
+        setRank(leaderboardData?.rank || 0);
+
+        // Then check if module is completed
         const { data, error } = await supabase
           .from('postutme_progress')
           .select('completed, points_earned')
@@ -61,18 +90,10 @@ const LearningModule = ({
           throw error;
         }
 
+        // Set completion states
         setIsCompleted(data?.completed || false);
+        setWasCompletedOnLoad(data?.completed || false);
         setPointsAwarded(data?.points_earned || 0);
-
-        // Fetch user's total gems (total_points in backend)
-        const { data: leaderboardData } = await supabase
-          .from('leaderboard')
-          .select('total_points, rank')
-          .eq('user_id', user.id)
-          .single();
-
-        setTotalPoints(leaderboardData?.total_points || 0);
-        setRank(leaderboardData?.rank || 0);
 
       } catch (error) {
         console.error("Error fetching user data:", error.message);
@@ -82,26 +103,35 @@ const LearningModule = ({
     };
 
     fetchUserData();
-  }, [isAuthenticated, user, subject, topic, subtopic]);
+  }, [isAuthenticated, user, subject, topic, subtopic, moduleId]);
 
   // Automatically mark as complete when reaching last page
   useEffect(() => {
-    if (isAuthenticated && 
-        user && 
-        currentPage === pages.length - 1 && 
-        !isMarkingComplete) {
-      if (!isCompleted) {
+    if (
+      isAuthenticated && 
+      user && 
+      currentPage === pages.length - 1 && 
+      !isMarkingComplete
+    ) {
+      if (!wasCompletedOnLoad) {
+        // First-time completion
         markModuleComplete();
       } else {
-        // Show the no points popup if already completed
+        // Already completed from before
         setShowNoPointsPopup(true);
       }
     }
-  }, [currentPage, isCompleted, isAuthenticated, user]);
+  }, [currentPage, wasCompletedOnLoad, isAuthenticated, user]);
 
   const markModuleComplete = async () => {
     if (!isAuthenticated || !user || isCompleted) return;
     
+    // Check if user spent enough time
+    if (timeSpentOnPage < minimumTimeRequired) {
+      setShowTimeWarning(true);
+      return;
+    }
+
     setIsMarkingComplete(true);
     
     try {
@@ -142,16 +172,17 @@ const LearningModule = ({
     }
   };
 
-  // Scroll to top of contentRef
+  // Scroll to the very top of the page
   const scrollToTop = () => {
-    if (contentRef.current) {
-      contentRef.current.scrollIntoView({ behavior: "smooth" });
-    } else {
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    }
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   const nextPage = () => {
+    if (timeSpentOnPage < minimumTimeRequired) {
+      setShowTimeWarning(true);
+      return;
+    }
+
     if (currentPage < pages.length - 1) {
       setCurrentPage(currentPage + 1);
       scrollToTop();
@@ -276,10 +307,6 @@ const LearningModule = ({
             </div>
             
             <div className="text-center py-4">
-              {/* <div className="inline-flex items-center justify-center bg-gradient-to-r from-teal-400 to-teal-600 w-24 h-24 rounded-full mb-4 mx-auto">
-                <div className="text-4xl">🔄</div>
-              </div> */}
-              
               <h3 className="text-2xl font-bold text-gray-900 mb-2 bg-gradient-to-r from-teal-600 to-teal-500 bg-clip-text text-transparent">
                 Module Completed Before!
               </h3>
@@ -317,15 +344,57 @@ const LearningModule = ({
         </div>
       )}
 
+      {/* Time Warning Popup */}
+      {showTimeWarning && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <motion.div 
+            initial={{ scale: 0.8, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            className="bg-white rounded-2xl shadow-xl p-6 max-w-md w-full relative border-4 border-yellow-400"
+          >
+            <div className="absolute -top-4 -right-4 bg-yellow-500 text-white rounded-full p-2">
+              <FiClock size={28} />
+            </div>
+            
+            <div className="text-center py-4">
+              <h3 className="text-2xl font-bold text-gray-900 mb-2">
+                Slow Down! ⏳
+              </h3>
+              
+              <div className="bg-yellow-50 rounded-xl p-4 mb-4 border border-yellow-100">
+                <p className="text-gray-700">
+                  You need to spend at least <strong>{minimumTimeRequired} seconds</strong> on each page to earn gems.
+                </p>
+                <p className="mt-2 text-gray-700">
+                  Time spent: <strong>{timeSpentOnPage}s / {minimumTimeRequired}s</strong>
+                </p>
+              </div>
+              
+              <button
+                onClick={() => setShowTimeWarning(false)}
+                className="w-full bg-gradient-to-r from-yellow-500 to-yellow-600 text-white font-bold rounded-xl px-4 py-3 hover:shadow-lg transition-shadow"
+              >
+                Got it! I'll read properly
+              </button>
+            </div>
+          </motion.div>
+        </div>
+      )}
+
       <div className="container mx-auto px-4 py-8 max-w-4xl">
         {/* Progress Header */}
-        <div className="flex flex-col sm:flex-row justify-between items-center gap-4 mb-8">
-          <div className="flex flex-col md:flex-row items-center gap-4">
-            <h1 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
+        <div className="flex flex-col sm:flex-row justify-between items-start gap-4 mb-8">
+          {/* Left section with arrow and title */}
+          <div className="flex flex-col items-start gap-1">
+            <Link className="mb-1" to='/post-utme/english'>
+              <FiArrowLeft className="text-xl" />
+            </Link>
+            <h1 className="text-2xl font-bold text-gray-900 leading-tight">
               {pages[currentPage].title}
             </h1>
           </div>
           
+          {/* Right section with badges */}
           <div className="flex items-center gap-4">
             <div className="flex items-center gap-2 bg-teal-100 px-3 py-1 rounded-full text-teal-800">
               <FiAward className="text-yellow-500" />
@@ -422,7 +491,7 @@ const LearningModule = ({
               <motion.button 
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                onClick={startQuiz}
+                onClick={() => { setCurrentPage(0); scrollToTop(); }}
                 className="flex items-center gap-2 bg-gradient-to-r from-teal-500 to-teal-700 text-white font-bold rounded-full px-8 py-4 hover:shadow-lg shadow-md"
               >
                 {isCompleted ? "Retake" : "Take Quiz Now! 🚀"}

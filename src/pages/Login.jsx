@@ -3,6 +3,7 @@ import { Link, useNavigate, useLocation } from "react-router-dom";
 import { supabase } from "../../supabase/supabaseClient";
 import { useAuth } from "../../provider/AuthContext";
 import { FiLock, FiMail, FiUser, FiArrowRight, FiZap } from "react-icons/fi";
+import { FcGoogle } from "react-icons/fc";
 import { motion } from "framer-motion";
 
 export const Login = () => {
@@ -23,6 +24,28 @@ export const Login = () => {
       navigate("/", { replace: true });
     }
   }, [user, navigate]);
+
+  const handleGoogleLogin = async () => {
+    setLoading(true);
+    setError(null);
+
+    try {
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: "google",
+        options: {
+          redirectTo: `${window.location.origin}/`
+        }
+      });
+
+      if (error) throw error;
+
+      // OAuth will handle redirect
+    } catch (err) {
+      console.error("Google login error:", err);
+      setError(err.message || "Failed to sign in with Google. Please try again.");
+      setLoading(false);
+    }
+  };
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -55,6 +78,16 @@ export const Login = () => {
   const iconVariants = {
     initial: { scale: 1, rotate: 0 },
     hover: { scale: 1.2, rotate: 10, transition: { duration: 0.3 } }
+  };
+
+  const buttonVariants = {
+    initial: { scale: 1, boxShadow: "0 0 0 rgba(45, 212, 191, 0)" },
+    hover: { 
+      scale: 1.05, 
+      boxShadow: "0 0 15px rgba(45, 212, 191, 0.5)",
+      transition: { duration: 0.3, ease: "easeOut" }
+    },
+    tap: { scale: 0.95, transition: { duration: 0.2 } }
   };
 
   return (
@@ -148,64 +181,89 @@ export const Login = () => {
             </motion.div>
           )}
 
-          <form onSubmit={handleLogin} className="space-y-6">
-            <div className="relative">
-              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <motion.div variants={iconVariants} initial="initial" whileHover="hover">
-                  <FiMail className="text-teal-500 text-xl" />
-                </motion.div>
-              </div>
-              <input
-                id="email"
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="w-full pl-12 pr-4 py-3 bg-white/20 border border-teal-300/50 focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500/50 rounded-lg transition-all duration-300"
-                placeholder="Your email"
-                required
-              />
-            </div>
-
-            <div className="relative">
-              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <motion.div variants={iconVariants} initial="initial" whileHover="hover">
-                  <FiLock className="text-teal-500 text-xl" />
-                </motion.div>
-              </div>
-              <input
-                id="password"
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="w-full pl-12 pr-4 py-3 bg-white/20 border border-teal-300/50 focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500/50 rounded-lg  transition-all duration-300"
-                placeholder="Your password"
-                required
-              />
-            </div>
-
+          <div className="space-y-6">
+            {/* Google Login Button */}
             <motion.button
-              type="submit"
+              onClick={handleGoogleLogin}
               disabled={loading}
-              className="w-full flex items-center justify-center gap-2 bg-teal-500 hover:bg-teal-600 text-white py-4 rounded-full font-semibold transition-all duration-300 transform hover:scale-105 disabled:bg-teal-300 disabled:transform-none"
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
+              className="w-full flex items-center justify-center gap-2 bg-white border border-gray-300 hover:bg-gray-50 text-gray-800 py-4 rounded-full font-semibold transition-all duration-300 backdrop-blur-md disabled:bg-gray-200 disabled:cursor-not-allowed"
+              variants={buttonVariants}
+              initial="initial"
+              whileHover={!loading ? "hover" : ""}
+              whileTap={!loading ? "tap" : ""}
             >
-              {loading ? (
-                <>
-                  <svg className="animate-spin -ml-1 mr-2 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                  </svg>
-                  Logging In...
-                </>
-              ) : (
-                <>
-                  Start Quest
-                  <FiArrowRight className="text-sm" />
-                </>
-              )}
+              <FcGoogle className="text-xl" />
+              Sign in with Google
             </motion.button>
-          </form>
+
+            <div className="flex items-center justify-center">
+              <div className="h-px bg-gray-300 w-full"></div>
+              <span className="px-4 text-gray-500">or</span>
+              <div className="h-px bg-gray-300 w-full"></div>
+            </div>
+
+            {/* Email/Password Form */}
+            <form onSubmit={handleLogin} className="space-y-6">
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <motion.div variants={iconVariants} initial="initial" whileHover="hover">
+                    <FiMail className="text-teal-500 text-xl" />
+                  </motion.div>
+                </div>
+                <input
+                  id="email"
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="w-full pl-12 pr-4 py-3 bg-white/20 border border-teal-300/50 focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500/50 rounded-lg transition-all duration-300"
+                  placeholder="Your email"
+                  required
+                />
+              </div>
+
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <motion.div variants={iconVariants} initial="initial" whileHover="hover">
+                    <FiLock className="text-teal-500 text-xl" />
+                  </motion.div>
+                </div>
+                <input
+                  id="password"
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="w-full pl-12 pr-4 py-3 bg-white/20 border border-teal-300/50 focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500/50 rounded-lg  transition-all duration-300"
+                  placeholder="Your password"
+                  required
+                />
+              </div>
+
+              <motion.button
+                type="submit"
+                disabled={loading}
+                className="w-full flex items-center justify-center gap-2 bg-teal-500 hover:bg-teal-600 text-white py-4 rounded-full font-semibold transition-all duration-300 transform hover:scale-105 disabled:bg-teal-300 disabled:transform-none"
+                variants={buttonVariants}
+                initial="initial"
+                whileHover={!loading ? "hover" : ""}
+                whileTap={!loading ? "tap" : ""}
+              >
+                {loading ? (
+                  <>
+                    <svg className="animate-spin -ml-1 mr-2 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                    Logging In...
+                  </>
+                ) : (
+                  <>
+                    Start Quest
+                    <FiArrowRight className="text-sm" />
+                  </>
+                )}
+              </motion.button>
+            </form>
+          </div>
 
           <div className="mt-8 text-center">
             <Link 

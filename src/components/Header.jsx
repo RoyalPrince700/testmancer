@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { FiMenu, FiX } from "react-icons/fi";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { supabase } from "../../supabase/supabaseClient";
 import { useAuth } from "../../provider/AuthContext";
 import { motion, AnimatePresence } from "framer-motion";
@@ -10,7 +10,9 @@ export const Header = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const { isAuthenticated, user } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
   const [isAdmin, setIsAdmin] = useState(false);
+  const [profileData, setProfileData] = useState(null);
 
   // Prevent background scroll when sidebar is open
   useEffect(() => {
@@ -46,11 +48,48 @@ export const Header = () => {
     navigate("/login");
   };
 
-  // Sidebar animation
+  useEffect(() => {
+  if (!isAuthenticated || !user) {
+    setProfileData(null);
+    return;
+  }
+
+  const fetchProfile = async () => {
+    try {
+      const { data, error } = await supabase
+        .from("profiles")
+        .select("full_name, avatar_url")
+        .eq("id", user.id)
+        .single();
+
+      if (error) throw error;
+      setProfileData(data);
+    } catch (err) {
+      console.error("Failed to fetch profile:", err);
+    }
+  };
+
+  fetchProfile();
+}, [isAuthenticated, user]);
+
+  // Sidebar animation variants
   const sidebarVariants = {
     hidden: { x: "-100%" },
     visible: { x: 0 },
     exit: { x: "-100%" },
+  };
+
+  // Helper to detect active routes including subroutes
+  const isActive = (basePath) =>
+    location.pathname === basePath || location.pathname.startsWith(basePath + "/");
+
+  // Underline animation props for reuse
+  const underlineAnimation = {
+    initial: { scaleX: 0, originX: 1 },
+    animate: { scaleX: 1, originX: 0 },
+    exit: { scaleX: 0, originX: 1 },
+    transition: { duration: 0.5, ease: "easeOut" },
+    style: { transformOrigin: "right" },
   };
 
   return (
@@ -62,22 +101,35 @@ export const Header = () => {
           <button
             onClick={() => setSidebarOpen(true)}
             className="text-black focus:outline-none"
+            aria-label="Open menu"
           >
             <FiMenu className="w-6 h-6" />
           </button>
-          
+
           {/* Quick Links */}
           <div className="flex items-center gap-4">
-            <Link to="/post-utme" className="text-sm font-medium text-black">
+            <Link to="/post-utme" className="relative text-sm font-medium text-black">
               PostUtme
+              {isActive("/post-utme") && (
+                <motion.span
+                  className="absolute left-0 bottom-0 h-0.5 w-full bg-teal-600 origin-right"
+                  {...underlineAnimation}
+                />
+              )}
             </Link>
-            <Link to="/quiz-hub" className="text-sm font-medium text-black">
+            <Link to="/quiz-hub" className="relative text-sm font-medium text-black">
               Quiz Hub
+              {isActive("/quiz-hub") && (
+                <motion.span
+                  className="absolute left-0 bottom-0 h-0.5 w-full bg-teal-600 origin-right"
+                  {...underlineAnimation}
+                />
+              )}
             </Link>
           </div>
 
           {/* Logo */}
-          <Link to="/" className="flex items-center gap-2">
+          <Link to="/" className="flex items-center gap-2" aria-label="Home">
             <img src={LOGO} alt="SnapTest" className="h-6 w-6" />
           </Link>
         </div>
@@ -87,28 +139,56 @@ export const Header = () => {
           <div className="container mx-auto px-4">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-10">
-                <Link to="/" className="flex items-center gap-2">
+                <Link to="/" className="flex items-center gap-2" aria-label="Home">
                   <img src={LOGO} alt="SnapTest" className="h-5 w-18" />
                 </Link>
                 <nav className="flex gap-6 text-gray-600 items-center">
-                 
-                  <Link to="/post-utme" className="hover:text-teal-600">
+                  <Link to="/post-utme" className="relative hover:text-teal-600">
                     PostUtme
+                    {isActive("/post-utme") && (
+                      <motion.span
+                        className="absolute left-0 bottom-0 h-0.5 w-full bg-teal-600 origin-right"
+                        {...underlineAnimation}
+                      />
+                    )}
                   </Link>
-                  <Link to="/quiz-hub" className="hover:text-teal-600">
+                  <Link to="/quiz-hub" className="relative hover:text-teal-600">
                     Quiz Hub
+                    {isActive("/quiz-hub") && (
+                      <motion.span
+                        className="absolute left-0 bottom-0 h-0.5 w-full bg-teal-600 origin-right"
+                        {...underlineAnimation}
+                      />
+                    )}
                   </Link>
-                   <Link to="/how-it-works" className="hover:text-teal-600">
+                  <Link to="/how-it-works" className="relative hover:text-teal-600">
                     How It Works
+                    {location.pathname === "/how-it-works" && (
+                      <motion.span
+                        className="absolute left-0 bottom-0 h-0.5 w-full bg-teal-600 origin-right"
+                        {...underlineAnimation}
+                      />
+                    )}
                   </Link>
-                  <Link to="/about-us" className="hover:text-teal-600">
+                  <Link to="/about-us" className="relative hover:text-teal-600">
                     About Us
+                    {location.pathname === "/about-us" && (
+                      <motion.span
+                        className="absolute left-0 bottom-0 h-0.5 w-full bg-teal-600 origin-right"
+                        {...underlineAnimation}
+                      />
+                    )}
                   </Link>
-                
                   {isAuthenticated && isAdmin && (
-                    <Link to="/admin" className="hover:text-teal-600 flex gap-1">
+                    <Link to="/admin" className="relative hover:text-teal-600 flex gap-1">
                       <span>Admin</span>
                       <span className="w-2 h-2 bg-teal-600 rounded-full"></span>
+                      {location.pathname === "/admin" && (
+                        <motion.span
+                          className="absolute left-0 bottom-0 h-0.5 w-full bg-teal-600 origin-right"
+                          {...underlineAnimation}
+                        />
+                      )}
                     </Link>
                   )}
                 </nav>
@@ -135,100 +215,125 @@ export const Header = () => {
         </div>
       </header>
 
-      {/* Sidebar (Mobile) */}
-      <AnimatePresence>
-        {sidebarOpen && (
-          <motion.div
-            className="fixed inset-0 z-[999] flex"
-            initial="hidden"
-            animate="visible"
-            exit="exit"
-            variants={sidebarVariants}
-            transition={{ duration: 0.3, ease: "easeInOut" }}
+  
+     {/* Sidebar (Mobile) */}
+<AnimatePresence>
+  {sidebarOpen && (
+    <motion.div
+      className="fixed inset-0 z-[999] flex"
+      initial="hidden"
+      animate="visible"
+      exit="exit"
+      variants={sidebarVariants}
+      transition={{ duration: 0.3, ease: "easeInOut" }}
+    >
+      {/* Sidebar Panel */}
+      <div className="w-64 bg-white shadow-lg p-6 flex flex-col">
+        {/* Header */}
+        <div className="flex justify-between items-center mb-6">
+          <Link to="/" onClick={() => setSidebarOpen(false)} aria-label="Home">
+            <img src={LOGO} alt="SnapTest" className="h-6 w-6" />
+          </Link>
+          <button
+            onClick={() => setSidebarOpen(false)}
+            className="text-teal-600"
+            aria-label="Close menu"
           >
-            {/* Sidebar Panel */}
-            <div className="w-64 bg-white shadow-lg p-6 flex flex-col">
-              <div className="flex justify-between items-center mb-6">
-                <Link to="/" onClick={() => setSidebarOpen(false)}>
-                  <img src={LOGO} alt="SnapTest" className="h-6 w-6" />
-                </Link>
-                <button
-                  onClick={() => setSidebarOpen(false)}
-                  className="text-teal-600"
-                >
-                  <FiX className="w-6 h-6" />
-                </button>
-              </div>
+            <FiX className="w-6 h-6" />
+          </button>
+        </div>
 
-              <nav className="flex flex-col gap-4 text-gray-700">
-                <Link
-                  to="/how-it-works"
-                  onClick={() => setSidebarOpen(false)}
-                  className="hover:text-teal-600"
-                >
-                  How It Works
-                </Link>
-                <Link
-                  to="/about-us"
-                  onClick={() => setSidebarOpen(false)}
-                  className="hover:text-teal-600"
-                >
-                  About Us
-                </Link>
-                {isAuthenticated && (
-                  <div className="flex flex-col gap-4">
-                   <Link
-                    to="/profile"
-                    onClick={() => setSidebarOpen(false)}
-                    className="hover:text-teal-600"
-                  >
-                    Profile
-                  </Link>
-                  </div>
-                 
-                  
-                )}
-                {isAuthenticated && isAdmin && (
-                  <Link
-                    to="/admin"
-                    onClick={() => setSidebarOpen(false)}
-                    className="hover:text-teal-600 flex gap-2"
-                  >
-                    Admin Dashboard
-                    <span className="w-2 h-2 bg-teal-600 rounded-full"></span>
-                  </Link>
-                )}
-              </nav>
-
-              {/* Auth Button */}
-              <div className="mt-auto pt-6">
-                {isAuthenticated ? (
-                  <button
-                    onClick={handleLogout}
-                    className="w-full bg-red-500 text-white py-2 rounded-lg hover:bg-red-600"
-                  >
-                    Logout
-                  </button>
-                ) : (
-                  <Link
-                    to="/login"
-                    onClick={() => setSidebarOpen(false)}
-                    className="block w-full text-center border border-teal-600 text-teal-600 py-2 rounded-lg hover:bg-teal-50"
-                  >
-                    Login
-                  </Link>
-                )}
-              </div>
-            </div>
-
-            {/* Overlay (click to close) */}
-            <div
-              className="flex-1 bg-black/40"
+        {/* Menu Links */}
+        <nav className="flex flex-col gap-4 text-gray-700">
+          <Link
+            to="/how-it-works"
+            onClick={() => setSidebarOpen(false)}
+            className="relative hover:text-teal-600"
+          >
+            How It Works
+            {location.pathname === "/how-it-works" && (
+              <motion.span
+                className="absolute left-0 bottom-0 h-0.5 w-full bg-teal-600 origin-right"
+                {...underlineAnimation}
+              />
+            )}
+          </Link>
+          <Link
+            to="/about-us"
+            onClick={() => setSidebarOpen(false)}
+            className="relative hover:text-teal-600"
+          >
+            About Us
+            {location.pathname === "/about-us" && (
+              <motion.span
+                className="absolute left-0 bottom-0 h-0.5 w-full bg-teal-600 origin-right"
+                {...underlineAnimation}
+              />
+            )}
+          </Link>
+          {isAuthenticated && isAdmin && (
+            <Link
+              to="/admin"
               onClick={() => setSidebarOpen(false)}
-            />
-          </motion.div>
-        )}
-      </AnimatePresence>
+              className="relative hover:text-teal-600 flex gap-2"
+            >
+              Admin Dashboard
+              <span className="w-2 h-2 bg-teal-600 rounded-full"></span>
+              {location.pathname === "/admin" && (
+                <motion.span
+                  className="absolute left-0 bottom-0 h-0.5 w-full bg-teal-600 origin-right"
+                  {...underlineAnimation}
+                />
+              )}
+            </Link>
+          )}
+        </nav>
+
+        {/* Profile/Login at Bottom */}
+        <div className="mt-auto pt-6 border-t border-gray-200">
+  {isAuthenticated ? (
+    <Link
+      to="/profile"
+      onClick={() => setSidebarOpen(false)}
+      className="flex items-center gap-3 hover:bg-gray-50 p-2 rounded-lg"
+    >
+      {profileData?.avatar_url ? (
+        <img
+          src={profileData.avatar_url}
+          alt={profileData.full_name || "Profile"}
+          className="w-10 h-10 rounded-full object-cover border"
+        />
+      ) : (
+        <div className="bg-gray-200 w-10 h-10 rounded-full flex items-center justify-center">
+          <FiUser className="text-gray-500 text-lg" />
+        </div>
+      )}
+      <span className="font-medium">
+        {profileData?.full_name || "Profile"}
+      </span>
+    </Link>
+  ) : (
+    <Link
+      to="/login"
+      onClick={() => setSidebarOpen(false)}
+      className="block w-full text-center border border-teal-600 text-teal-600 py-2 rounded-lg hover:bg-teal-50"
+    >
+      Login
+    </Link>
+  )}
+</div>
+
+      </div>
+
+      {/* Overlay */}
+      <div
+        className="flex-1 bg-black/40"
+        onClick={() => setSidebarOpen(false)}
+      />
+    </motion.div>
+  )}
+</AnimatePresence>
+
     </>
   );
 };
