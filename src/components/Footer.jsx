@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import LOGO from "../assets/snaptest-logo.png";
+import LOGO from "../assets/testmancer-logo.png";
 import SocialX from "../assets/social-x.svg?react";
 import SocialInsta from "../assets/social-insta.svg?react";
 import SocialLinkedIn from "../assets/social-linkedin.svg?react";

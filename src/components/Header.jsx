@@ -4,7 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { supabase } from "../../supabase/supabaseClient";
 import { useAuth } from "../../provider/AuthContext";
 import { motion, AnimatePresence } from "framer-motion";
-import LOGO from "../assets/snaptest-logo.png";
+import LOGO from "../assets/testmancer-logo.png";
 
 export const Header = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
