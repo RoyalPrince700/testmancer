@@ -1,6 +1,5 @@
-// src/components/LearningModule.jsx
-import React, { useState, useEffect } from "react";
-import { useNavigate,Link } from "react-router-dom";
+import React, { useState, useEffect, useRef } from "react";
+import { useNavigate, Link } from "react-router-dom";
 import { 
   FiArrowLeft, 
   FiArrowRight, 
@@ -12,6 +11,7 @@ import {
 import { motion } from "framer-motion";
 import { useAuth } from "../../provider/AuthContext";
 import { supabase } from "../../supabase/supabaseClient";
+import TestMancerLoader from "./TestMancer";
 
 const LearningModule = ({
   moduleId,
@@ -32,10 +32,15 @@ const LearningModule = ({
   const [isLoading, setIsLoading] = useState(true);
   const [isCompleted, setIsCompleted] = useState(false);
   const [showCompletionPopup, setShowCompletionPopup] = useState(false);
+  const [showNoPointsPopup, setShowNoPointsPopup] = useState(false);
   const [pointsAwarded, setPointsAwarded] = useState(0);
   const [isMarkingComplete, setIsMarkingComplete] = useState(false);
+  const [showSparkles, setShowSparkles] = useState(false);
 
-  // Fetch user progress and points
+  // Create a ref for the content container
+  const contentRef = useRef(null);
+
+  // Fetch user progress and gems (points in backend)
   useEffect(() => {
     if (!isAuthenticated || !user) return;
 
@@ -59,7 +64,7 @@ const LearningModule = ({
         setIsCompleted(data?.completed || false);
         setPointsAwarded(data?.points_earned || 0);
 
-        // Fetch user's total points and rank
+        // Fetch user's total gems (total_points in backend)
         const { data: leaderboardData } = await supabase
           .from('leaderboard')
           .select('total_points, rank')
@@ -83,10 +88,14 @@ const LearningModule = ({
   useEffect(() => {
     if (isAuthenticated && 
         user && 
-        !isCompleted && 
         currentPage === pages.length - 1 && 
         !isMarkingComplete) {
-      markModuleComplete();
+      if (!isCompleted) {
+        markModuleComplete();
+      } else {
+        // Show the no points popup if already completed
+        setShowNoPointsPopup(true);
+      }
     }
   }, [currentPage, isCompleted, isAuthenticated, user]);
 
@@ -123,7 +132,8 @@ const LearningModule = ({
       setRank(leaderboardData?.rank || 0);
       setIsCompleted(true);
       setPointsAwarded(points);
-      setShowCompletionPopup(true);
+      setShowSparkles(true);
+      setTimeout(() => setShowCompletionPopup(true), 500);
 
     } catch (error) {
       console.error("Error marking module complete:", error.message);
@@ -132,15 +142,26 @@ const LearningModule = ({
     }
   };
 
+  // Scroll to top of contentRef
+  const scrollToTop = () => {
+    if (contentRef.current) {
+      contentRef.current.scrollIntoView({ behavior: "smooth" });
+    } else {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  };
+
   const nextPage = () => {
     if (currentPage < pages.length - 1) {
       setCurrentPage(currentPage + 1);
+      scrollToTop();
     }
   };
 
   const prevPage = () => {
     if (currentPage > 0) {
       setCurrentPage(currentPage - 1);
+      scrollToTop();
     }
   };
 
@@ -150,55 +171,147 @@ const LearningModule = ({
 
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-indigo-50 to-white">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-indigo-600 mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading your progress...</p>
-        </div>
-      </div>
+     <TestMancerLoader />
     );
   }
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-indigo-50 to-white">
+      {/* Sparkle Confetti */}
+      {showSparkles && (
+        <div className="fixed inset-0 pointer-events-none z-50">
+          {[...Array(50)].map((_, i) => (
+            <motion.div
+              key={i}
+              className="absolute text-2xl"
+              initial={{ 
+                scale: 0,
+                opacity: 1,
+                x: Math.random() * window.innerWidth,
+                y: Math.random() * window.innerHeight
+              }}
+              animate={{ 
+                scale: [0, 1, 0],
+                opacity: [1, 1, 0],
+                y: Math.random() * 100 - 100
+              }}
+              transition={{ 
+                duration: 1.5, 
+                ease: "easeOut",
+                delay: i * 0.02 
+              }}
+              onAnimationComplete={() => i === 49 && setShowSparkles(false)}
+            >
+              {["✨", "🎉", "🌟", "🏆"][Math.floor(Math.random() * 4)]}
+            </motion.div>
+          ))}
+        </div>
+      )}
+
       {/* Completion Popup */}
       {showCompletionPopup && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
           <motion.div 
-            initial={{ scale: 0.9, opacity: 0 }}
+            initial={{ scale: 0.8, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
-            className="bg-white rounded-2xl shadow-xl p-6 max-w-md w-full relative"
+            className="bg-white rounded-2xl shadow-xl p-6 max-w-md w-full relative border-4 border-teal-400"
           >
-            <button 
-              onClick={() => setShowCompletionPopup(false)}
-              className="absolute top-4 right-4 text-gray-500 hover:text-gray-700"
-            >
-              <FiX size={24} />
-            </button>
+            <div className="absolute -top-4 -right-4 bg-pink-500 text-white rounded-full p-2">
+              <FiAward size={28} />
+            </div>
             
             <div className="text-center py-4">
-              <div className="inline-block bg-gradient-to-r from-green-500 to-green-700 rounded-full p-3 mb-4">
-                <FiAward className="text-white text-3xl" />
+              <div className="inline-flex items-center justify-center bg-gradient-to-r from-teal-400 to-teal-600 w-24 h-24 rounded-full mb-4 mx-auto">
+                <div className="text-4xl">🏆</div>
               </div>
               
-              <h3 className="text-2xl font-bold text-gray-900 mb-2">
-                Course Completed!
+              <h3 className="text-2xl font-bold text-gray-900 mb-2 bg-gradient-to-r from-teal-600 to-pink-500 bg-clip-text text-transparent">
+                Module Mastered! 🎉
               </h3>
               
-              <p className="text-gray-700 mb-6">
-                You've completed the <span className="font-bold">{subtopic}</span> course and earned 
-                <span className="font-bold text-green-600"> {points} points</span>!
-              </p>
+              <div className="bg-teal-50 rounded-xl p-4 mb-4 border border-teal-100">
+                <p className="text-gray-700">
+                  You've completed <span className="font-bold text-teal-700">{subtopic}</span> and earned
+                </p>
+                <div className="flex items-center justify-center gap-2 mt-2">
+                  <span className="text-2xl font-bold text-teal-700">+{points} gems</span>
+                  <span className="text-xl">💎</span>
+                </div>
+              </div>
               
-              <button
-                onClick={() => {
-                  setShowCompletionPopup(false);
-                  startQuiz();
-                }}
-                className="w-full bg-gradient-to-r from-indigo-600 to-indigo-800 text-white font-bold rounded-full px-6 py-3 hover:shadow-lg transition-shadow"
-              >
-                Take Quiz Now
-              </button>
+              <div className="flex flex-col sm:flex-row gap-3 mt-6">
+                <button
+                  onClick={() => setShowCompletionPopup(false)}
+                  className="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-800 font-bold rounded-xl px-4 py-3 transition-colors flex items-center justify-center gap-2"
+                >
+                  <FiX /> Later
+                </button>
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={() => {
+                    setShowCompletionPopup(false);
+                    startQuiz();
+                  }}
+                  className="flex-1 bg-gradient-to-r from-teal-500 to-teal-700 text-white font-bold rounded-xl px-4 py-3 hover:shadow-lg transition-shadow flex items-center justify-center gap-2"
+                >
+                  Take Quiz Now <FiArrowRight />
+                </motion.button>
+              </div>
+            </div>
+          </motion.div>
+        </div>
+      )}
+
+      {/* No Points Popup */}
+      {showNoPointsPopup && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <motion.div 
+            initial={{ scale: 0.8, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            className="bg-white rounded-2xl shadow-xl p-6 max-w-md w-full relative border-4 border-teal-400"
+          >
+            <div className="absolute -top-4 -right-4 bg-teal-500 text-white rounded-full p-2">
+              <FiAward size={28} />
+            </div>
+            
+            <div className="text-center py-4">
+              {/* <div className="inline-flex items-center justify-center bg-gradient-to-r from-teal-400 to-teal-600 w-24 h-24 rounded-full mb-4 mx-auto">
+                <div className="text-4xl">🔄</div>
+              </div> */}
+              
+              <h3 className="text-2xl font-bold text-gray-900 mb-2 bg-gradient-to-r from-teal-600 to-teal-500 bg-clip-text text-transparent">
+                Module Completed Before!
+              </h3>
+              
+              <div className="bg-teal-50 rounded-xl p-4 mb-4 border border-teal-100">
+                <p className="text-gray-700">
+                  You've already completed <span className="font-bold text-teal-700">{subtopic}</span> and earned your points.
+                </p>
+                <p className="mt-2 text-gray-700">
+                  Try a new topic to earn more gems! 💎
+                </p>
+              </div>
+              
+              <div className="flex flex-col sm:flex-row gap-3 mt-6">
+                <button
+                  onClick={() => setShowNoPointsPopup(false)}
+                  className="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-800 font-bold rounded-xl px-4 py-3 transition-colors flex items-center justify-center gap-2"
+                >
+                  <FiX /> Close
+                </button>
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={() => {
+                    setShowNoPointsPopup(false);
+                    navigate("/post-utme/english");
+                  }}
+                  className="flex-1 bg-gradient-to-r from-teal-500 to-teal-700 text-white font-bold rounded-xl px-4 py-3 hover:shadow-lg transition-shadow flex items-center justify-center gap-2"
+                >
+                  Browse New Topics <FiArrowRight />
+                </motion.button>
+              </div>
             </div>
           </motion.div>
         </div>
@@ -207,23 +320,20 @@ const LearningModule = ({
       <div className="container mx-auto px-4 py-8 max-w-4xl">
         {/* Progress Header */}
         <div className="flex flex-col sm:flex-row justify-between items-center gap-4 mb-8">
-          <div className="flex items-center gap-4">
-            <Link to={backPath} className="text-indigo-600 hover:text-indigo-800 flex items-center gap-1">
-              <FiArrowLeft />
-            </Link>
+          <div className="flex flex-col md:flex-row items-center gap-4">
             <h1 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
-              {pages[currentPage].icon}
               {pages[currentPage].title}
             </h1>
           </div>
           
           <div className="flex items-center gap-4">
-            <div className="flex items-center gap-2 bg-indigo-100 px-3 py-1 rounded-full">
+            <div className="flex items-center gap-2 bg-teal-100 px-3 py-1 rounded-full text-teal-800">
               <FiAward className="text-yellow-500" />
-              <span className="font-bold">{totalPoints} pts</span>
+              <span className="font-bold">{totalPoints} gems</span>
+              <span className="text-xl">💎</span>
             </div>
-            <div className="flex items-center gap-2 bg-indigo-100 px-3 py-1 rounded-full">
-              <FiBarChart2 className="text-indigo-600" />
+            <div className="flex items-center gap-2 bg-pink-100 px-3 py-1 rounded-full text-pink-800">
+              <FiBarChart2 className="text-pink-600" />
               <span className="font-bold">#{rank}</span>
             </div>
           </div>
@@ -231,10 +341,14 @@ const LearningModule = ({
         
         {/* Completion Badge */}
         {isCompleted && (
-          <div className="mb-6 bg-gradient-to-r from-green-500 to-green-700 text-white p-4 rounded-xl flex items-center gap-3">
+          <motion.div 
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="mb-6 bg-gradient-to-r from-teal-500 to-teal-700 text-white p-4 rounded-xl flex items-center gap-3"
+          >
             <FiAward className="text-xl" />
-            <span>You've completed {subtopic}! +{points} points earned</span>
-          </div>
+            <span>You've completed {subtopic}! +{points} gems earned 💎</span>
+          </motion.div>
         )}
         
         {/* Progress Bar */}
@@ -243,13 +357,13 @@ const LearningModule = ({
             <span className="text-gray-600">
               Section {currentPage + 1} of {pages.length}
             </span>
-            <span className="font-medium text-indigo-700">
+            <span className="font-medium text-teal-700">
               {Math.min(currentPage + 1, pages.length)}/{pages.length} completed
             </span>
           </div>
-          <div className="w-full bg-gray-200 rounded-full h-3">
+          <div className="w-full bg-gray-200 rounded-full h-3 overflow-hidden">
             <div 
-              className="bg-gradient-to-r from-indigo-500 to-indigo-700 h-3 rounded-full" 
+              className="bg-gradient-to-r from-teal-400 to-teal-600 h-3 rounded-full" 
               style={{ width: `${((currentPage + 1) / pages.length) * 100}%` }}
             ></div>
           </div>
@@ -258,55 +372,76 @@ const LearningModule = ({
         {/* Content Card */}
         <motion.div 
           key={currentPage}
+          ref={contentRef}
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -20 }}
           transition={{ duration: 0.3 }}
-          className="bg-white rounded-2xl shadow-lg p-6 md:p-8 mb-8 border border-indigo-100"
+          className="bg-white rounded-2xl shadow-lg p-6 md:p-8 mb-8 border border-teal-100"
         >
           {pages[currentPage].content}
         </motion.div>
         
         {/* Navigation */}
         <div className="flex justify-between items-center">
-          <button 
+          <motion.button 
+            whileHover={{ x: -5 }}
             onClick={prevPage}
             disabled={currentPage === 0}
             className={`flex items-center gap-2 px-6 py-3 rounded-full ${
               currentPage === 0 
                 ? "text-gray-400 cursor-not-allowed" 
-                : "text-indigo-700 hover:bg-indigo-50"
+                : "text-teal-700 hover:bg-teal-50"
             }`}
           >
             <FiArrowLeft />
             Previous
-          </button>
+          </motion.button>
           
           {currentPage < pages.length - 1 ? (
-            <button 
+            <motion.button 
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
               onClick={nextPage}
-              className="flex items-center gap-2 bg-gradient-to-r from-indigo-600 to-indigo-800 text-white font-medium rounded-full px-6 py-3 hover:shadow-lg transition-shadow"
+              className="flex items-center gap-2 bg-gradient-to-r from-teal-500 to-teal-700 text-white font-medium rounded-full px-6 py-3 hover:shadow-lg transition-shadow"
             >
-              Next Section
+              Next
               <FiArrowRight />
-            </button>
+            </motion.button>
           ) : (
-            <button 
-              onClick={startQuiz}
-              className="flex items-center gap-2 bg-gradient-to-r from-green-500 to-green-700 text-white font-bold rounded-full px-8 py-4 hover:shadow-lg transform hover:scale-105 transition-all"
+            <motion.div
+              animate={!showCompletionPopup && isCompleted ? {
+                scale: [1, 1.1, 1],
+                transition: {
+                  repeat: Infinity,
+                  duration: 1.5,
+                  ease: "easeInOut"
+                }
+              } : {}}
             >
-              {isCompleted ? "Retake Quiz" : "Take Quiz Now!"}
-              <FiAward />
-            </button>
+              <motion.button 
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={startQuiz}
+                className="flex items-center gap-2 bg-gradient-to-r from-teal-500 to-teal-700 text-white font-bold rounded-full px-8 py-4 hover:shadow-lg shadow-md"
+              >
+                {isCompleted ? "Retake" : "Take Quiz Now! 🚀"}
+                <FiAward />
+              </motion.button>
+            </motion.div>
           )}
         </div>
         
         {/* Badges Preview */}
         {currentPage < pages.length - 1 && badges.length > 0 && (
-          <div className="mt-12 text-center">
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="mt-12 text-center p-6 bg-gradient-to-br from-teal-50 to-pink-50 rounded-2xl border border-teal-200"
+          >
             <h3 className="text-xl font-bold text-gray-900 mb-4 flex items-center justify-center gap-2">
               <FiAward className="text-yellow-500" />
-              Complete all sections to earn these badges:
+              Complete all sections to unlock:
             </h3>
             
             <div className="flex justify-center gap-6 flex-wrap">
@@ -316,16 +451,26 @@ const LearningModule = ({
                   initial={{ scale: 0.8, opacity: 0 }}
                   animate={{ scale: 1, opacity: 1 }}
                   transition={{ delay: index * 0.1 }}
+                  whileHover={{ y: -5 }}
                   className="flex flex-col items-center"
                 >
-                  <div className={`w-16 h-16 rounded-full bg-gradient-to-br ${badge.color} flex items-center justify-center mb-2`}>
-                    <FiAward className="text-white text-2xl" />
+                  <div
+                    className={`w-20 h-20 rounded-2xl ${badge.color} flex items-center justify-center mb-2 shadow-md`}
+                  >
+                    <div className="text-3xl">
+                      {badge.emoji || "🏅"}
+                    </div>
                   </div>
-                  <span className="font-medium text-gray-700 text-sm">{badge.name}</span>
+                  <span className="font-medium text-gray-700">
+                    {badge.name || "Unnamed Badge"}
+                  </span>
+                  <span className="text-sm text-teal-600">
+                    +{badge.points ?? 0} gems 💎
+                  </span>
                 </motion.div>
               ))}
             </div>
-          </div>
+          </motion.div>
         )}
       </div>
     </div>

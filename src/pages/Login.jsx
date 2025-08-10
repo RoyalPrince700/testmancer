@@ -116,7 +116,7 @@ export const Login = () => {
         </div>
         
         {/* Login Form with Glass Effect */}
-        <div className="w-full md:w-3/5 bg-white/10 backdrop-blur-lg p-10 border border-teal-200/20">
+        <div className="w-full md:w-3/5 bg-white backdrop-blur-lg p-10 border border-teal-200/20">
           <div className="text-center mb-10">
             <motion.div
               className="bg-gradient-to-br from-teal-400 to-teal-600 rounded-2xl p-4 inline-flex items-center justify-center"
@@ -152,7 +152,7 @@ export const Login = () => {
             <div className="relative">
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                 <motion.div variants={iconVariants} initial="initial" whileHover="hover">
-                  <FiMail className="text-teal-300 text-xl" />
+                  <FiMail className="text-teal-500 text-xl" />
                 </motion.div>
               </div>
               <input
@@ -160,7 +160,7 @@ export const Login = () => {
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full pl-12 pr-4 py-3 bg-white/20 border border-teal-300/50 focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500/50 rounded-lg backdrop-blur-sm transition-all duration-300"
+                className="w-full pl-12 pr-4 py-3 bg-white/20 border border-teal-300/50 focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500/50 rounded-lg transition-all duration-300"
                 placeholder="Your email"
                 required
               />
@@ -169,7 +169,7 @@ export const Login = () => {
             <div className="relative">
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                 <motion.div variants={iconVariants} initial="initial" whileHover="hover">
-                  <FiLock className="text-teal-300 text-xl" />
+                  <FiLock className="text-teal-500 text-xl" />
                 </motion.div>
               </div>
               <input
@@ -177,7 +177,7 @@ export const Login = () => {
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full pl-12 pr-4 py-3 bg-white/20 border border-teal-300/50 focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500/50 rounded-lg backdrop-blur-sm transition-all duration-300"
+                className="w-full pl-12 pr-4 py-3 bg-white/20 border border-teal-300/50 focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500/50 rounded-lg  transition-all duration-300"
                 placeholder="Your password"
                 required
               />

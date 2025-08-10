@@ -13,13 +13,14 @@ const Concord = () => (
     subtopic="Concord"
     pages={pages}
     points={3}
-    quizPath="/quiz-hub/english/quiz-concord"
+    quizPath="/quiz-hub/english-quiz/concord-quiz"
     backPath="/post-utme/english"
-    badges={[
-      { name: "Concord Champion", color: "from-indigo-500 to-indigo-700" },
-      { name: "Grammar Expert", color: "from-purple-500 to-purple-700" },
-      { name: "Verb Master", color: "from-blue-500 to-blue-700" }
-    ]}
+   badges={[
+  { name: "Concord Champion", color: "bg-gradient-to-r from-indigo-500 to-indigo-700", emoji: "🏆", points: 50 },
+  { name: "Grammar Expert", color: "bg-gradient-to-r from-purple-500 to-purple-700", emoji: "📚", points: 30 },
+  { name: "Verb Master", color: "bg-gradient-to-r from-blue-500 to-blue-700", emoji: "✍️", points: 20 }
+]}
+
   />
 );
 

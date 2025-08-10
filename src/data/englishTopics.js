@@ -10,7 +10,7 @@ export const ENGLISH_TOPICS = [
       { name: "Tenses", path: "/post-utme/english/tenses" },
       { name: "Concord", path: "/post-utme/english/concord" },
       { name: "Sentence", path: "/post-utme/english/sentence" },
-      { name: "SentenceTypes", path: "/post-utme/english/sentence-types" },
+      { name: "Sentence-Types", path: "/post-utme/english/sentence-types" },
       { name: "Punctuation", path: "/post-utme/english/punctuation" },
       { name: "Subjunctive", path: "/post-utme/english/subjunctive" },
       { name: "Real", path: "/post-utme/english/real" },

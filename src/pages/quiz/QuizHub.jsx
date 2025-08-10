@@ -12,7 +12,7 @@ import { supabase } from "../../../supabase/supabaseClient";
 import FullNameModal from '../../components/FullNameModal';
 import WelcomeCard from '../../components/WelcomeCard';
 import StatsOverview from '../../components/StatsOverview';
-import SnaptestLoader from "../../components/SnaptestLoader";
+import TestMancerLoader from "../../components/TestMancer";
 
 
 
@@ -137,7 +137,7 @@ const QuizHub = () => {
   };
 
   if (loading) {
-    return <SnaptestLoader />;
+    return <TestMancerLoader />;
   }
 
   return (

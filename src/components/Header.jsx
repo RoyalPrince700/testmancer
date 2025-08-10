@@ -1,4 +1,3 @@
-// Header.jsx
 import React, { useState, useEffect } from "react";
 import { FiMenu, FiX } from "react-icons/fi";
 import { Link, useNavigate } from "react-router-dom";
@@ -8,69 +7,76 @@ import { motion, AnimatePresence } from "framer-motion";
 import LOGO from "../assets/snaptest-logo.png";
 
 export const Header = () => {
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const { isAuthenticated, user } = useAuth(); // Added user from AuthContext
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const { isAuthenticated, user } = useAuth();
   const navigate = useNavigate();
   const [isAdmin, setIsAdmin] = useState(false);
 
-  // Prevent background scroll when menu is open
+  // Prevent background scroll when sidebar is open
   useEffect(() => {
-    document.body.style.overflow = mobileMenuOpen ? "hidden" : "";
-  }, [mobileMenuOpen]);
+    document.body.style.overflow = sidebarOpen ? "hidden" : "";
+  }, [sidebarOpen]);
 
- // Check admin status
-useEffect(() => {
-  const checkAdminStatus = async () => {
-    if (user) {
-      try {
-        const { data, error } = await supabase
-          .from('profiles')
-          .select('is_admin')
-          .eq('id', user.id)
-          .maybeSingle(); // ✅ Correct spelling
+  // Check admin status
+  useEffect(() => {
+    const checkAdminStatus = async () => {
+      if (user) {
+        try {
+          const { data, error } = await supabase
+            .from("profiles")
+            .select("is_admin")
+            .eq("id", user.id)
+            .maybeSingle();
 
-        if (error) throw error;
-
-        if (data?.is_admin) {
-          setIsAdmin(true);
-        } else {
-          setIsAdmin(false); // Optional: explicitly set to false if not admin
+          if (error) throw error;
+          setIsAdmin(!!data?.is_admin);
+        } catch (err) {
+          console.error("Failed to verify admin status:", err);
         }
-      } catch (err) {
-        console.error('Failed to verify admin status:', err);
       }
-    }
-  };
+    };
 
-  checkAdminStatus();
-}, [user]);
-
+    checkAdminStatus();
+  }, [user]);
 
   const handleLogout = async () => {
     await supabase.auth.signOut();
-    setMobileMenuOpen(false);
-    setIsAdmin(false); // Reset admin status on logout
+    setSidebarOpen(false);
+    setIsAdmin(false);
     navigate("/login");
   };
 
-  // Framer variants
-  const menuVariants = {
-    hidden: { y: "-100%" },
-    visible: { y: 0 },
-    exit:   { y: "-100%" }
+  // Sidebar animation
+  const sidebarVariants = {
+    hidden: { x: "-100%" },
+    visible: { x: 0 },
+    exit: { x: "-100%" },
   };
 
   return (
     <>
       <header className="sticky top-0 z-50 border-b border-gray-100 bg-white/80 backdrop-blur-sm">
-        {/* Mobile & Tablet Header */}
+        {/* Mobile Header */}
         <div className="lg:hidden flex items-center justify-between py-4 px-4">
+          {/* Hamburger */}
           <button
-            onClick={() => setMobileMenuOpen(true)}
-            className="text-teal-600 focus:outline-none"
+            onClick={() => setSidebarOpen(true)}
+            className="text-black focus:outline-none"
           >
             <FiMenu className="w-6 h-6" />
           </button>
+          
+          {/* Quick Links */}
+          <div className="flex items-center gap-4">
+            <Link to="/post-utme" className="text-sm font-medium text-black">
+              PostUtme
+            </Link>
+            <Link to="/quiz-hub" className="text-sm font-medium text-black">
+              Quiz Hub
+            </Link>
+          </div>
+
+          {/* Logo */}
           <Link to="/" className="flex items-center gap-2">
             <img src={LOGO} alt="SnapTest" className="h-6 w-6" />
           </Link>
@@ -85,31 +91,22 @@ useEffect(() => {
                   <img src={LOGO} alt="SnapTest" className="h-5 w-18" />
                 </Link>
                 <nav className="flex gap-6 text-gray-600 items-center">
-                  <Link to="/how-it-works" className="hover:text-teal-600 transition-colors">
-                    How It Works
-                  </Link>
-                   <Link to="/about-us" className="hover:text-teal-600 transition-colors">
-                    About Us
-                  </Link>
-                    <Link to="/post-utme" className="hover:text-teal-600 transition-colors">
+                 
+                  <Link to="/post-utme" className="hover:text-teal-600">
                     PostUtme
                   </Link>
-                   <Link to="/quiz-hub" className="hover:text-teal-600 transition-colors">
+                  <Link to="/quiz-hub" className="hover:text-teal-600">
                     Quiz Hub
                   </Link>
-                  
-                  {isAuthenticated && (
-                    <Link to="/my-questions" className="hover:text-teal-600 transition-colors">
-                      My Questions
-                    </Link>
-                  )}
-                  
-                  {/* Admin Dashboard Link - Desktop */}
+                   <Link to="/how-it-works" className="hover:text-teal-600">
+                    How It Works
+                  </Link>
+                  <Link to="/about-us" className="hover:text-teal-600">
+                    About Us
+                  </Link>
+                
                   {isAuthenticated && isAdmin && (
-                    <Link 
-                      to="/admin" 
-                      className="hover:text-teal-600 transition-colors flex items-center gap-1"
-                    >
+                    <Link to="/admin" className="hover:text-teal-600 flex gap-1">
                       <span>Admin</span>
                       <span className="w-2 h-2 bg-teal-600 rounded-full"></span>
                     </Link>
@@ -118,19 +115,16 @@ useEffect(() => {
               </div>
               <div className="flex gap-3">
                 {isAuthenticated ? (
-                  <>
-                  
-                    <button
-                      onClick={handleLogout}
-                      className="bg-teal-600 px-4 py-1.5 rounded-lg text-white font-medium hover:shadow-md transition-all"
-                    >
-                      Logout 
-                    </button>
-                  </>
+                  <button
+                    onClick={handleLogout}
+                    className="bg-teal-600 px-4 py-1.5 rounded-lg text-white font-medium hover:shadow-md"
+                  >
+                    Logout
+                  </button>
                 ) : (
                   <Link
                     to="/login"
-                    className="px-4 py-1.5 rounded-lg border border-teal-600 text-teal-600 font-medium hover:bg-teal-50 transition-colors"
+                    className="px-4 py-1.5 rounded-lg border border-teal-600 text-teal-600 font-medium hover:bg-teal-50"
                   >
                     Login
                   </Link>
@@ -141,105 +135,97 @@ useEffect(() => {
         </div>
       </header>
 
-      {/* Fullscreen Mobile/Tablet Menu */}
+      {/* Sidebar (Mobile) */}
       <AnimatePresence>
-        {mobileMenuOpen && (
+        {sidebarOpen && (
           <motion.div
-            className="fixed inset-0 z-[999] bg-white flex flex-col overflow-auto"
-            variants={menuVariants}
+            className="fixed inset-0 z-[999] flex"
             initial="hidden"
             animate="visible"
             exit="exit"
+            variants={sidebarVariants}
             transition={{ duration: 0.3, ease: "easeInOut" }}
           >
-            {/* Top Bar */}
-            <div className="flex justify-between items-center p-4 border-b shadow-md bg-white">
-              <Link
-                to="/"
-                className="flex items-center gap-2"
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                <img src={LOGO} alt="SnapTest" className="h-6 w-6" />
-              </Link>
-              <button
-                onClick={() => setMobileMenuOpen(false)}
-                className="text-teal-600 focus:outline-none"
-              >
-                <FiX className="w-6 h-6" />
-              </button>
-            </div>
+            {/* Sidebar Panel */}
+            <div className="w-64 bg-white shadow-lg p-6 flex flex-col">
+              <div className="flex justify-between items-center mb-6">
+                <Link to="/" onClick={() => setSidebarOpen(false)}>
+                  <img src={LOGO} alt="SnapTest" className="h-6 w-6" />
+                </Link>
+                <button
+                  onClick={() => setSidebarOpen(false)}
+                  className="text-teal-600"
+                >
+                  <FiX className="w-6 h-6" />
+                </button>
+              </div>
 
-            {/* Menu Content */}
-            <nav className="flex flex-col gap-3 px-6 py-6 text-gray-700">
-              <Link
-                to="/how-it-works"
-                className="hover:text-teal-600 py-2 border-b"
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                How It Works
-              </Link>
+              <nav className="flex flex-col gap-4 text-gray-700">
                 <Link
-                to="/about-us"
-                className="hover:text-teal-600 py-2 border-b"
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                About Us
-              </Link>
+                  to="/how-it-works"
+                  onClick={() => setSidebarOpen(false)}
+                  className="hover:text-teal-600"
+                >
+                  How It Works
+                </Link>
                 <Link
-                to="/post-utme"
-                className="hover:text-teal-600 py-2 border-b"
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                PostUtme
-              </Link>
-               <Link
-                to="/quiz-hub"
-                className="hover:text-teal-600 py-2 border-b"
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                Quiz Hub
-              </Link>
-
-
-              {isAuthenticated ? (
-                <>
-                  <Link
-                    to="/my-questions"
-                    className="hover:text-teal-600 py-2 border-b"
-                    onClick={() => setMobileMenuOpen(false)}
+                  to="/about-us"
+                  onClick={() => setSidebarOpen(false)}
+                  className="hover:text-teal-600"
+                >
+                  About Us
+                </Link>
+                {isAuthenticated && (
+                  <div className="flex flex-col gap-4">
+                   <Link
+                    to="/profile"
+                    onClick={() => setSidebarOpen(false)}
+                    className="hover:text-teal-600"
                   >
-                    My Questions
+                    Profile
                   </Link>
+                  </div>
+                 
                   
-                  {/* Admin Dashboard Link - Mobile */}
-                  {isAdmin && (
-                    <Link
-                      to="/admin"
-                      className="hover:text-teal-600 py-2 border-b flex items-center gap-2"
-                      onClick={() => setMobileMenuOpen(false)}
-                    >
-                      Admin Dashboard
-                      <span className="w-2 h-2 bg-teal-600 rounded-full"></span>
-                    </Link>
-                  )}
-                  
+                )}
+                {isAuthenticated && isAdmin && (
+                  <Link
+                    to="/admin"
+                    onClick={() => setSidebarOpen(false)}
+                    className="hover:text-teal-600 flex gap-2"
+                  >
+                    Admin Dashboard
+                    <span className="w-2 h-2 bg-teal-600 rounded-full"></span>
+                  </Link>
+                )}
+              </nav>
+
+              {/* Auth Button */}
+              <div className="mt-auto pt-6">
+                {isAuthenticated ? (
                   <button
                     onClick={handleLogout}
-                    className="mt-3 text-left text-red-500 hover:text-red-600 font-medium"
+                    className="w-full bg-red-500 text-white py-2 rounded-lg hover:bg-red-600"
                   >
                     Logout
                   </button>
-                </>
-              ) : (
-                <Link
-                  to="/login"
-                  className="mt-4 px-4 py-2 rounded-lg border border-teal-600 text-teal-600 font-medium hover:bg-teal-50 text-left"
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  Login
-                </Link>
-              )}
-            </nav>
+                ) : (
+                  <Link
+                    to="/login"
+                    onClick={() => setSidebarOpen(false)}
+                    className="block w-full text-center border border-teal-600 text-teal-600 py-2 rounded-lg hover:bg-teal-50"
+                  >
+                    Login
+                  </Link>
+                )}
+              </div>
+            </div>
+
+            {/* Overlay (click to close) */}
+            <div
+              className="flex-1 bg-black/40"
+              onClick={() => setSidebarOpen(false)}
+            />
           </motion.div>
         )}
       </AnimatePresence>

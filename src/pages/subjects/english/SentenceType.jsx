@@ -10,7 +10,7 @@ const SentenceTypes = () => (
     moduleId="sentence-types"
     subject="English"
     topic="grammatical"
-    subtopic="SentenceTypes"
+    subtopic="Sentence-Types"
     pages={pages}
     points={3}
     quizPath="/quiz-hub/english/quiz-sentence-types"

@@ -1,6 +1,6 @@
-// src/pages/TermsPolicy.jsx
 import React, { useState } from 'react';
-import { FiShield, FiFileText, FiLock, FiUser, FiDatabase, FiMail, FiCheck } from 'react-icons/fi';
+import { FiShield, FiFileText, FiLock, FiUser, FiDatabase, FiMail, FiCheck, FiAward, FiBook, FiBarChart2 } from 'react-icons/fi';
+import { motion } from 'framer-motion';
 
 const TermsPolicy = () => {
   const [activeSection, setActiveSection] = useState('terms');
@@ -11,153 +11,224 @@ const TermsPolicy = () => {
     { id: 'cookies', label: 'Cookie Policy', icon: <FiShield /> }
   ];
 
+  // Animation variants
+  const cardVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.5 } }
+  };
+
   return (
-    <div className="bg-gradient-to-br from-indigo-50 to-white min-h-screen">
+    <div className="bg-gradient-to-br from-teal-50 to-blue-50 min-h-screen">
       {/* Hero Section */}
-      <section className="py-16 bg-gradient-to-br from-indigo-600 to-indigo-800 text-white">
-        <div className="container mx-auto px-4 max-w-6xl text-center">
-          <h1 className="text-4xl md:text-5xl font-bold mb-6">Terms & Policies</h1>
-          <p className="text-xl max-w-3xl mx-auto mb-6">
-            Understand how we protect your data and govern our services
-          </p>
-          <div className="flex justify-center">
-            <div className="w-20 h-1 bg-indigo-300 rounded-full"></div>
-          </div>
+      <section className="py-20 bg-gradient-to-br from-teal-600 to-blue-700 text-white relative overflow-hidden">
+        <div className="absolute inset-0 opacity-10">
+          <div className="absolute top-20 left-1/4 w-32 h-32 rounded-full bg-teal-400/30"></div>
+          <div className="absolute bottom-20 right-1/4 w-40 h-40 rounded-full bg-blue-400/20"></div>
+        </div>
+        
+        <div className="container mx-auto px-4 max-w-6xl text-center relative z-10">
+          <motion.h1 
+            className="text-4xl md:text-5xl font-bold mb-6"
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+          >
+            TestMancer Policies
+          </motion.h1>
+          <motion.p 
+            className="text-xl max-w-3xl mx-auto mb-6"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.2, duration: 0.6 }}
+          >
+            Your trust is our top priority. Learn how we protect your data and govern our learning platform.
+          </motion.p>
+          <motion.div
+            className="flex justify-center"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.4, duration: 0.6 }}
+          >
+            <div className="w-20 h-1 bg-teal-300 rounded-full"></div>
+          </motion.div>
         </div>
       </section>
 
       {/* Main Content */}
       <section className="py-16">
         <div className="container mx-auto px-4 max-w-6xl">
-          <div className="flex flex-col lg:flex-row gap-10">
+          <div className="flex flex-col lg:flex-row gap-8">
             {/* Side Navigation */}
             <div className="lg:w-1/4">
-              <div className="bg-white rounded-2xl shadow-lg p-6 sticky top-6">
-                <h2 className="text-xl font-bold text-gray-900 mb-6 flex items-center gap-2">
-                  <FiShield className="text-indigo-600" />
-                  Our Policies
+              <motion.div 
+                className="bg-white rounded-2xl shadow-xl p-6 sticky top-6 border border-teal-100/50"
+                variants={cardVariants}
+                initial="hidden"
+                animate="visible"
+              >
+                <h2 className="text-xl font-bold text-gray-900 mb-6 flex items-center gap-3">
+                  <div className="bg-gradient-to-br from-teal-500 to-blue-500 p-2 rounded-xl">
+                    <FiShield className="text-white" />
+                  </div>
+                  <span>Your Policy Guide</span>
                 </h2>
                 
                 <nav className="space-y-2">
                   {sections.map((section) => (
-                    <button
+                    <motion.button
                       key={section.id}
                       onClick={() => setActiveSection(section.id)}
-                      className={`w-full text-left px-4 py-3 rounded-lg flex items-center gap-3 transition ${
+                      className={`w-full text-left px-4 py-3 rounded-xl flex items-center gap-3 transition-all ${
                         activeSection === section.id
-                          ? 'bg-indigo-100 text-indigo-700 font-medium'
-                          : 'text-gray-600 hover:bg-gray-50'
+                          ? 'bg-gradient-to-r from-teal-50 to-blue-50 text-teal-700 font-medium border border-teal-200 shadow-sm'
+                          : 'text-gray-600 hover:bg-gray-50 hover:shadow-sm'
                       }`}
+                      whileHover={{ x: 5 }}
+                      transition={{ type: 'spring', stiffness: 300 }}
                     >
-                      <span className="text-lg">{section.icon}</span>
+                      <span className={`text-lg ${activeSection === section.id ? 'text-teal-600' : 'text-gray-500'}`}>
+                        {section.icon}
+                      </span>
                       {section.label}
-                    </button>
+                    </motion.button>
                   ))}
                 </nav>
                 
-                <div className="mt-8 p-4 bg-indigo-50 rounded-lg border border-indigo-100">
-                  <h3 className="font-bold text-gray-900 mb-2">Last Updated</h3>
-                  <p className="text-gray-600">August 4, 2025</p>
+                <div className="mt-8 p-4 bg-teal-50/50 rounded-xl border border-teal-100">
+                  <h3 className="font-bold text-gray-900 mb-2 flex items-center gap-2">
+                    <FiAward className="text-teal-600" />
+                    Last Updated
+                  </h3>
+                  <p className="text-gray-600">August 10, 2025</p>
+                  <p className="text-sm text-gray-500 mt-2">Version 2.1</p>
                 </div>
-              </div>
+              </motion.div>
             </div>
             
             {/* Content Area */}
             <div className="lg:w-3/4">
-              <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
+              <motion.div 
+                className="bg-white rounded-2xl shadow-xl overflow-hidden border border-teal-100/50"
+                variants={cardVariants}
+                initial="hidden"
+                animate="visible"
+                transition={{ delay: 0.1 }}
+              >
                 {/* Terms of Service */}
                 {activeSection === 'terms' && (
                   <div className="p-8">
                     <div className="flex items-center gap-4 mb-8">
-                      <div className="bg-gradient-to-br from-indigo-500 to-indigo-700 rounded-2xl p-4">
+                      <div className="bg-gradient-to-br from-teal-500 to-blue-500 rounded-2xl p-4 shadow-md">
                         <FiFileText className="text-white text-2xl" />
                       </div>
                       <div>
                         <h2 className="text-3xl font-bold text-gray-900">Terms of Service</h2>
-                        <p className="text-gray-600">Effective: August 4, 2025</p>
+                        <p className="text-gray-600">Effective: August 10, 2025</p>
                       </div>
                     </div>
                     
                     <div className="prose max-w-none">
                       <div className="mb-10">
-                        <h3 className="text-xl font-bold text-gray-900 mb-4">1. Acceptance of Terms</h3>
+                        <h3 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-3">
+                          <div className="w-8 h-8 rounded-lg bg-teal-100 flex items-center justify-center">
+                            <span className="text-teal-600 font-bold">1</span>
+                          </div>
+                          Acceptance of Terms
+                        </h3>
                         <p className="text-gray-700 mb-4">
-                          By accessing or using SnapTest ("Service"), you agree to be bound by these Terms of Service. 
-                          If you do not agree to all the terms, do not use our Service.
+                          By accessing or using TestMancer ("Platform"), you agree to be bound by these Terms. 
+                          If you don't agree, you may not use our gamified learning platform.
                         </p>
                       </div>
                       
                       <div className="mb-10">
-                        <h3 className="text-xl font-bold text-gray-900 mb-4">2. Description of Service</h3>
+                        <h3 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-3">
+                          <div className="w-8 h-8 rounded-lg bg-blue-100 flex items-center justify-center">
+                            <span className="text-blue-600 font-bold">2</span>
+                          </div>
+                          Platform Description
+                        </h3>
                         <p className="text-gray-700 mb-4">
-                          SnapTest provides an AI-powered platform that allows users to generate practice questions from 
-                          various content sources including text, documents, and images.
+                          TestMancer provides an interactive learning platform where users can:
                         </p>
-                      </div>
-                      
-                      <div className="mb-10">
-                        <h3 className="text-xl font-bold text-gray-900 mb-4">3. User Accounts</h3>
-                        <p className="text-gray-700 mb-4">
-                          To access certain features, you must create an account. You are responsible for maintaining 
-                          the confidentiality of your account and password.
-                        </p>
-                        <ul className="space-y-2 mb-4">
-                          <li className="flex items-start">
-                            <FiCheck className="text-green-500 mt-1 mr-2 flex-shrink-0" />
-                            <span>You must be at least 13 years old to use our Service</span>
+                        <ul className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                          <li className="flex items-start gap-3 bg-teal-50/50 p-3 rounded-lg">
+                            <FiBook className="text-teal-600 mt-1 flex-shrink-0" />
+                            <span>Create and take knowledge tests</span>
                           </li>
-                          <li className="flex items-start">
-                            <FiCheck className="text-green-500 mt-1 mr-2 flex-shrink-0" />
-                            <span>You are responsible for all activities under your account</span>
+                          <li className="flex items-start gap-3 bg-blue-50/50 p-3 rounded-lg">
+                            <FiAward className="text-blue-600 mt-1 flex-shrink-0" />
+                            <span>Earn badges and achievements</span>
                           </li>
-                          <li className="flex items-start">
-                            <FiCheck className="text-green-500 mt-1 mr-2 flex-shrink-0" />
-                            <span>You must provide accurate and complete information</span>
+                          <li className="flex items-start gap-3 bg-teal-50/50 p-3 rounded-lg">
+                            <FiBarChart2 className="text-teal-600 mt-1 flex-shrink-0" />
+                            <span>Track learning progress</span>
+                          </li>
+                          <li className="flex items-start gap-3 bg-blue-50/50 p-3 rounded-lg">
+                            <FiUser className="text-blue-600 mt-1 flex-shrink-0" />
+                            <span>Compete with other learners</span>
                           </li>
                         </ul>
                       </div>
                       
                       <div className="mb-10">
-                        <h3 className="text-xl font-bold text-gray-900 mb-4">4. User Content</h3>
+                        <h3 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-3">
+                          <div className="w-8 h-8 rounded-lg bg-teal-100 flex items-center justify-center">
+                            <span className="text-teal-600 font-bold">3</span>
+                          </div>
+                          User Accounts
+                        </h3>
                         <p className="text-gray-700 mb-4">
-                          You retain ownership of any content you submit to the Service. By uploading content, you grant 
-                          SnapTest a license to use, reproduce, and process your content solely to provide the Service.
+                          To access all features, you must create an account. Keep your credentials secure!
                         </p>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                          <div className="bg-teal-50/50 p-4 rounded-lg border border-teal-100">
+                            <div className="flex items-center gap-3 mb-2">
+                              <FiCheck className="text-teal-600" />
+                              <h4 className="font-bold text-gray-900">Age Requirement</h4>
+                            </div>
+                            <p className="text-gray-600">Must be at least 13 years old to use our Platform</p>
+                          </div>
+                          <div className="bg-blue-50/50 p-4 rounded-lg border border-blue-100">
+                            <div className="flex items-center gap-3 mb-2">
+                              <FiCheck className="text-blue-600" />
+                              <h4 className="font-bold text-gray-900">Account Security</h4>
+                            </div>
+                            <p className="text-gray-600">You're responsible for all activities under your account</p>
+                          </div>
+                        </div>
                       </div>
                       
                       <div className="mb-10">
-                        <h3 className="text-xl font-bold text-gray-900 mb-4">5. Prohibited Conduct</h3>
+                        <h3 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-3">
+                          <div className="w-8 h-8 rounded-lg bg-blue-100 flex items-center justify-center">
+                            <span className="text-blue-600 font-bold">4</span>
+                          </div>
+                          Prohibited Conduct
+                        </h3>
                         <p className="text-gray-700 mb-4">
-                          You agree not to engage in any of the following prohibited activities:
+                          Keep TestMancer a positive learning environment by avoiding:
                         </p>
-                        <ul className="space-y-2 mb-4">
-                          <li className="flex items-start">
-                            <div className="w-5 h-5 rounded-full bg-red-100 flex items-center justify-center mr-2 mt-0.5">
-                              <span className="text-red-600 text-xs font-bold">!</span>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          <div className="bg-red-50/50 p-4 rounded-lg border border-red-100">
+                            <div className="flex items-center gap-3 mb-2">
+                              <div className="w-6 h-6 rounded-full bg-red-100 flex items-center justify-center">
+                                <span className="text-red-600 text-xs font-bold">!</span>
+                              </div>
+                              <h4 className="font-bold text-gray-900">Cheating</h4>
                             </div>
-                            <span>Violating laws or infringing intellectual property rights</span>
-                          </li>
-                          <li className="flex items-start">
-                            <div className="w-5 h-5 rounded-full bg-red-100 flex items-center justify-center mr-2 mt-0.5">
-                              <span className="text-red-600 text-xs font-bold">!</span>
+                            <p className="text-gray-600">No automated bots or unfair advantages</p>
+                          </div>
+                          <div className="bg-red-50/50 p-4 rounded-lg border border-red-100">
+                            <div className="flex items-center gap-3 mb-2">
+                              <div className="w-6 h-6 rounded-full bg-red-100 flex items-center justify-center">
+                                <span className="text-red-600 text-xs font-bold">!</span>
+                              </div>
+                              <h4 className="font-bold text-gray-900">Harassment</h4>
                             </div>
-                            <span>Uploading malicious code or interfering with Service operations</span>
-                          </li>
-                          <li className="flex items-start">
-                            <div className="w-5 h-5 rounded-full bg-red-100 flex items-center justify-center mr-2 mt-0.5">
-                              <span className="text-red-600 text-xs font-bold">!</span>
-                            </div>
-                            <span>Attempting unauthorized access to other accounts or systems</span>
-                          </li>
-                        </ul>
-                      </div>
-                      
-                      <div className="mb-10">
-                        <h3 className="text-xl font-bold text-gray-900 mb-4">6. Termination</h3>
-                        <p className="text-gray-700 mb-4">
-                          We may terminate or suspend your access to the Service immediately, without prior notice, 
-                          for any reason, including violation of these Terms.
-                        </p>
+                            <p className="text-gray-600">Respect all community members</p>
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -167,176 +238,135 @@ const TermsPolicy = () => {
                 {activeSection === 'privacy' && (
                   <div className="p-8">
                     <div className="flex items-center gap-4 mb-8">
-                      <div className="bg-gradient-to-br from-indigo-500 to-indigo-700 rounded-2xl p-4">
+                      <div className="bg-gradient-to-br from-teal-500 to-blue-500 rounded-2xl p-4 shadow-md">
                         <FiLock className="text-white text-2xl" />
                       </div>
                       <div>
                         <h2 className="text-3xl font-bold text-gray-900">Privacy Policy</h2>
-                        <p className="text-gray-600">Effective: August 4, 2025</p>
+                        <p className="text-gray-600">Effective: August 10, 2025</p>
                       </div>
                     </div>
                     
                     <div className="prose max-w-none">
                       <div className="mb-10">
-                        <h3 className="text-xl font-bold text-gray-900 mb-4">1. Information We Collect</h3>
+                        <h3 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-3">
+                          <div className="w-8 h-8 rounded-lg bg-teal-100 flex items-center justify-center">
+                            <span className="text-teal-600 font-bold">1</span>
+                          </div>
+                          Information We Collect
+                        </h3>
                         <p className="text-gray-700 mb-4">
-                          We collect information to provide better services to our users. The types of information we collect include:
+                          We collect data to enhance your learning experience:
                         </p>
                         
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-                          <div className="bg-indigo-50 rounded-xl p-5 border border-indigo-100">
+                          <div className="bg-teal-50/50 rounded-xl p-5 border border-teal-100">
                             <div className="flex items-center gap-3 mb-3">
-                              <FiUser className="text-indigo-600 text-xl" />
-                              <h4 className="font-bold text-gray-900">Personal Information</h4>
+                              <FiUser className="text-teal-600 text-xl" />
+                              <h4 className="font-bold text-gray-900">Profile Data</h4>
                             </div>
                             <p className="text-gray-600">
-                              When you create an account, we collect your email address and password.
+                              Username, avatar, and learning preferences
                             </p>
                           </div>
                           
-                          <div className="bg-indigo-50 rounded-xl p-5 border border-indigo-100">
+                          <div className="bg-blue-50/50 rounded-xl p-5 border border-blue-100">
                             <div className="flex items-center gap-3 mb-3">
-                              <FiDatabase className="text-indigo-600 text-xl" />
-                              <h4 className="font-bold text-gray-900">Content Data</h4>
+                              <FiDatabase className="text-blue-600 text-xl" />
+                              <h4 className="font-bold text-gray-900">Progress Data</h4>
                             </div>
                             <p className="text-gray-600">
-                              We process content you upload to generate questions, but we don't store it longer than necessary.
+                              Test results, badges earned, and skill levels
                             </p>
                           </div>
                           
-                          <div className="bg-indigo-50 rounded-xl p-5 border border-indigo-100">
+                          <div className="bg-teal-50/50 rounded-xl p-5 border border-teal-100">
                             <div className="flex items-center gap-3 mb-3">
-                              <FiMail className="text-indigo-600 text-xl" />
-                              <h4 className="font-bold text-gray-900">Communication Data</h4>
+                              <FiMail className="text-teal-600 text-xl" />
+                              <h4 className="font-bold text-gray-900">Contact Info</h4>
                             </div>
                             <p className="text-gray-600">
-                              When you contact us, we collect your messages and contact information.
+                              Email for account verification and notifications
                             </p>
                           </div>
                           
-                          <div className="bg-indigo-50 rounded-xl p-5 border border-indigo-100">
+                          <div className="bg-blue-50/50 rounded-xl p-5 border border-blue-100">
                             <div className="flex items-center gap-3 mb-3">
-                              <FiShield className="text-indigo-600 text-xl" />
-                              <h4 className="font-bold text-gray-900">Usage Data</h4>
+                              <FiAward className="text-blue-600 text-xl" />
+                              <h4 className="font-bold text-gray-900">Achievements</h4>
                             </div>
                             <p className="text-gray-600">
-                              We collect information about how you interact with our Service.
+                              Badges, streaks, and leaderboard positions
                             </p>
                           </div>
                         </div>
                       </div>
                       
                       <div className="mb-10">
-                        <h3 className="text-xl font-bold text-gray-900 mb-4">2. How We Use Information</h3>
-                        <p className="text-gray-700 mb-4">
-                          We use the information we collect for the following purposes:
-                        </p>
-                        <ul className="space-y-3 mb-4">
-                          <li className="flex items-start">
-                            <FiCheck className="text-green-500 mt-1 mr-2 flex-shrink-0" />
-                            <span>To provide, maintain, and improve our Service</span>
-                          </li>
-                          <li className="flex items-start">
-                            <FiCheck className="text-green-500 mt-1 mr-2 flex-shrink-0" />
-                            <span>To personalize your experience and content</span>
-                          </li>
-                          <li className="flex items-start">
-                            <FiCheck className="text-green-500 mt-1 mr-2 flex-shrink-0" />
-                            <span>To communicate with you about updates and support</span>
-                          </li>
-                          <li className="flex items-start">
-                            <FiCheck className="text-green-500 mt-1 mr-2 flex-shrink-0" />
-                            <span>To ensure security and prevent fraud</span>
-                          </li>
-                        </ul>
+                        <h3 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-3">
+                          <div className="w-8 h-8 rounded-lg bg-blue-100 flex items-center justify-center">
+                            <span className="text-blue-600 font-bold">2</span>
+                          </div>
+                          How We Use Information
+                        </h3>
+                        <div className="bg-gradient-to-r from-teal-50 to-blue-50 rounded-xl p-6 mb-6">
+                          <ul className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <li className="flex items-start gap-3">
+                              <FiCheck className="text-teal-600 mt-1 flex-shrink-0" />
+                              <span>Personalize your learning journey</span>
+                            </li>
+                            <li className="flex items-start gap-3">
+                              <FiCheck className="text-blue-600 mt-1 flex-shrink-0" />
+                              <span>Track and visualize your progress</span>
+                            </li>
+                            <li className="flex items-start gap-3">
+                              <FiCheck className="text-teal-600 mt-1 flex-shrink-0" />
+                              <span>Award achievements and badges</span>
+                            </li>
+                            <li className="flex items-start gap-3">
+                              <FiCheck className="text-blue-600 mt-1 flex-shrink-0" />
+                              <span>Improve our educational content</span>
+                            </li>
+                          </ul>
+                        </div>
                       </div>
                       
                       <div className="mb-10">
-                        <h3 className="text-xl font-bold text-gray-900 mb-4">3. Information Sharing</h3>
-                        <p className="text-gray-700 mb-4">
-                          We do not sell your personal information. We may share information in the following limited circumstances:
-                        </p>
-                        <ul className="space-y-2 mb-4">
-                          <li className="flex items-start">
-                            <div className="w-5 h-5 rounded-full bg-indigo-100 flex items-center justify-center mr-2 mt-0.5">
-                              <span className="text-indigo-700 text-xs font-bold">i</span>
-                            </div>
-                            <span>With service providers who assist in operating our Service</span>
-                          </li>
-                          <li className="flex items-start">
-                            <div className="w-5 h-5 rounded-full bg-indigo-100 flex items-center justify-center mr-2 mt-0.5">
-                              <span className="text-indigo-700 text-xs font-bold">i</span>
-                            </div>
-                            <span>When required by law or legal process</span>
-                          </li>
-                          <li className="flex items-start">
-                            <div className="w-5 h-5 rounded-full bg-indigo-100 flex items-center justify-center mr-2 mt-0.5">
-                              <span className="text-indigo-700 text-xs font-bold">i</span>
-                            </div>
-                            <span>To protect the rights, property, or safety of SnapTest or others</span>
-                          </li>
-                        </ul>
-                      </div>
-                      
-                      <div className="mb-10">
-                        <h3 className="text-xl font-bold text-gray-900 mb-4">4. Data Security</h3>
-                        <p className="text-gray-700 mb-4">
-                          We implement security measures designed to protect your information:
-                        </p>
-                        <div className="bg-indigo-50 rounded-xl p-5 mb-4">
-                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <div className="flex items-center gap-3">
-                              <div className="w-10 h-10 rounded-lg bg-indigo-100 flex items-center justify-center">
-                                <FiLock className="text-indigo-600" />
+                        <h3 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-3">
+                          <div className="w-8 h-8 rounded-lg bg-teal-100 flex items-center justify-center">
+                            <span className="text-teal-600 font-bold">3</span>
+                          </div>
+                          Data Security
+                        </h3>
+                        <div className="bg-white rounded-xl p-6 border border-teal-100 shadow-sm">
+                          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                            <div className="flex flex-col items-center text-center">
+                              <div className="w-12 h-12 rounded-xl bg-teal-100 flex items-center justify-center mb-2">
+                                <FiLock className="text-teal-600" />
                               </div>
-                              <span>End-to-end encryption for data in transit</span>
+                              <span className="text-sm font-medium">Encryption</span>
                             </div>
-                            <div className="flex items-center gap-3">
-                              <div className="w-10 h-10 rounded-lg bg-indigo-100 flex items-center justify-center">
-                                <FiShield className="text-indigo-600" />
+                            <div className="flex flex-col items-center text-center">
+                              <div className="w-12 h-12 rounded-xl bg-blue-100 flex items-center justify-center mb-2">
+                                <FiShield className="text-blue-600" />
                               </div>
-                              <span>Regular security audits</span>
+                              <span className="text-sm font-medium">Access Controls</span>
                             </div>
-                            <div className="flex items-center gap-3">
-                              <div className="w-10 h-10 rounded-lg bg-indigo-100 flex items-center justify-center">
-                                <FiDatabase className="text-indigo-600" />
+                            <div className="flex flex-col items-center text-center">
+                              <div className="w-12 h-12 rounded-xl bg-teal-100 flex items-center justify-center mb-2">
+                                <FiDatabase className="text-teal-600" />
                               </div>
-                              <span>Secure storage with access controls</span>
+                              <span className="text-sm font-medium">Secure Storage</span>
                             </div>
-                            <div className="flex items-center gap-3">
-                              <div className="w-10 h-10 rounded-lg bg-indigo-100 flex items-center justify-center">
-                                <FiUser className="text-indigo-600" />
+                            <div className="flex flex-col items-center text-center">
+                              <div className="w-12 h-12 rounded-xl bg-blue-100 flex items-center justify-center mb-2">
+                                <FiUser className="text-blue-600" />
                               </div>
-                              <span>Limited employee access to user data</span>
+                              <span className="text-sm font-medium">Privacy Training</span>
                             </div>
                           </div>
                         </div>
                       </div>
-                      
-                      {/* <div className="mb-10">
-                        <h3 className="text-xl font-bold text-gray-900 mb-4">5. Your Rights</h3>
-                        <p className="text-gray-700 mb-4">
-                          You have certain rights regarding your personal information:
-                        </p>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                          <div className="bg-white border border-indigo-100 rounded-lg p-4">
-                            <h4 className="font-bold text-gray-900 mb-2">Access & Correction</h4>
-                            <p className="text-gray-600">View and update your account information</p>
-                          </div>
-                          <div className="bg-white border border-indigo-100 rounded-lg p-4">
-                            <h4 className="font-bold text-gray-900 mb-2">Data Portability</h4>
-                            <p className="text-gray-600">Request a copy of your data</p>
-                          </div>
-                          <div className="bg-white border border-indigo-100 rounded-lg p-4">
-                            <h4 className="font-bold text-gray-900 mb-2">Deletion</h4>
-                            <p className="text-gray-600">Request deletion of your account and data</p>
-                          </div>
-                          <div className="bg-white border border-indigo-100 rounded-lg p-4">
-                            <h4 className="font-bold text-gray-900 mb-2">Opt-Out</h4>
-                            <p className="text-gray-600">Control marketing communications</p>
-                          </div>
-                        </div>
-                      </div> */}
                     </div>
                   </div>
                 )}
@@ -345,149 +375,113 @@ const TermsPolicy = () => {
                 {activeSection === 'cookies' && (
                   <div className="p-8">
                     <div className="flex items-center gap-4 mb-8">
-                      <div className="bg-gradient-to-br from-indigo-500 to-indigo-700 rounded-2xl p-4">
+                      <div className="bg-gradient-to-br from-teal-500 to-blue-500 rounded-2xl p-4 shadow-md">
                         <FiShield className="text-white text-2xl" />
                       </div>
                       <div>
                         <h2 className="text-3xl font-bold text-gray-900">Cookie Policy</h2>
-                        <p className="text-gray-600">Effective: August 4, 2025</p>
+                        <p className="text-gray-600">Effective: August 10, 2025</p>
                       </div>
                     </div>
                     
                     <div className="prose max-w-none">
                       <div className="mb-10">
-                        <h3 className="text-xl font-bold text-gray-900 mb-4">1. What Are Cookies?</h3>
-                        <p className="text-gray-700 mb-4">
-                          Cookies are small text files stored on your device when you visit websites. 
-                          They help websites remember information about your visit.
-                        </p>
+                        <h3 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-3">
+                          <div className="w-8 h-8 rounded-lg bg-blue-100 flex items-center justify-center">
+                            <span className="text-blue-600 font-bold">1</span>
+                          </div>
+                          Essential Cookies
+                        </h3>
+                        <div className="bg-blue-50/50 rounded-xl p-5 mb-6">
+                          <p className="text-gray-700 mb-4">
+                            These cookies are necessary for TestMancer to function:
+                          </p>
+                          <ul className="space-y-3">
+                            <li className="flex items-start gap-3">
+                              <div className="w-6 h-6 rounded-full bg-blue-100 flex items-center justify-center mt-0.5 flex-shrink-0">
+                                <span className="text-blue-600 text-xs font-bold">S</span>
+                              </div>
+                              <span>Session management for your learning progress</span>
+                            </li>
+                            <li className="flex items-start gap-3">
+                              <div className="w-6 h-6 rounded-full bg-blue-100 flex items-center justify-center mt-0.5 flex-shrink-0">
+                                <span className="text-blue-600 text-xs font-bold">L</span>
+                              </div>
+                              <span>Remembering your login state</span>
+                            </li>
+                          </ul>
+                        </div>
                       </div>
                       
                       <div className="mb-10">
-                        <h3 className="text-xl font-bold text-gray-900 mb-4">2. How We Use Cookies</h3>
-                        <p className="text-gray-700 mb-4">
-                          We use cookies for the following purposes:
-                        </p>
-                        
+                        <h3 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-3">
+                          <div className="w-8 h-8 rounded-lg bg-teal-100 flex items-center justify-center">
+                            <span className="text-teal-600 font-bold">2</span>
+                          </div>
+                          Learning Experience Cookies
+                        </h3>
                         <div className="overflow-x-auto">
-                          <table className="min-w-full border border-indigo-100">
+                          <table className="min-w-full border border-teal-100">
                             <thead>
-                              <tr className="bg-indigo-50">
+                              <tr className="bg-teal-50">
+                                <th className="py-3 px-4 text-left text-gray-700 font-bold">Cookie Type</th>
                                 <th className="py-3 px-4 text-left text-gray-700 font-bold">Purpose</th>
-                                <th className="py-3 px-4 text-left text-gray-700 font-bold">Description</th>
                                 <th className="py-3 px-4 text-left text-gray-700 font-bold">Example</th>
                               </tr>
                             </thead>
                             <tbody>
-                              <tr className="border-b border-indigo-100">
-                                <td className="py-3 px-4 font-medium">Essential</td>
-                                <td className="py-3 px-4">Required for site functionality</td>
-                                <td className="py-3 px-4">Session management, security</td>
-                              </tr>
-                              <tr className="border-b border-indigo-100 bg-white">
+                              <tr className="border-b border-teal-100">
                                 <td className="py-3 px-4 font-medium">Preferences</td>
-                                <td className="py-3 px-4">Remember your settings</td>
-                                <td className="py-3 px-4">Language preference, theme</td>
+                                <td className="py-3 px-4">Enhance your learning</td>
+                                <td className="py-3 px-4">Theme, font size</td>
                               </tr>
-                              <tr className="border-b border-indigo-100">
-                                <td className="py-3 px-4 font-medium">Analytics</td>
-                                <td className="py-3 px-4">Improve our Service</td>
-                                <td className="py-3 px-4">Usage patterns, popular features</td>
+                              <tr className="border-b border-teal-100 bg-white">
+                                <td className="py-3 px-4 font-medium">Performance</td>
+                                <td className="py-3 px-4">Track progress</td>
+                                <td className="py-3 px-4">Test attempts, time spent</td>
                               </tr>
-                              <tr className="bg-white">
-                                <td className="py-3 px-4 font-medium">Marketing</td>
-                                <td className="py-3 px-4">Relevant advertising</td>
-                                <td className="py-3 px-4">Campaign performance</td>
+                              <tr className="border-b border-teal-100">
+                                <td className="py-3 px-4 font-medium">Gamification</td>
+                                <td className="py-3 px-4">Reward achievements</td>
+                                <td className="py-3 px-4">Streaks, badges</td>
                               </tr>
                             </tbody>
                           </table>
                         </div>
                       </div>
-                      
-                      <div className="mb-10">
-                        <h3 className="text-xl font-bold text-gray-900 mb-4">3. Managing Cookies</h3>
-                        <p className="text-gray-700 mb-4">
-                          You can control cookies through your browser settings. However, disabling essential cookies may affect site functionality.
-                        </p>
-                        
-                        <div className="bg-indigo-50 rounded-xl p-5 mb-4">
-                          <h4 className="font-bold text-gray-900 mb-3">Browser Controls:</h4>
-                          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                            <a href="#" className="bg-white rounded-lg p-3 border border-indigo-100 hover:shadow transition flex items-center gap-2">
-                              <div className="w-8 h-8 rounded-md bg-blue-100 flex items-center justify-center">
-                                <span className="text-blue-700 font-bold text-xs">C</span>
-                              </div>
-                              Chrome Settings
-                            </a>
-                            <a href="#" className="bg-white rounded-lg p-3 border border-indigo-100 hover:shadow transition flex items-center gap-2">
-                              <div className="w-8 h-8 rounded-md bg-orange-100 flex items-center justify-center">
-                                <span className="text-orange-700 font-bold text-xs">F</span>
-                              </div>
-                              Firefox Settings
-                            </a>
-                            <a href="#" className="bg-white rounded-lg p-3 border border-indigo-100 hover:shadow transition flex items-center gap-2">
-                              <div className="w-8 h-8 rounded-md bg-blue-100 flex items-center justify-center">
-                                <span className="text-blue-700 font-bold text-xs">S</span>
-                              </div>
-                              Safari Settings
-                            </a>
-                          </div>
-                        </div>
-                      </div>
-                      
-                      <div className="mb-10">
-                        <h3 className="text-xl font-bold text-gray-900 mb-4">4. Third-Party Cookies</h3>
-                        <p className="text-gray-700 mb-4">
-                          We may use third-party services that set their own cookies to provide features such as:
-                        </p>
-                        <ul className="space-y-2 mb-4">
-                          <li className="flex items-start">
-                            <div className="w-5 h-5 rounded-full bg-indigo-100 flex items-center justify-center mr-2 mt-0.5">
-                              <span className="text-indigo-700 text-xs font-bold">i</span>
-                            </div>
-                            <span>Analytics (Google Analytics)</span>
-                          </li>
-                          <li className="flex items-start">
-                            <div className="w-5 h-5 rounded-full bg-indigo-100 flex items-center justify-center mr-2 mt-0.5">
-                              <span className="text-indigo-700 text-xs font-bold">i</span>
-                            </div>
-                            <span>Advertising (Google Ads)</span>
-                          </li>
-                          <li className="flex items-start">
-                            <div className="w-5 h-5 rounded-full bg-indigo-100 flex items-center justify-center mr-2 mt-0.5">
-                              <span className="text-indigo-700 text-xs font-bold">i</span>
-                            </div>
-                            <span>Video embedding (YouTube)</span>
-                          </li>
-                        </ul>
-                        <p className="text-gray-700">
-                          These third parties have their own privacy policies. We recommend reviewing them for more information.
-                        </p>
-                      </div>
                     </div>
                   </div>
                 )}
-              </div>
+              </motion.div>
               
               {/* Contact Card */}
-              <div className="bg-gradient-to-br from-indigo-500 to-indigo-700 rounded-2xl p-8 mt-10 text-white">
+              <motion.div 
+                className="bg-gradient-to-br from-teal-600 to-blue-600 rounded-2xl p-8 mt-10 text-white shadow-xl"
+                variants={cardVariants}
+                initial="hidden"
+                animate="visible"
+                transition={{ delay: 0.2 }}
+              >
                 <div className="flex flex-col md:flex-row items-center gap-8">
                   <div className="flex-1">
-                    <h3 className="text-2xl font-bold mb-4">Questions about our policies?</h3>
-                    <p className="text-indigo-100">
-                      Contact our support team for clarification on any policy or to exercise your data rights.
+                    <h3 className="text-2xl font-bold mb-4">Need help with our policies?</h3>
+                    <p className="text-teal-100">
+                      Our support team is ready to answer any questions about your data or account.
                     </p>
                   </div>
                   <div>
-                    <a 
-                      href="mailto:finetex700@gmail.com" 
-                      className="px-8 py-3 bg-white text-indigo-600 font-bold rounded-full hover:bg-indigo-50 transition"
+                    <motion.a 
+                      href="mailto:support@testmancer.com" 
+                      className="px-8 py-3 bg-white text-teal-700 font-bold rounded-full hover:bg-teal-50 transition flex items-center gap-2"
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
                     >
-                      Contact Privacy Team
-                    </a>
+                      Contact Support
+                      <FiArrowRight />
+                    </motion.a>
                   </div>
                 </div>
-              </div>
+              </motion.div>
             </div>
           </div>
         </div>

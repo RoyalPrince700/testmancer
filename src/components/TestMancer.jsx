@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 
-const SnaptestLoader = () => {
+const TestMancerLoader = () => {
   const circleVariants = {
     initial: { scale: 0.8, opacity: 0.5 },
     animate: {
@@ -19,16 +19,20 @@ const SnaptestLoader = () => {
     })
   };
 
-  const text = "Snaptest";
+  const text = "Testmancer";
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-b from-gray-50 to-white" aria-live="polite" aria-label="Loading Snaptest progress">
-      <div className="flex gap-3 mb-6">
+    <div 
+      className="flex flex-col items-center justify-center h-screen w-full fixed top-0 left-0 bg-gradient-to-b from-gray-50 to-white overflow-hidden" 
+      aria-live="polite" 
+      aria-label="Loading Snaptest progress"
+    >
+      <div className="flex gap-3 mb-6"> 
         <motion.div
           variants={circleVariants}
           initial="initial"
           animate="animate"
-          className="w-12 h-12 rounded-full bg-coral-500"
+          className="w-12 h-12 rounded-full bg-pink-500"
         />
         <motion.div
           variants={circleVariants}
@@ -65,10 +69,10 @@ const SnaptestLoader = () => {
         transition={{ delay: 0.8, duration: 0.5 }}
         className="text-gray-500 text-lg"
       >
-        Snapping your progress into place! 📸
+       Study. Play. Win.
       </motion.p>
     </div>
   );
 };
 
-export default SnaptestLoader;
+export default TestMancerLoader;

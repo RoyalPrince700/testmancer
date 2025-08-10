@@ -15,77 +15,10 @@ import FullNameModal from '../components/FullNameModal';
 import { useAuth } from '../../provider/AuthContext';
 import { supabase } from '../../supabase/supabaseClient';
 import WelcomeCard from '../components/WelcomeCard';
+import TestMancerLoader from "../components/TestMancer";
+import ScrollToTop from "../components/ScrollToTop";
 
-const SnaptestLoader = () => {
-  const circleVariants = {
-    initial: { scale: 0.8, opacity: 0.5 },
-    animate: {
-      scale: [0.8, 1.2, 0.8],
-      opacity: [0.5, 1, 0.5],
-      transition: { repeat: Infinity, duration: 1.2, ease: "easeInOut" }
-    }
-  };
 
-  const letterVariants = {
-    initial: { y: 10, opacity: 0 },
-    animate: (i) => ({
-      y: 0,
-      opacity: 1,
-      transition: { delay: i * 0.1, type: "spring", stiffness: 120 }
-    })
-  };
-
-  const text = "TestMancer";
-
-  return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-b from-gray-50 to-white" aria-live="polite" aria-label="Loading Snaptest progress">
-      <div className="flex gap-3 mb-6">
-        <motion.div
-          variants={circleVariants}
-          initial="initial"
-          animate="animate"
-          className="w-12 h-12 rounded-full bg-pink-500"
-        />
-        <motion.div
-          variants={circleVariants}
-          initial="initial"
-          animate="animate"
-          transition={{ delay: 0.2 }}
-          className="w-12 h-12 rounded-full bg-teal-500"
-        />
-        <motion.div
-          variants={circleVariants}
-          initial="initial"
-          animate="animate"
-          transition={{ delay: 0.4 }}
-          className="w-12 h-12 rounded-full bg-yellow-400"
-        />
-      </div>
-      <div className="flex gap-1 mb-4">
-        {text.split("").map((char, i) => (
-          <motion.span
-            key={i}
-            custom={i}
-            variants={letterVariants}
-            initial="initial"
-            animate="animate"
-            className="text-3xl font-bold text-gray-800"
-          >
-            {char}
-          </motion.span>
-        ))}
-      </div>
-      <motion.p
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.8, duration: 0.5 }}
-        className="text-gray-500 text-lg"
-      >
-        Snapping your progress into place! 📸
-      </motion.p>
-    </div>
-  );
-};
 
 const PostUtme = () => {
   const { user } = useAuth();
@@ -229,27 +162,47 @@ const PostUtme = () => {
   };
 
   if (loading) {
-    return <SnaptestLoader />;
+    return <TestMancerLoader />;
   }
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white">
       <div className="container mx-auto px-4 py-6 max-w-6xl">
-        <WelcomeCard />
+    <ScrollToTop />;
+
+        {/* <WelcomeCard /> */}
+
+         {/* Personalized Callout */}
+        {userData?.full_name && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.3 }}
+            className="bg-gradient-to-r from-teal-400 to-teal-600 rounded-2xl p-6 text-white text-center mb-12 max-w-2xl mx-auto"
+          >
+            <h2 className="text-2xl font-bold mb-3">
+              {userData.full_name.split(' ')[0]}, You're on Fire! 🔥
+            </h2>
+            <p className="text-teal-100">
+              Keep going to climb the leaderboard and unlock exclusive badges. 
+              Every topic you master brings you closer to the top!
+            </p>
+          </motion.div>
+        )}
 
         {/* Main Header */}
         <motion.div
           initial={{ y: -20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ duration: 0.5 }}
-          className="text-center mb-16"
+          className="text-center mb-4"
         >
-          <div className="inline-flex items-center gap-2 bg-yellow-100 text-yellow-800 px-4 py-2 rounded-full mb-6 font-medium">
+          {/* <div className="inline-flex items-center gap-2 bg-yellow-100 text-yellow-800 px-4 py-2 rounded-full mb-6 font-medium">
             <FiZap className="text-yellow-500 animate-pulse" />
             Make Learning Fun & Rewarding!
-          </div>
+          </div> */}
 
-          <h1 className="text-4xl md:text-5xl font-extrabold text-gray-800 mb-3">
+          {/* <h1 className="text-4xl md:text-5xl font-extrabold text-gray-800 mb-3">
             {userData?.full_name ? (
               <span>
                 🚀 Hey {userData.full_name.split(' ')[0]}, Crush Your Post-UTME!
@@ -257,15 +210,15 @@ const PostUtme = () => {
             ) : (
               <span>🚀 Post-UTME Gamified Practice</span>
             )}
-          </h1>
+          </h1> */}
           
-          <p className="text-lg text-gray-500 max-w-2xl mx-auto">
+          {/* <p className="text-lg text-gray-500 max-w-2xl mx-auto">
             {userData?.full_name 
               ? `Earn rewards, track your progress, and rise to the top, ${userData.full_name.split(' ')[0]}!` 
               : "Earn rewards, track your progress, and rise to the top as you prepare for success!"}
-          </p>
+          </p> */}
 
-          <div className="mt-10 grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto">
+          {/* <div className="mt-10 grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto">
             {achievements.map((a, i) => (
               <motion.div
                 key={i}
@@ -283,26 +236,10 @@ const PostUtme = () => {
                 </div>
               </motion.div>
             ))}
-          </div>
+          </div> */}
         </motion.div>
 
-        {/* Personalized Callout */}
-        {userData?.full_name && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.3 }}
-            className="bg-gradient-to-r from-teal-400 to-teal-600 rounded-2xl p-6 text-white text-center mb-12 max-w-2xl mx-auto"
-          >
-            <h2 className="text-2xl font-bold mb-3">
-              {userData.full_name.split(' ')[0]}, You're on Fire! 🔥
-            </h2>
-            <p className="text-teal-100">
-              Keep going to climb the leaderboard and unlock exclusive badges. 
-              Every topic you master brings you closer to the top!
-            </p>
-          </motion.div>
-        )}
+       
 
         {/* Subject Cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">

@@ -20,6 +20,8 @@ import { ENGLISH_TOPICS } from '../../../data/englishTopics';
 import * as Icons from 'react-icons/fi';
 import GamifiedButton from '../../../components/GamifiedButton';
 import EnglishCard from '../../../components/EnglishCard';
+import LoadingSpinner from '../../../components/LoadingSpinner';
+import TestMancerLoader from '../../../components/TestMancer';
 
 const English = () => {
   const navigate = useNavigate();
@@ -315,19 +317,14 @@ const English = () => {
 
   if (loading || !userData) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-gray-50 to-white">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-coral-500 mx-auto mb-4"></div>
-          <p className="text-gray-500">Loading your English adventure...</p>
-        </div>
-      </div>
+     <TestMancerLoader />
     );
   }
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white">
       <div className="container mx-auto px-4 py-8 max-w-6xl">
-        <WelcomeCard />
+        {/* <WelcomeCard /> */}
 
         <motion.div
           initial={{ y: -20, opacity: 0 }}
@@ -337,7 +334,7 @@ const English = () => {
         >
           <div className="inline-flex items-center gap-2 bg-yellow-100 text-yellow-800 px-4 py-2 rounded-full mb-6 font-medium">
             <FiZap className="text-yellow-500 animate-pulse" />
-            Make Learning Fun & Rewarding!
+            We Make Learning Fun & Rewarding!
           </div>
 
           <h1 className="text-4xl md:text-5xl font-extrabold text-gray-800 mb-3">
@@ -357,7 +354,7 @@ const English = () => {
           </p>
         </motion.div>
 
-        {firstName && (
+        {/* {firstName && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -371,7 +368,7 @@ const English = () => {
               Keep going to unlock more badges and climb the English leaderboard!
             </p>
           </motion.div>
-        )}
+        )} */}
 
         <ProgressCard userProgress={userProgress} badgeCount={badgeCount} streak={streak} />
 
@@ -411,27 +408,9 @@ const English = () => {
           transition={{ delay: 0.5 }}
           className="mt-16"
         >
-          <div className="flex justify-between items-center mb-6">
-            <h2 className="text-2xl font-bold text-gray-800">
-              English Leaderboard
-            </h2>
-            <Link 
-              to="/post-utme/leaderboard" 
-              className="text-coral-500 hover:text-coral-600 font-medium flex items-center gap-1"
-            >
-              View Full Leaderboard
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                <path fillRule="evenodd" d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z" clipRule="evenodd" />
-              </svg>
-            </Link>
-          </div>
+        
           
-          <Leaderboard 
-            limit={3} 
-            title="" 
-            showBadges={false} 
-            className="bg-gradient-to-r from-teal-400 to-teal-600 text-white"
-          />
+      
         </motion.div>
         
         {firstName && (
