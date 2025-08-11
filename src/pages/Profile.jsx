@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { supabase } from "../../supabase/supabaseClient"; // adjust path if needed
 import { avatarList } from "../components/avatarList"; // import your avatar list array
 
-export const Profile = ({ logout }) => {
+export const Profile = () => {
   const navigate = useNavigate();
   const [displayName, setDisplayName] = useState("");
   const [avatar, setAvatar] = useState(null);
@@ -70,6 +70,19 @@ export const Profile = ({ logout }) => {
     }
   };
 
+  // Logout logic
+  const handleLogout = async () => {
+    if (window.confirm("Are you sure you want to log out?")) {
+      const { error } = await supabase.auth.signOut();
+      if (error) {
+        console.error("Logout error:", error);
+        alert("Failed to log out. Please try again.");
+      } else {
+        navigate("/login"); // Redirect to login page
+      }
+    }
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -127,13 +140,21 @@ export const Profile = ({ logout }) => {
         </div>
       </div>
 
-      {/* Save Button */}
-      <div className="p-4 bg-white border-t border-gray-200 mt-4">
+      {/* Save & Logout Buttons */}
+      <div className="p-4 bg-white border-t border-gray-200 mt-4 space-y-3">
         <button
           onClick={handleSave}
           className="w-full bg-black text-white py-3 rounded-lg font-medium"
         >
           Save Changes
+        </button>
+
+        <button
+          onClick={handleLogout}
+          className="w-full flex items-center justify-center gap-2 bg-red-500 text-white py-3 rounded-lg font-medium"
+        >
+          <FiLogOut className="text-lg" />
+          Logout
         </button>
       </div>
 
