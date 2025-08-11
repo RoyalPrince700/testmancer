@@ -45,7 +45,7 @@ export const Header = () => {
     await supabase.auth.signOut();
     setSidebarOpen(false);
     setIsAdmin(false);
-    navigate("/auth");
+    navigate("/login");
   };
 
   useEffect(() => {
@@ -107,7 +107,7 @@ export const Header = () => {
           </button>
 
           {/* Website Name */}
-          <Link to="/" className="text-xl font-bold text-black" aria-label="Home">
+          <Link to="/" className="text-xl font-bold text-teal-600" aria-label="Home">
             TestMancer
           </Link>
 
@@ -132,7 +132,7 @@ export const Header = () => {
             </Link>
           ) : (
             <Link
-              to="/auth"
+              to="/login"
               className="px-4"
             >
               <div className="bg-gray-200 w-8 h-8 rounded-full flex items-center justify-center">
@@ -225,7 +225,7 @@ export const Header = () => {
                   </Link>
                 ) : (
                   <Link
-                    to="/auth"
+                    to="/login"
                     className="px-4 py-1.5 rounded-lg border border-teal-600 text-teal-600 font-medium hover:bg-teal-50"
                   >
                     Login
@@ -361,7 +361,7 @@ export const Header = () => {
                   </Link>
                 ) : (
                   <Link
-                    to="/auth"
+                    to="/login"
                     onClick={() => setSidebarOpen(false)}
                     className="block w-full text-center border border-teal-600 text-teal-600 py-2 rounded-lg hover:bg-teal-50"
                   >

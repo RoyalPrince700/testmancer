@@ -83,7 +83,7 @@ function App() {
           {/* Public Routes */}
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
-          {/* <Route path="/signup" element={<PublicRoute><Signup /></PublicRoute>} /> */}
+          <Route path="/signup" element={<PublicRoute><Signup /></PublicRoute>} />
           <Route path="/auth" element={<PublicRoute><AuthPage /></PublicRoute>} />
           {/* <Route path="/confirm" element={<EmailConfirmation />} /> */}
           <Route path="/how-it-works" element={<HowItWorks />} />
