@@ -83,7 +83,7 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<PublicRoute><Signup /></PublicRoute>} />
-          <Route path="/confirm" element={<EmailConfirmation />} />
+          {/* <Route path="/confirm" element={<EmailConfirmation />} /> */}
           <Route path="/how-it-works" element={<HowItWorks />} />
           <Route path="/about-us" element={<AboutUs />} />
           <Route path="/contact-us" element={<ContactUs />} />
@@ -92,15 +92,15 @@ function App() {
 
           {/* Protected Routes */}
           <Route path="/dashboard" element={<DashboardRedirect />} />
-          <Route path="/input-text" element={<ProtectedRoute><InputTextPage /></ProtectedRoute>} />
-          <Route path="/questions" element={<ProtectedRoute><QuestionsPage /></ProtectedRoute>} />
-          <Route path="/questions/:setId" element={<ProtectedRoute><QuestionDetailPage /></ProtectedRoute>} />
-          <Route path="/quiz/:setId" element={<ProtectedRoute><QuizPage /></ProtectedRoute>} />
-          <Route path="/snap-photo" element={<ProtectedRoute><CameraPage /></ProtectedRoute>} />
-          <Route path="/upload-document" element={<ProtectedRoute><UploadDocumentPage /></ProtectedRoute>} />
-          <Route path="/upload-image" element={<ProtectedRoute><UploadImagePage /></ProtectedRoute>} />
-          <Route path="/text-preview" element={<ProtectedRoute><TextPreviewPage /></ProtectedRoute>} />
-          <Route path="/my-questions" element={<ProtectedRoute><MyQuestionsPage /></ProtectedRoute>} />
+          {/* <Route path="/input-text" element={<ProtectedRoute><InputTextPage /></ProtectedRoute>} /> */}
+          {/* <Route path="/questions" element={<ProtectedRoute><QuestionsPage /></ProtectedRoute>} /> */}
+          {/* <Route path="/questions/:setId" element={<ProtectedRoute><QuestionDetailPage /></ProtectedRoute>} /> */}
+          {/* <Route path="/quiz/:setId" element={<ProtectedRoute><QuizPage /></ProtectedRoute>} /> */}
+          {/* <Route path="/snap-photo" element={<ProtectedRoute><CameraPage /></ProtectedRoute>} /> */}
+          {/* <Route path="/upload-document" element={<ProtectedRoute><UploadDocumentPage /></ProtectedRoute>} /> */}
+          {/* <Route path="/upload-image" element={<ProtectedRoute><UploadImagePage /></ProtectedRoute>} /> */}
+          {/* <Route path="/text-preview" element={<ProtectedRoute><TextPreviewPage /></ProtectedRoute>} /> */}
+          {/* <Route path="/my-questions" element={<ProtectedRoute><MyQuestionsPage /></ProtectedRoute>} /> */}
 
           <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
           {/* Nested Subject Routes under /post-utme */}

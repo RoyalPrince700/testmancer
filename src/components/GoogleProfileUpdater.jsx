@@ -1,14 +1,14 @@
-// src/components/FullNameModal.jsx
+// src/components/GoogleProfileUpdater.jsx
 import { useEffect, useState } from "react";
 import { supabase } from "../../supabase/supabaseClient";
 
-export default function FullNameModal({ onClose, onSuccess }) {
+export default function GoogleProfileUpdater({ onSuccess }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const updateFromGoogle = async () => {
+    const updateProfileFromGoogle = async () => {
       try {
-        // Get the current logged-in user
+        // Get currently logged-in user
         const { data: { user }, error: userError } = await supabase.auth.getUser();
         if (userError) throw userError;
         if (!user) {
@@ -16,35 +16,29 @@ export default function FullNameModal({ onClose, onSuccess }) {
           return;
         }
 
-        // Extract Google name & avatar
+        // Extract Google info
         const fullName =
-          user.user_metadata.full_name ||
-          user.user_metadata.name ||
-          "";
+          user.user_metadata.full_name || user.user_metadata.name || "";
         const avatarUrl = user.user_metadata.avatar_url || "";
 
-        // Save or update in profiles table
-        const { error: upsertError } = await supabase
+        // Save to profiles table (create if missing, update if exists)
+        const { error: updateError } = await supabase
           .from("profiles")
           .upsert(
             {
-              id: user.id, // matches auth.users ID
+              id: user.id, // id from auth
               full_name: fullName,
               avatar_url: avatarUrl
             },
             { onConflict: "id" }
           );
 
-        if (upsertError) throw upsertError;
+        if (updateError) throw updateError;
 
-        // Optional success callback
+        // Optional callback
         if (onSuccess) {
           onSuccess({ full_name: fullName, avatar_url: avatarUrl });
         }
-
-        // Close modal if you still want it to disappear
-        if (onClose) onClose();
-
       } catch (err) {
         console.error("Error updating profile from Google:", err.message);
       } finally {
@@ -52,8 +46,8 @@ export default function FullNameModal({ onClose, onSuccess }) {
       }
     };
 
-    updateFromGoogle();
-  }, [onClose, onSuccess]);
+    updateProfileFromGoogle();
+  }, [onSuccess]);
 
   if (loading) {
     return (

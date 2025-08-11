@@ -15,7 +15,7 @@ export const Footer = () => {
         <div className="flex flex-col lg:flex-row justify-between items-center gap-6">
           {/* Logo */}
           <Link to="/" className="flex items-center gap-2">
-            <img src={LOGO} alt="SnapTest" className="h-8 w-8" />
+            <img src={LOGO} alt="TestMancer" className="h-8 w-15" />
           </Link>
 
           {/* Nav */}
@@ -41,7 +41,7 @@ export const Footer = () => {
 
         {/* Copyright */}
         <p className="mt-6 text-center text-xs text-gray-400">
-          &copy; {new Date().getFullYear()} SnapTest. All rights reserved.
+          &copy; {new Date().getFullYear()} TestMancer. All rights reserved.
         </p>
       </div>
     </footer>
