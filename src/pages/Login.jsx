@@ -215,14 +215,16 @@ export const Login = () => {
             </form>
           </div>
 
-          <div className="mt-8 text-center">
-            <Link 
-              to="/password-reset" 
-              className="text-teal-400 hover:text-teal-600 text-sm font-semibold"
-            >
-              Forgot your password?
-            </Link>
-          </div>
+         <div className="mt-8 text-center">
+                    <Link 
+                      to="/signup" 
+                      className="text-teal-400 hover:text-teal-600 text-sm font-semibold"
+                    >
+                      Don't have an account? Sign Up
+                    </Link>
+                  </div>
+
+
         </div>
       </motion.div>
     </section>
