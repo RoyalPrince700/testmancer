@@ -45,6 +45,7 @@ import Real from './pages/subjects/english/Real';
 import Question from './pages/subjects/english/QuestionTags';
 import QuizConcord from './pages/quiz/QuizConcord';
 import Profile from './pages/Profile';
+import AuthPage from './pages/Auth';
 
 const ProtectedRoute = ({ children }) => {
   const { user, loading } = useAuth();
@@ -54,7 +55,7 @@ const ProtectedRoute = ({ children }) => {
     return <LoadingSpinner fullScreen />;
   }
   if (!user) {
-    return <Navigate to="/login" state={{ from: location }} replace />;
+    return <Navigate to="/auth" state={{ from: location }} replace />;
   }
   return children;
 };
@@ -82,7 +83,8 @@ function App() {
           {/* Public Routes */}
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
-          <Route path="/signup" element={<PublicRoute><Signup /></PublicRoute>} />
+          {/* <Route path="/signup" element={<PublicRoute><Signup /></PublicRoute>} /> */}
+          <Route path="/auth" element={<PublicRoute><AuthPage /></PublicRoute>} />
           {/* <Route path="/confirm" element={<EmailConfirmation />} /> */}
           <Route path="/how-it-works" element={<HowItWorks />} />
           <Route path="/about-us" element={<AboutUs />} />

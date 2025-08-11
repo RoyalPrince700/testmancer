@@ -1,25 +1,25 @@
-import React, { useState, useEffect } from "react";
-import { useNavigate, useLocation, Link } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 import { supabase } from "../../supabase/supabaseClient";
 import { useAuth } from "../../provider/AuthContext";
 import { FiLock } from "react-icons/fi";
 import { motion } from "framer-motion";
 import { GoogleLogin } from "@react-oauth/google";
 
-export const Signup = () => {
-  const [error, setError] = useState(null);
-  const [loading, setLoading] = useState(false);
+const AuthPage = () => {
+  const { user } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
-  const { user } = useAuth();
+  const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   const from = location.state?.from?.pathname || "/";
 
   useEffect(() => {
     if (user) {
-      navigate("/", { replace: true });
+      navigate(from, { replace: true });
     }
-  }, [user, navigate]);
+  }, [user, navigate, from]);
 
   const handleGoogleSuccess = async (credentialResponse) => {
     try {
@@ -34,8 +34,8 @@ export const Signup = () => {
       if (error) throw error;
       navigate(from, { replace: true });
     } catch (err) {
-      console.error("Google signup error:", err);
-      setError(err.message || "Failed to sign up with Google. Please try again.");
+      console.error("Google auth error:", err);
+      setError(err.message || "Failed to authenticate with Google. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -85,9 +85,9 @@ export const Signup = () => {
               animate={{ opacity: 1 }}
               transition={{ delay: 0.3 }}
             >
-              Sign Up for TestMancer
+              Welcome to TestMancer
             </motion.h2>
-            <p className="text-gray-500">Quick, secure, and easy — just use your Google account.</p>
+            <p className="text-gray-500">Sign in or sign up instantly with Google.</p>
           </div>
 
           {error && (
@@ -110,28 +110,19 @@ export const Signup = () => {
           >
             <GoogleLogin
               onSuccess={handleGoogleSuccess}
-              onError={() => setError("Google signup failed. Please try again.")}
+              onError={() => setError("Google authentication failed. Please try again.")}
               shape="pill"
               size="large"
               text="continue_with"
             />
             <p className="text-sm text-gray-500">
-              We only support Google sign up for security and convenience.
+              Secure, fast, and password-free.
             </p>
           </motion.div>
-
-          <div className="mt-8 text-center">
-            <Link
-              to="/login"
-              className="text-teal-400 hover:text-teal-600 text-sm font-semibold"
-            >
-              Already have an account? Log in
-            </Link>
-          </div>
         </div>
       </motion.div>
     </section>
   );
 };
 
-export default Signup;
+export default AuthPage;

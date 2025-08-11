@@ -45,7 +45,7 @@ export const Header = () => {
     await supabase.auth.signOut();
     setSidebarOpen(false);
     setIsAdmin(false);
-    navigate("/login");
+    navigate("/auth");
   };
 
   useEffect(() => {
@@ -106,32 +106,40 @@ export const Header = () => {
             <FiMenu className="w-6 h-6" />
           </button>
 
-          {/* Quick Links */}
-          <div className="flex items-center gap-4">
-            <Link to="/post-utme" className="relative text-sm font-medium text-black">
-              Post-UTME
-              {isActive("/post-utme") && (
-                <motion.span
-                  className="absolute left-0 bottom-0 h-0.5 w-full bg-teal-600 origin-right"
-                  {...underlineAnimation}
-                />
-              )}
-            </Link>
-            <Link to="/quiz-hub" className="relative text-sm font-medium text-black">
-              Quiz Hub
-              {isActive("/quiz-hub") && (
-                <motion.span
-                  className="absolute left-0 bottom-0 h-0.5 w-full bg-teal-600 origin-right"
-                  {...underlineAnimation}
-                />
-              )}
-            </Link>
-          </div>
-
-          {/* Logo */}
-          <Link to="/" className="flex items-center gap-2" aria-label="Home">
-            <img src={LOGO} alt="TestMancer" className="h-6 w-10" />
+          {/* Website Name */}
+          <Link to="/" className="text-xl font-bold text-black" aria-label="Home">
+            TestMancer
           </Link>
+
+          {/* Profile Icon */}
+          {isAuthenticated ? (
+            <Link
+              to="/profile"
+              className="flex items-center gap-3 hover:bg-gray-50 p-2 rounded-lg"
+              aria-label="Profile"
+            >
+              {profileData?.avatar_url ? (
+                <img
+                  src={profileData.avatar_url}
+                  alt={profileData.full_name || "Profile"}
+                  className="w-8 h-8 rounded-full object-cover border"
+                />
+              ) : (
+                <div className="bg-gray-200 w-8 h-8 rounded-full flex items-center justify-center">
+                  <FiUser className="text-gray-500 text-lg" />
+                </div>
+              )}
+            </Link>
+          ) : (
+            <Link
+              to="/auth"
+              className="px-4"
+            >
+              <div className="bg-gray-200 w-8 h-8 rounded-full flex items-center justify-center">
+                  <FiUser className="text-gray-500 text-lg" />
+                </div>
+            </Link>
+          )}
         </div>
 
         {/* Desktop Header */}
@@ -217,7 +225,7 @@ export const Header = () => {
                   </Link>
                 ) : (
                   <Link
-                    to="/login"
+                    to="/auth"
                     className="px-4 py-1.5 rounded-lg border border-teal-600 text-teal-600 font-medium hover:bg-teal-50"
                   >
                     Login
@@ -258,6 +266,32 @@ export const Header = () => {
 
               {/* Menu Links */}
               <nav className="flex flex-col gap-4 text-gray-700">
+                <Link
+                  to="/post-utme"
+                  onClick={() => setSidebarOpen(false)}
+                  className="relative hover:text-teal-600"
+                >
+                  Post-UTME
+                  {isActive("/post-utme") && (
+                    <motion.span
+                      className="absolute left-0 bottom-0 h-0.5 w-full bg-teal-600 origin-right"
+                      {...underlineAnimation}
+                    />
+                  )}
+                </Link>
+                <Link
+                  to="/quiz-hub"
+                  onClick={() => setSidebarOpen(false)}
+                  className="relative hover:text-teal-600"
+                >
+                  Quiz Hub
+                  {isActive("/quiz-hub") && (
+                    <motion.span
+                      className="absolute left-0 bottom-0 h-0.5 w-full bg-teal-600 origin-right"
+                      {...underlineAnimation}
+                    />
+                  )}
+                </Link>
                 <Link
                   to="/how-it-works"
                   onClick={() => setSidebarOpen(false)}
@@ -327,7 +361,7 @@ export const Header = () => {
                   </Link>
                 ) : (
                   <Link
-                    to="/login"
+                    to="/auth"
                     onClick={() => setSidebarOpen(false)}
                     className="block w-full text-center border border-teal-600 text-teal-600 py-2 rounded-lg hover:bg-teal-50"
                   >
