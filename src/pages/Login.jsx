@@ -2,9 +2,10 @@ import React, { useState, useEffect } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { supabase } from "../../supabase/supabaseClient";
 import { useAuth } from "../../provider/AuthContext";
-import { FiLock, FiMail, FiUser, FiArrowRight, FiZap } from "react-icons/fi";
+import { FiLock, FiMail, FiArrowRight } from "react-icons/fi";
 import { FcGoogle } from "react-icons/fc";
 import { motion } from "framer-motion";
+import { GoogleLogin } from "@react-oauth/google";
 
 export const Login = () => {
   const [email, setEmail] = useState("");
@@ -15,34 +16,32 @@ export const Login = () => {
   const location = useLocation();
   const { user } = useAuth();
 
-  // Determine redirect destination
   const from = location.state?.from?.pathname || "/";
 
-  // If already authenticated, redirect to homepage
   useEffect(() => {
     if (user) {
       navigate("/", { replace: true });
     }
   }, [user, navigate]);
 
-  const handleGoogleLogin = async () => {
-    setLoading(true);
-    setError(null);
-
+  // Google popup login success
+  const handleGoogleSuccess = async (credentialResponse) => {
     try {
-      const { error } = await supabase.auth.signInWithOAuth({
+      setLoading(true);
+      setError(null);
+
+      const { data, error } = await supabase.auth.signInWithIdToken({
         provider: "google",
-        options: {
-          redirectTo: `${window.location.origin}/`
-        }
+        token: credentialResponse.credential,
       });
 
       if (error) throw error;
 
-      // OAuth will handle redirect
+      navigate(from, { replace: true });
     } catch (err) {
       console.error("Google login error:", err);
       setError(err.message || "Failed to sign in with Google. Please try again.");
+    } finally {
       setLoading(false);
     }
   };
@@ -56,20 +55,18 @@ export const Login = () => {
       const { data, error: loginError } = await supabase.auth.signInWithPassword({ email, password });
 
       if (loginError) {
-        console.log('Login error:', loginError);
         setError(loginError.message);
       } else if (data.user) {
         navigate(from, { replace: true });
       }
     } catch (err) {
-      console.error('Unexpected login error:', err);
+      console.error("Unexpected login error:", err);
       setError("Something went wrong. Please try again.");
     } finally {
       setLoading(false);
     }
   };
 
-  // Animation variants for vibrant effects
   const containerVariants = {
     hidden: { opacity: 0, y: 20 },
     visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: "easeOut" } }
@@ -98,57 +95,7 @@ export const Login = () => {
         initial="hidden"
         animate="visible"
       >
-        {/* Decorative Side Panel */}
-        <div className="w-full md:w-2/5 bg-gradient-to-br from-teal-500 to-teal-700 p-10 flex flex-col justify-between relative overflow-hidden">
-          <motion.div
-            className="absolute top-10 left-10 w-24 h-24 rounded-full bg-teal-400/30"
-            animate={{ scale: [1, 1.2, 1], opacity: [0.3, 0.5, 0.3] }}
-            transition={{ repeat: Infinity, duration: 3, ease: "easeInOut" }}
-          />
-          <motion.div
-            className="absolute bottom-20 right-10 w-32 h-32 rounded-full bg-teal-300/20"
-            animate={{ scale: [1, 1.15, 1], opacity: [0.2, 0.4, 0.2] }}
-            transition={{ repeat: Infinity, duration: 4, ease: "easeInOut" }}
-          />
-          
-          <div className="relative z-10">
-            <motion.h2
-              className="text-4xl font-extrabold text-white mb-4 flex items-center gap-2"
-              initial={{ x: -20, opacity: 0 }}
-              animate={{ x: 0, opacity: 1 }}
-              transition={{ delay: 0.2 }}
-            >
-              <FiZap className="text-yellow-300 animate-pulse" />
-              Welcome Back!
-            </motion.h2>
-            <p className="text-teal-100 max-w-xs text-lg">
-              Jump into TestMancer! Crush quizzes, earn badges, and level up your skills! 🚀
-            </p>
-          </div>
-          
-          <div className="relative z-10">
-            <div className="flex items-center gap-3 mb-4">
-              <motion.div
-                className="w-12 h-12 rounded-full bg-teal-400/40 flex items-center justify-center"
-                variants={iconVariants}
-                initial="initial"
-                whileHover="hover"
-              >
-                <FiUser className="text-white text-2xl" />
-              </motion.div>
-              <p className="text-teal-100 text-lg">New to TestMancer?</p>
-            </div>
-            <Link 
-              to="/signup" 
-              className="inline-flex items-center gap-2 bg-teal-600/80 hover:bg-teal-700 text-white font-semibold rounded-full px-6 py-3 transition-all duration-300 backdrop-blur-sm transform hover:scale-105"
-            >
-              Join the Quest
-              <FiArrowRight className="text-sm" />
-            </Link>
-          </div>
-        </div>
-        
-        {/* Login Form with Glass Effect */}
+        {/* Login Form */}
         <div className="w-full md:w-3/5 bg-white backdrop-blur-lg p-10 border border-teal-200/20">
           <div className="text-center mb-10">
             <motion.div
@@ -183,18 +130,21 @@ export const Login = () => {
 
           <div className="space-y-6">
             {/* Google Login Button */}
-            <motion.button
-              onClick={handleGoogleLogin}
-              disabled={loading}
-              className="w-full flex items-center justify-center gap-2 bg-white border border-gray-300 hover:bg-gray-50 text-gray-800 py-4 rounded-full font-semibold transition-all duration-300 backdrop-blur-md disabled:bg-gray-200 disabled:cursor-not-allowed"
+            <motion.div
+              className="w-full flex items-center justify-center"
               variants={buttonVariants}
               initial="initial"
               whileHover={!loading ? "hover" : ""}
               whileTap={!loading ? "tap" : ""}
             >
-              <FcGoogle className="text-xl" />
-              Sign in with Google
-            </motion.button>
+              <GoogleLogin
+                onSuccess={handleGoogleSuccess}
+                onError={() => setError("Google login failed. Please try again.")}
+                shape="pill"
+                size="large"
+                text="continue_with"
+              />
+            </motion.div>
 
             <div className="flex items-center justify-center">
               <div className="h-px bg-gray-300 w-full"></div>
@@ -232,7 +182,7 @@ export const Login = () => {
                   type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full pl-12 pr-4 py-3 bg-white/20 border border-teal-300/50 focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500/50 rounded-lg  transition-all duration-300"
+                  className="w-full pl-12 pr-4 py-3 bg-white/20 border border-teal-300/50 focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500/50 rounded-lg transition-all duration-300"
                   placeholder="Your password"
                   required
                 />
