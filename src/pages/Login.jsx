@@ -26,47 +26,25 @@ export const Login = () => {
 
   // Google popup login success
   const handleGoogleSuccess = async (credentialResponse) => {
-  try {
-    setLoading(true);
-    setError(null);
+    try {
+      setLoading(true);
+      setError(null);
 
-    // Sign in with Google
-    const { data, error } = await supabase.auth.signInWithIdToken({
-      provider: "google",
-      token: credentialResponse.credential,
-    });
+      const { data, error } = await supabase.auth.signInWithIdToken({
+        provider: "google",
+        token: credentialResponse.credential,
+      });
 
-    if (error) throw error;
+      if (error) throw error;
 
-    const user = data?.user;
-    if (user) {
-      const fullName = user.user_metadata?.full_name || user.user_metadata?.name || "";
-      const avatarUrl = user.user_metadata?.avatar_url || user.user_metadata?.picture || "";
-
-      // Update profile table with Google name & avatar
-      await supabase
-        .from("profile")
-        .upsert(
-          {
-            id: user.id, // match your primary key in profile table
-            full_name: fullName,
-            avatar_url: avatarUrl,
-          },
-          { onConflict: "id" } // ensures existing row is updated instead of inserted
-        );
-
-      console.log("Profile updated with Google info");
+      navigate(from, { replace: true });
+    } catch (err) {
+      console.error("Google login error:", err);
+      setError(err.message || "Failed to sign in with Google. Please try again.");
+    } finally {
+      setLoading(false);
     }
-
-    navigate(from, { replace: true });
-  } catch (err) {
-    console.error("Google login error:", err);
-    setError(err.message || "Failed to sign in with Google. Please try again.");
-  } finally {
-    setLoading(false);
-  }
-};
-
+  };
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -112,7 +90,7 @@ export const Login = () => {
   return (
     <section className="min-h-screen items-center justify-center bg-teal-50">
       <motion.div
-        className="max-w-4xl w-full rounded-2xl just"
+        className="max-w-4xl w-full rounded-2xl overflow-hidden"
         variants={containerVariants}
         initial="hidden"
         animate="visible"
