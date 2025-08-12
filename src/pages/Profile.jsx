@@ -1,17 +1,14 @@
 // src/pages/Profile.jsx
 import React, { useState, useEffect } from "react";
-import { FiArrowLeft, FiLogOut, FiEdit, FiUser, FiChevronRight } from "react-icons/fi";
+import { FiArrowLeft, FiLogOut, FiUser } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
-import { supabase } from "../../supabase/supabaseClient"; // adjust path if needed
-import { avatarList } from "../components/avatarList"; // import your avatar list array
+import { supabase } from "../../supabase/supabaseClient";
 
 export const Profile = () => {
   const navigate = useNavigate();
   const [displayName, setDisplayName] = useState("");
   const [avatar, setAvatar] = useState(null);
-  const [isAvatarPickerOpen, setIsAvatarPickerOpen] = useState(false);
   const [loading, setLoading] = useState(true);
-  const [userId, setUserId] = useState(null);
 
   // Fetch user profile data from Supabase
   useEffect(() => {
@@ -19,13 +16,16 @@ export const Profile = () => {
       setLoading(true);
 
       // Get the logged-in user
-      const { data: { user }, error: authError } = await supabase.auth.getUser();
+      const {
+        data: { user },
+        error: authError
+      } = await supabase.auth.getUser();
+
       if (authError || !user) {
         console.error("Auth error or no user:", authError);
         setLoading(false);
         return;
       }
-      setUserId(user.id);
 
       // Fetch the profile from "profiles" table
       const { data: profile, error: profileError } = await supabase
@@ -47,29 +47,6 @@ export const Profile = () => {
     fetchUserProfile();
   }, []);
 
-  // Save changes to Supabase
-  const handleSave = async () => {
-    if (!userId) {
-      alert("Missing user ID. Please re-login.");
-      return;
-    }
-
-    const { error } = await supabase
-      .from("profiles")
-      .update({
-        full_name: displayName,
-        avatar_url: avatar
-      })
-      .eq("id", userId);
-
-    if (error) {
-      console.error("Error updating profile:", error);
-      alert("Failed to update profile.");
-    } else {
-      alert("Profile updated successfully!");
-    }
-  };
-
   // Logout logic
   const handleLogout = async () => {
     if (window.confirm("Are you sure you want to log out?")) {
@@ -78,7 +55,7 @@ export const Profile = () => {
         console.error("Logout error:", error);
         alert("Failed to log out. Please try again.");
       } else {
-        navigate("/login"); // Redirect to login page
+        navigate("/login");
       }
     }
   };
@@ -103,10 +80,7 @@ export const Profile = () => {
 
       {/* Profile Section */}
       <div className="bg-white rounded-lg mx-4 mt-4 mb-3 overflow-hidden">
-        <div
-          className="flex items-center p-4 border-b border-gray-100 cursor-pointer"
-          onClick={() => setIsAvatarPickerOpen(true)}
-        >
+        <div className="flex items-center p-4 border-b border-gray-100">
           {avatar ? (
             <img
               src={avatar}
@@ -118,37 +92,15 @@ export const Profile = () => {
               <FiUser className="text-gray-500 text-xl" />
             </div>
           )}
-          <div className="ml-4 flex-1">
-            <p className="text-xs text-gray-500">Tap to change</p>
-            <p className="font-medium">Profile Photo</p>
-          </div>
-          <FiChevronRight className="text-gray-400" />
-        </div>
-
-        <div className="p-4 border-b border-gray-100">
-          <p className="text-xs text-gray-500 mb-1">DISPLAY NAME</p>
-          <div className="flex items-center">
-            <input
-              type="text"
-              value={displayName}
-              onChange={(e) => setDisplayName(e.target.value)}
-              className="flex-1 outline-none bg-transparent text-base"
-              placeholder="Enter your name"
-            />
-            <FiEdit className="text-gray-400" />
+          <div className="ml-4">
+            <p className="font-medium">{displayName}</p>
+            <p className="text-xs text-gray-500">Google Account</p>
           </div>
         </div>
       </div>
 
-      {/* Save & Logout Buttons */}
-      <div className="p-4 bg-white border-t border-gray-200 mt-4 space-y-3">
-        <button
-          onClick={handleSave}
-          className="w-full bg-black text-white py-3 rounded-lg font-medium"
-        >
-          Save Changes
-        </button>
-
+      {/* Logout Button */}
+      <div className="p-4 bg-white border-t border-gray-200 mt-4">
         <button
           onClick={handleLogout}
           className="w-full flex items-center justify-center gap-2 bg-red-500 text-white py-3 rounded-lg font-medium"
@@ -157,41 +109,6 @@ export const Profile = () => {
           Logout
         </button>
       </div>
-
-      {/* Avatar Picker Modal */}
-      {isAvatarPickerOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-xl w-80 max-w-sm">
-            <div className="p-4 border-b border-gray-200">
-              <h3 className="text-center font-medium">Choose Profile Photo</h3>
-            </div>
-            <div className="grid grid-cols-3 gap-4 p-4">
-              {avatarList.map((av, idx) => (
-                <img
-                  key={idx}
-                  src={av}
-                  alt="Avatar option"
-                  className={`w-20 h-20 rounded-full cursor-pointer object-cover ${
-                    avatar === av ? "ring-2 ring-black" : ""
-                  }`}
-                  onClick={() => {
-                    setAvatar(av);
-                    setIsAvatarPickerOpen(false);
-                  }}
-                />
-              ))}
-            </div>
-            <div className="p-2 border-t border-gray-200">
-              <button
-                onClick={() => setIsAvatarPickerOpen(false)}
-                className="w-full py-3 text-gray-900 font-medium"
-              >
-                Cancel
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 };

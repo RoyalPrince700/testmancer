@@ -26,25 +26,47 @@ export const Login = () => {
 
   // Google popup login success
   const handleGoogleSuccess = async (credentialResponse) => {
-    try {
-      setLoading(true);
-      setError(null);
+  try {
+    setLoading(true);
+    setError(null);
 
-      const { data, error } = await supabase.auth.signInWithIdToken({
-        provider: "google",
-        token: credentialResponse.credential,
-      });
+    // Sign in with Google
+    const { data, error } = await supabase.auth.signInWithIdToken({
+      provider: "google",
+      token: credentialResponse.credential,
+    });
 
-      if (error) throw error;
+    if (error) throw error;
 
-      navigate(from, { replace: true });
-    } catch (err) {
-      console.error("Google login error:", err);
-      setError(err.message || "Failed to sign in with Google. Please try again.");
-    } finally {
-      setLoading(false);
+    const user = data?.user;
+    if (user) {
+      const fullName = user.user_metadata?.full_name || user.user_metadata?.name || "";
+      const avatarUrl = user.user_metadata?.avatar_url || user.user_metadata?.picture || "";
+
+      // Update profile table with Google name & avatar
+      await supabase
+        .from("profile")
+        .upsert(
+          {
+            id: user.id, // match your primary key in profile table
+            full_name: fullName,
+            avatar_url: avatarUrl,
+          },
+          { onConflict: "id" } // ensures existing row is updated instead of inserted
+        );
+
+      console.log("Profile updated with Google info");
     }
-  };
+
+    navigate(from, { replace: true });
+  } catch (err) {
+    console.error("Google login error:", err);
+    setError(err.message || "Failed to sign in with Google. Please try again.");
+  } finally {
+    setLoading(false);
+  }
+};
+
 
   const handleLogin = async (e) => {
     e.preventDefault();
