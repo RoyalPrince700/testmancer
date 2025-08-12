@@ -20,40 +20,11 @@ export const Login = () => {
 
   useEffect(() => {
     if (user) {
-      // Check if profile exists in Supabase
-      const checkProfile = async () => {
-        try {
-          const timeoutPromise = new Promise((_, reject) =>
-            setTimeout(() => reject(new Error("Profile check timed out")), 10000)
-          );
-
-          const { data, error } = await Promise.race([
-            supabase
-              .from("profiles")
-              .select("full_name, avatar_url")
-              .eq("id", user.id)
-              .single(),
-            timeoutPromise,
-          ]);
-
-          if (error || !data) {
-            // No profile exists, redirect to profile setup
-            navigate("/profile-setup", { state: { from } });
-          } else {
-            // Profile exists, navigate to intended page
-            navigate(from, { replace: true });
-          }
-        } catch (err) {
-          console.error("Profile check error:", err);
-          navigate("/profile-setup", { state: { from } }); // Fallback to profile setup
-        }
-      };
-
-      checkProfile();
+      // Directly navigate to the intended page (defaults to home)
+      navigate(from, { replace: true });
     }
   }, [user, navigate, from]);
 
-  // Google popup login success
   const handleGoogleSuccess = async (credentialResponse) => {
     try {
       setLoading(true);
@@ -66,22 +37,23 @@ export const Login = () => {
 
       if (error) throw error;
 
-      // Ensure user exists
       const { data: userData, error: userError } = await supabase.auth.getUser();
       if (userError || !userData.user) throw new Error("Failed to fetch user after Google login");
 
-      // Insert or update profile with email
+      // Optionally upsert profile with email (if needed for other parts of the app)
       const { error: profileError } = await supabase.from("profiles").upsert(
         {
           id: userData.user.id,
           email: userData.user.email,
+          updated_at: new Date().toISOString(),
         },
         { onConflict: "id" }
       );
 
       if (profileError) throw profileError;
 
-      // Redirect to profile setup (profile check in useEffect will handle navigation)
+      // Redirect to home (or intended page)
+      navigate(from, { replace: true });
     } catch (err) {
       console.error("Google login error:", err);
       setError(err.message || "Failed to sign in with Google. Please try again.");
@@ -103,9 +75,8 @@ export const Login = () => {
 
       if (loginError) throw loginError;
 
-      if (data.user) {
-        // Redirect to profile setup (profile check in useEffect will handle navigation)
-      }
+      // Redirect to home (or intended page)
+      navigate(from, { replace: true });
     } catch (err) {
       console.error("Unexpected login error:", err);
       setError(err.message || "Something went wrong. Please try again.");
@@ -142,12 +113,10 @@ export const Login = () => {
         initial="hidden"
         animate="visible"
       >
-        {/* Login Form */}
         <div className="w-full md:w-3/5 bg-white backdrop-blur-lg p-10 border border-teal-200/20 rounded-2xl">
           <div className="text-center mb-10">
             <motion.div
-              className="bg-gradient-to-br from-teal-4
-System: 00 to-teal-600 rounded-2xl p-4 inline-flex items-center justify-center"
+              className="bg-gradient-to-br from-teal-400 to-teal-600 rounded-2xl p-4 inline-flex items-center justify-center"
               variants={iconVariants}
               initial="initial"
               whileHover="hover"
@@ -177,7 +146,6 @@ System: 00 to-teal-600 rounded-2xl p-4 inline-flex items-center justify-center"
           )}
 
           <div className="space-y-6">
-            {/* Google Login Button */}
             <motion.div
               className="w-full flex items-center justify-center"
               variants={buttonVariants}
@@ -200,7 +168,6 @@ System: 00 to-teal-600 rounded-2xl p-4 inline-flex items-center justify-center"
               <div className="h-px bg-gray-300 w-full"></div>
             </div>
 
-            {/* Email/Password Form */}
             <form onSubmit={handleLogin} className="space-y-6">
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
