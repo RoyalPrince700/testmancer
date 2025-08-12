@@ -20,9 +20,38 @@ export const Login = () => {
 
   useEffect(() => {
     if (user) {
-      navigate("/", { replace: true });
+      // Check if profile exists in Supabase
+      const checkProfile = async () => {
+        try {
+          const timeoutPromise = new Promise((_, reject) =>
+            setTimeout(() => reject(new Error("Profile check timed out")), 10000)
+          );
+
+          const { data, error } = await Promise.race([
+            supabase
+              .from("profiles")
+              .select("full_name, avatar_url")
+              .eq("id", user.id)
+              .single(),
+            timeoutPromise,
+          ]);
+
+          if (error || !data) {
+            // No profile exists, redirect to profile setup
+            navigate("/profile-setup", { state: { from } });
+          } else {
+            // Profile exists, navigate to intended page
+            navigate(from, { replace: true });
+          }
+        } catch (err) {
+          console.error("Profile check error:", err);
+          navigate("/profile-setup", { state: { from } }); // Fallback to profile setup
+        }
+      };
+
+      checkProfile();
     }
-  }, [user, navigate]);
+  }, [user, navigate, from]);
 
   // Google popup login success
   const handleGoogleSuccess = async (credentialResponse) => {
@@ -37,7 +66,22 @@ export const Login = () => {
 
       if (error) throw error;
 
-      navigate(from, { replace: true });
+      // Ensure user exists
+      const { data: userData, error: userError } = await supabase.auth.getUser();
+      if (userError || !userData.user) throw new Error("Failed to fetch user after Google login");
+
+      // Insert or update profile with email
+      const { error: profileError } = await supabase.from("profiles").upsert(
+        {
+          id: userData.user.id,
+          email: userData.user.email,
+        },
+        { onConflict: "id" }
+      );
+
+      if (profileError) throw profileError;
+
+      // Redirect to profile setup (profile check in useEffect will handle navigation)
     } catch (err) {
       console.error("Google login error:", err);
       setError(err.message || "Failed to sign in with Google. Please try again.");
@@ -52,16 +96,19 @@ export const Login = () => {
     setError(null);
 
     try {
-      const { data, error: loginError } = await supabase.auth.signInWithPassword({ email, password });
+      const { data, error: loginError } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
 
-      if (loginError) {
-        setError(loginError.message);
-      } else if (data.user) {
-        navigate(from, { replace: true });
+      if (loginError) throw loginError;
+
+      if (data.user) {
+        // Redirect to profile setup (profile check in useEffect will handle navigation)
       }
     } catch (err) {
       console.error("Unexpected login error:", err);
-      setError("Something went wrong. Please try again.");
+      setError(err.message || "Something went wrong. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -69,37 +116,38 @@ export const Login = () => {
 
   const containerVariants = {
     hidden: { opacity: 0, y: 20 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: "easeOut" } }
+    visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: "easeOut" } },
   };
 
   const iconVariants = {
     initial: { scale: 1, rotate: 0 },
-    hover: { scale: 1.2, rotate: 10, transition: { duration: 0.3 } }
+    hover: { scale: 1.2, rotate: 10, transition: { duration: 0.3 } },
   };
 
   const buttonVariants = {
     initial: { scale: 1, boxShadow: "0 0 0 rgba(45, 212, 191, 0)" },
-    hover: { 
-      scale: 1.05, 
+    hover: {
+      scale: 1.05,
       boxShadow: "0 0 15px rgba(45, 212, 191, 0.5)",
-      transition: { duration: 0.3, ease: "easeOut" }
+      transition: { duration: 0.3, ease: "easeOut" },
     },
-    tap: { scale: 0.95, transition: { duration: 0.2 } }
+    tap: { scale: 0.95, transition: { duration: 0.2 } },
   };
 
   return (
-    <section className="min-h-screen items-center justify-center bg-teal-50">
+    <section className="min-h-screen flex items-center justify-center bg-teal-50 px-4">
       <motion.div
-        className="max-w-4xl w-full rounded-2xl overflow-hidden"
+        className="max-w-4xl w-full rounded-2xl flex justify-center"
         variants={containerVariants}
         initial="hidden"
         animate="visible"
       >
         {/* Login Form */}
-        <div className="w-full md:w-3/5 bg-white backdrop-blur-lg p-10 border border-teal-200/20">
+        <div className="w-full md:w-3/5 bg-white backdrop-blur-lg p-10 border border-teal-200/20 rounded-2xl">
           <div className="text-center mb-10">
             <motion.div
-              className="bg-gradient-to-br from-teal-400 to-teal-600 rounded-2xl p-4 inline-flex items-center justify-center"
+              className="bg-gradient-to-br from-teal-4
+System: 00 to-teal-600 rounded-2xl p-4 inline-flex items-center justify-center"
               variants={iconVariants}
               initial="initial"
               whileHover="hover"
@@ -199,9 +247,25 @@ export const Login = () => {
               >
                 {loading ? (
                   <>
-                    <svg className="animate-spin -ml-1 mr-2 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    <svg
+                      className="animate-spin -ml-1 mr-2 h-5 w-5 text-white"
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                    >
+                      <circle
+                        className="opacity-25"
+                        cx="12"
+                        cy="12"
+                        r="10"
+                        stroke="currentColor"
+                        strokeWidth="4"
+                      ></circle>
+                      <path
+                        className="opacity-75"
+                        fill="currentColor"
+                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                      ></path>
                     </svg>
                     Logging In...
                   </>
@@ -215,16 +279,14 @@ export const Login = () => {
             </form>
           </div>
 
-         <div className="mt-8 text-center">
-                    <Link 
-                      to="/signup" 
-                      className="text-teal-400 hover:text-teal-600 text-sm font-semibold"
-                    >
-                      Don't have an account? Sign Up
-                    </Link>
-                  </div>
-
-
+          <div className="mt-8 text-center">
+            <Link
+              to="/signup"
+              className="text-teal-400 hover:text-teal-600 text-sm font-semibold"
+            >
+              Don't have an account? Sign Up
+            </Link>
+          </div>
         </div>
       </motion.div>
     </section>
