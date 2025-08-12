@@ -1,9 +1,8 @@
-// src/pages/Profile.jsx
 import React, { useState, useEffect } from "react";
 import { FiArrowLeft, FiLogOut, FiEdit, FiUser, FiChevronRight } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
-import { supabase } from "../../supabase/supabaseClient"; // adjust path if needed
-import { avatarList } from "../components/avatarList"; // import your avatar list array
+import { supabase } from "../../supabase/supabaseClient";
+import { avatarList } from "../components/avatarList";
 
 export const Profile = () => {
   const navigate = useNavigate();
@@ -12,73 +11,115 @@ export const Profile = () => {
   const [isAvatarPickerOpen, setIsAvatarPickerOpen] = useState(false);
   const [loading, setLoading] = useState(true);
   const [userId, setUserId] = useState(null);
+  const [error, setError] = useState(null);
 
   // Fetch user profile data from Supabase
   useEffect(() => {
     const fetchUserProfile = async () => {
       setLoading(true);
+      setError(null);
 
-      // Get the logged-in user
-      const { data: { user }, error: authError } = await supabase.auth.getUser();
-      if (authError || !user) {
-        console.error("Auth error or no user:", authError);
-        setLoading(false);
-        return;
-      }
-      setUserId(user.id);
+      try {
+        // Add timeout to prevent hanging
+        const timeoutPromise = new Promise((_, reject) =>
+          setTimeout(() => reject(new Error("User fetch timed out")), 10000)
+        );
 
-      // Fetch the profile from "profiles" table
-      const { data: profile, error: profileError } = await supabase
-        .from("profiles")
-        .select("full_name, avatar_url")
-        .eq("id", user.id)
-        .single();
+        // Get the logged-in user
+        let { data: { user }, error: authError } = await Promise.race([
+          supabase.auth.getUser(),
+          timeoutPromise,
+        ]);
 
-      if (profileError) {
-        console.error("Profile fetch error:", profileError);
-      } else {
+        if (authError || !user) {
+          // Attempt to refresh session
+          const { data: sessionData, error: refreshError } = await supabase.auth.refreshSession();
+          if (refreshError || !sessionData.user) {
+            console.error("Auth error or no user:", authError || refreshError);
+            if (authError?.message?.includes("User from sub claim in JWT does not exist")) {
+              // Clear cookies and redirect to login
+              document.cookie.split(";").forEach((c) => {
+                document.cookie = c
+                  .replace(/^ +/, "")
+                  .replace(/=.*/, "=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/");
+              });
+              navigate("/login");
+              return;
+            }
+            throw authError || refreshError || new Error("No user found");
+          }
+          user = sessionData.user;
+        }
+
+        setUserId(user.id);
+
+        // Fetch the profile from "profiles" table
+        const { data: profile, error: profileError } = await supabase
+          .from("profiles")
+          .select("email, full_name, avatar_url")
+          .eq("id", user.id)
+          .single();
+
+        if (profileError) {
+          if (profileError.code === "PGRST116") {
+            // No profile exists, redirect to setup
+            navigate("/profile-setup");
+            return;
+          }
+          throw profileError;
+        }
+
         setDisplayName(profile?.full_name || "");
         setAvatar(profile?.avatar_url || null);
+      } catch (err) {
+        console.error("Profile fetch error:", err);
+        setError(err.message || "Failed to fetch profile");
+      } finally {
+        setLoading(false);
       }
-
-      setLoading(false);
     };
 
     fetchUserProfile();
-  }, []);
+  }, [navigate]);
 
   // Save changes to Supabase
   const handleSave = async () => {
     if (!userId) {
-      alert("Missing user ID. Please re-login.");
+      setError("Missing user ID. Please re-login.");
       return;
     }
 
-    const { error } = await supabase
-      .from("profiles")
-      .update({
-        full_name: displayName,
-        avatar_url: avatar
-      })
-      .eq("id", userId);
+    try {
+      const { error } = await supabase
+        .from("profiles")
+        .upsert(
+          {
+            id: userId,
+            full_name: displayName,
+            avatar_url: avatar,
+          },
+          { onConflict: "id" }
+        );
 
-    if (error) {
-      console.error("Error updating profile:", error);
-      alert("Failed to update profile.");
-    } else {
+      if (error) throw error;
+
       alert("Profile updated successfully!");
+    } catch (err) {
+      console.error("Error updating profile:", err);
+      setError("Failed to update profile.");
     }
   };
 
   // Logout logic
   const handleLogout = async () => {
     if (window.confirm("Are you sure you want to log out?")) {
-      const { error } = await supabase.auth.signOut();
-      if (error) {
-        console.error("Logout error:", error);
-        alert("Failed to log out. Please try again.");
-      } else {
-        navigate("/login"); // Redirect to login page
+      try {
+        const { error } = await supabase.auth.signOut();
+        if (error) throw error;
+        navigate("/login");
+      } catch (err) {
+        console.error("Logout error:", err);
+        setError("Failed to log out. Please try again.");
       }
     }
   };
@@ -100,6 +141,13 @@ export const Profile = () => {
         </button>
         <h1 className="text-lg font-medium">Profile</h1>
       </div>
+
+      {/* Error Message */}
+      {error && (
+        <div className="mx-4 mt-4 p-3 bg-red-50 text-red-700 rounded-lg text-center">
+          {error}
+        </div>
+      )}
 
       {/* Profile Section */}
       <div className="bg-white rounded-lg mx-4 mt-4 mb-3 overflow-hidden">
