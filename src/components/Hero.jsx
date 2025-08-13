@@ -22,7 +22,7 @@ const Hero = () => {
           to="/post-utme"
           className="inline-block bg-yellow-500 text-white font-semibold px-6 py-3 rounded-full text-lg hover:bg-yellow-600 transition duration-300"
         >
-          Start Studying Now
+         🚀 Start Studying Now
         </Link>
       </div>
 
