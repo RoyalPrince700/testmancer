@@ -14,9 +14,16 @@ const Hero = () => {
         <h1 className="text-4xl sm:text-5xl font-extrabold text-gray-900 mb-4">
           Study. Play. Win. 🎮
         </h1>
-        <p className="text-lg text-gray-600">
+        <p className="text-lg text-gray-600 mb-6">
           Get ready to conquer Post-UTME with quizzes, badges, and a leaderboard that keeps you motivated.
         </p>
+        {/* CTA Button */}
+        <Link
+          to="/post-utme"
+          className="inline-block bg-yellow-500 text-white font-semibold px-6 py-3 rounded-full text-lg hover:bg-yellow-600 transition duration-300"
+        >
+          Start Studying Now
+        </Link>
       </div>
 
       {/* Stats Cards */}
