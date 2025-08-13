@@ -3,6 +3,7 @@ import { FiArrowLeft, FiLogOut, FiEdit, FiUser, FiChevronRight } from "react-ico
 import { useNavigate } from "react-router-dom";
 import { supabase } from "../../supabase/supabaseClient";
 import { avatarList } from "../components/avatarList";
+import TestMancerLoader from "../components/TestMancer";
 
 export const Profile = () => {
   const navigate = useNavigate();
@@ -12,6 +13,13 @@ export const Profile = () => {
   const [loading, setLoading] = useState(true);
   const [userId, setUserId] = useState(null);
   const [error, setError] = useState(null);
+  const usernamePattern = /^[a-zA-Z0-9_-]+$/; // only letters, numbers, _ and -
+
+  // Capitalize first letter for display
+  const formatDisplayName = (name) => {
+    if (!name) return "";
+    return name.charAt(0).toUpperCase() + name.slice(1);
+  };
 
   // Fetch user profile data from Supabase
   useEffect(() => {
@@ -20,24 +28,20 @@ export const Profile = () => {
       setError(null);
 
       try {
-        // Add timeout to prevent hanging
         const timeoutPromise = new Promise((_, reject) =>
           setTimeout(() => reject(new Error("User fetch timed out")), 10000)
         );
 
-        // Get the logged-in user
         let { data: { user }, error: authError } = await Promise.race([
           supabase.auth.getUser(),
           timeoutPromise,
         ]);
 
         if (authError || !user) {
-          // Attempt to refresh session
           const { data: sessionData, error: refreshError } = await supabase.auth.refreshSession();
           if (refreshError || !sessionData.user) {
             console.error("Auth error or no user:", authError || refreshError);
             if (authError?.message?.includes("User from sub claim in JWT does not exist")) {
-              // Clear cookies and redirect to login
               document.cookie.split(";").forEach((c) => {
                 document.cookie = c
                   .replace(/^ +/, "")
@@ -53,7 +57,6 @@ export const Profile = () => {
 
         setUserId(user.id);
 
-        // Fetch the profile from "profiles" table
         const { data: profile, error: profileError } = await supabase
           .from("profiles")
           .select("email, full_name, avatar_url")
@@ -62,14 +65,14 @@ export const Profile = () => {
 
         if (profileError) {
           if (profileError.code === "PGRST116") {
-            // No profile exists, redirect to setup
             navigate("/profile-setup");
             return;
           }
           throw profileError;
         }
 
-        setDisplayName(profile?.full_name || "");
+        // Store lowercase but display with capital letter
+        setDisplayName(formatDisplayName(profile?.full_name || ""));
         setAvatar(profile?.avatar_url || null);
       } catch (err) {
         console.error("Profile fetch error:", err);
@@ -84,33 +87,64 @@ export const Profile = () => {
 
   // Save changes to Supabase
   const handleSave = async () => {
-    if (!userId) {
-      setError("Missing user ID. Please re-login.");
+  if (!userId) {
+    setError("Missing user ID. Please re-login.");
+    return;
+  }
+
+  if (!displayName.trim()) {
+    setError("Please enter a username.");
+    return;
+  }
+
+  if (!usernamePattern.test(displayName)) {
+    setError(
+      "Username can only contain letters, numbers, underscores (_) and hyphens (-)."
+    );
+    return;
+  }
+
+  setError(null);
+  setLoading(true);
+
+  try {
+    const lowerUsername = displayName.trim().toLowerCase();
+
+    const { error: updateError } = await supabase
+      .from("profiles")
+      .update({
+        full_name: lowerUsername,
+        avatar_url: avatar,
+      })
+      .eq("id", userId);
+
+    setLoading(false);
+
+    if (updateError) {
+      // Handle uniqueness violation from Supabase/Postgres
+      if (
+        updateError.code === "23505" || // Postgres unique violation
+        updateError.message?.toLowerCase().includes("duplicate key")
+      ) {
+        setError("This username is already taken. Please choose another.");
+      } else {
+        console.error("Supabase update error:", updateError);
+        setError("An error occurred while updating your profile.");
+      }
       return;
     }
 
-    try {
-      const { error } = await supabase
-        .from("profiles")
-        .upsert(
-          {
-            id: userId,
-            full_name: displayName,
-            avatar_url: avatar,
-          },
-          { onConflict: "id" }
-        );
+    // Success
+    alert("Profile updated successfully!");
+    setDisplayName(formatDisplayName(lowerUsername));
+  } catch (err) {
+    console.error("Error updating profile:", err);
+    setError("An unexpected error occurred.");
+    setLoading(false);
+  }
+};
 
-      if (error) throw error;
 
-      alert("Profile updated successfully!");
-    } catch (err) {
-      console.error("Error updating profile:", err);
-      setError("Failed to update profile.");
-    }
-  };
-
-  // Logout logic
   const handleLogout = async () => {
     if (window.confirm("Are you sure you want to log out?")) {
       try {
@@ -126,9 +160,7 @@ export const Profile = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        Loading profile...
-      </div>
+      <TestMancerLoader/>
     );
   }
 
@@ -174,14 +206,14 @@ export const Profile = () => {
         </div>
 
         <div className="p-4 border-b border-gray-100">
-          <p className="text-xs text-gray-500 mb-1">DISPLAY NAME</p>
+          <p className="text-xs text-gray-500 mb-1">USERNAME</p>
           <div className="flex items-center">
             <input
               type="text"
               value={displayName}
               onChange={(e) => setDisplayName(e.target.value)}
               className="flex-1 outline-none bg-transparent text-base"
-              placeholder="Enter your name"
+              placeholder="Enter your username"
             />
             <FiEdit className="text-gray-400" />
           </div>

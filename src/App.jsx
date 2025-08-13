@@ -46,6 +46,13 @@ import Question from './pages/subjects/english/QuestionTags';
 import QuizConcord from './pages/quiz/QuizConcord';
 import Profile from './pages/Profile';
 import AuthPage from './pages/Auth';
+import QuizSentence from './pages/quiz/QuizSentence';
+import QuizSentenceType from './pages/quiz/QuizSentenceType';
+import QuizPunctuation from './pages/quiz/QuizPunctuation';
+import QuizSubjunctive from './pages/quiz/QuizSubjunctive';
+import QuizReal from './pages/quiz/QuizReal';
+import QuizError from './pages/quiz/QuizErrors';
+import QuizQuestionTag from './pages/quiz/QuizQuestionTag';
 
 const ProtectedRoute = ({ children }) => {
   const { user, loading } = useAuth();
@@ -129,6 +136,13 @@ function App() {
           <Route path="/quiz-hub/english" element={<ProtectedRoute><EnglishQuiz /></ProtectedRoute>} />
           <Route path="/quiz-hub/english/quiz-tenses" element={<ProtectedRoute><QuizTenses  subtopic="tenses_quiz"/></ProtectedRoute>} />
           <Route path="/quiz-hub/english-quiz/concord-quiz" element={<ProtectedRoute><QuizConcord subtopic="concord_quiz"/></ProtectedRoute>} />
+          <Route path="/quiz-hub/english-quiz/sentence-quiz" element={<ProtectedRoute><QuizSentence subtopic="sentence_quiz"/></ProtectedRoute>} />
+          <Route path="/quiz-hub/english-quiz/sentence-types-quiz" element={<ProtectedRoute><QuizSentenceType subtopic="sentence_types_quiz"/></ProtectedRoute>} />
+          <Route path="/quiz-hub/english-quiz/punctuation-quiz" element={<ProtectedRoute><QuizPunctuation subtopic="punctuation_quiz"/></ProtectedRoute>} />
+          <Route path="/quiz-hub/english-quiz/subjunctive-quiz" element={<ProtectedRoute><QuizSubjunctive subtopic="subjunctive_quiz"/></ProtectedRoute>} />
+          <Route path="/quiz-hub/english-quiz/real-quiz" element={<ProtectedRoute><QuizReal subtopic="real_quiz"/></ProtectedRoute>} />
+          <Route path="/quiz-hub/english-quiz/errors-quiz" element={<ProtectedRoute><QuizError subtopic="errors_quiz"/></ProtectedRoute>} />
+          <Route path="/quiz-hub/english-quiz/question-tags-quiz" element={<ProtectedRoute><QuizQuestionTag subtopic="question_tags_quiz"/></ProtectedRoute>} />
 
 
 

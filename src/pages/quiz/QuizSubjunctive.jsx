@@ -1,11 +1,11 @@
 // In your route component
 import QuizComponent from "./QuizComponent";
-import questions from "../../data/tensesQuestions";
+import questions from "../../data/subjuctiveQuestions";
 
-export const QuizTenses =() => {
+export const QuizSubjunctive =() => {
   return (
     <QuizComponent 
-      quizId="tenses_quiz"
+      quizId="subjunctive_quiz"
       questions={questions}
       quizTitle="Grammar Master Quiz"
       backPath="/quiz-hub/english"
@@ -13,4 +13,4 @@ export const QuizTenses =() => {
   );
 }
 
-export default QuizTenses;
+export default QuizSubjunctive;

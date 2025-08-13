@@ -2,14 +2,11 @@ import React, { useState, useEffect } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { supabase } from "../../supabase/supabaseClient";
 import { useAuth } from "../../provider/AuthContext";
-import { FiLock, FiMail, FiArrowRight } from "react-icons/fi";
-import { FcGoogle } from "react-icons/fc";
+import { FiLock } from "react-icons/fi";
 import { motion } from "framer-motion";
 import { GoogleLogin } from "@react-oauth/google";
 
 export const Signup = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
@@ -41,64 +38,54 @@ export const Signup = () => {
     }
   };
 
-  const handleGoogleSuccess = async (credentialResponse) => {
-    try {
-      setLoading(true);
-      setError(null);
-
-      const { data, error } = await supabase.auth.signInWithIdToken({
-        provider: "google",
-        token: credentialResponse.credential,
-      });
-
-      if (error) throw error;
-
-      // Insert email into profiles table
-      await supabase.from("profiles").insert({
-        id: data.user.id,
-        email: data.user.email,
-      });
-
-      // Redirect to profile setup
-      navigate("/profile-setup", { state: { from } });
-    } catch (err) {
-      console.error("Google signup error:", err);
-      setError(err.message || "Failed to sign up with Google. Please try again.");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleSignUp = async (e) => {
-    e.preventDefault();
+ const handleGoogleSuccess = async (credentialResponse) => {
+  try {
     setLoading(true);
     setError(null);
 
-    try {
-      const { data, error: signUpError } = await supabase.auth.signUp({
-        email,
-        password,
-      });
+    const { data, error } = await supabase.auth.signInWithIdToken({
+      provider: "google",
+      token: credentialResponse.credential,
+    });
 
-      if (signUpError) {
-        setError(signUpError.message);
-      } else if (data.user) {
-        // Insert email into profiles table
-        await supabase.from("profiles").insert({
-          id: data.user.id,
-          email: data.user.email,
-        });
+    if (error) throw error;
 
-        // Redirect to profile setup
-        navigate("/profile-setup", { state: { from } });
-      }
-    } catch (err) {
-      console.error("Unexpected signup error:", err);
-      setError("Something went wrong. Please try again.");
-    } finally {
-      setLoading(false);
+    const { user } = data;
+
+    // Check if profile already exists
+    const { data: existingProfile, error: profileError } = await supabase
+      .from("profiles")
+      .select("id")
+      .eq("id", user.id)
+      .single();
+
+    if (profileError && profileError.code !== "PGRST116") {
+      // Real error from Supabase (not "no rows found")
+      throw profileError;
     }
-  };
+
+    if (!existingProfile) {
+      // Insert new profile if doesn't exist
+      const { error: insertError } = await supabase.from("profiles").insert({
+        id: user.id,
+        email: user.email,
+      });
+      if (insertError) throw insertError;
+
+      // Redirect to profile setup for first-time users
+      navigate("/profile-setup", { state: { from } });
+    } else {
+      // Existing user, go to intended page
+      navigate(from, { replace: true });
+    }
+  } catch (err) {
+    console.error("Google signup error:", err);
+    setError(err.message || "Failed to sign up with Google. Please try again.");
+  } finally {
+    setLoading(false);
+  }
+};
+
 
   const containerVariants = {
     hidden: { opacity: 0, y: 20 },
@@ -179,82 +166,14 @@ export const Signup = () => {
               />
             </motion.div>
 
-            <div className="flex items-center justify-center">
-              <div className="h-px bg-gray-300 w-full"></div>
-              <span className="px-4 text-gray-500">or</span>
-              <div className="h-px bg-gray-300 w-full"></div>
-            </div>
-
-            {/* Email/Password Form */}
-            <form onSubmit={handleSignUp} className="space-y-6">
-              <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <motion.div variants={iconVariants} initial="initial" whileHover="hover">
-                    <FiMail className="text-teal-500 text-xl" />
-                  </motion.div>
-                </div>
-                <input
-                  id="email"
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="w-full pl-12 pr-4 py-3 bg-white/20 border border-teal-300/50 focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500/50 rounded-lg transition-all duration-300"
-                  placeholder="Your email"
-                  required
-                />
-              </div>
-
-              <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <motion.div variants={iconVariants} initial="initial" whileHover="hover">
-                    <FiLock className="text-teal-500 text-xl" />
-                  </motion.div>
-                </div>
-                <input
-                  id="password"
-                  type="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  className="w-full pl-12 pr-4 py-3 bg-white/20 border border-teal-300/50 focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500/50 rounded-lg transition-all duration-300"
-                  placeholder="Create a password"
-                  required
-                />
-              </div>
-
-              <motion.button
-                type="submit"
-                disabled={loading}
-                className="w-full flex items-center justify-center gap-2 bg-teal-500 hover:bg-teal-600 text-white py-4 rounded-full font-semibold transition-all duration-300 transform hover:scale-105 disabled:bg-teal-300 disabled:transform-none"
-                variants={buttonVariants}
-                initial="initial"
-                whileHover={!loading ? "hover" : ""}
-                whileTap={!loading ? "tap" : ""}
+            <div className="mt-8 text-center">
+              <Link 
+                to="/login" 
+                className="text-teal-400 hover:text-teal-600 text-sm font-semibold"
               >
-                {loading ? (
-                  <>
-                    <svg className="animate-spin -ml-1 mr-2 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                    </svg>
-                    Signing Up...
-                  </>
-                ) : (
-                  <>
-                    Join Quest
-                    <FiArrowRight className="text-sm" />
-                  </>
-                )}
-              </motion.button>
-            </form>
-          </div>
-
-          <div className="mt-8 text-center">
-            <Link 
-              to="/login" 
-              className="text-teal-400 hover:text-teal-600 text-sm font-semibold"
-            >
-              Already have an account? Log in
-            </Link>
+                Already have an account? Log in
+              </Link>
+            </div>
           </div>
         </div>
       </motion.div>

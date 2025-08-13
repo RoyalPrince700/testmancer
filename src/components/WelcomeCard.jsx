@@ -148,35 +148,36 @@ const WelcomeCard = () => {
             ))}
           </div>
   
-          <style jsx>{`
-            .animate-shimmer {
-              position: relative;
-              overflow: hidden;
-            }
-            .animate-shimmer::after {
-              content: '';
-              position: absolute;
-              top: 0;
-              left: -100%;
-              width: 100%;
-              height: 100%;
-              background: linear-gradient(
-                90deg,
-                transparent,
-                rgba(255, 255, 255, 0.3),
-                transparent
-              );
-              animation: shimmer 1.5s infinite;
-            }
-            @keyframes shimmer {
-              0% {
-                left: -100%;
-              }
-              100% {
-                left: 100%;
-              }
-            }
-          `}</style>
+         
+<style>{`
+  .animate-shimmer {
+    position: relative;
+    overflow: hidden;
+  }
+  .animate-shimmer::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba(255, 255, 255, 0.3),
+      transparent
+    );
+    animation: shimmer 1.5s infinite;
+  }
+  @keyframes shimmer {
+    0% {
+      left: -100%;
+    }
+    100% {
+      left: 100%;
+    }
+  }
+`}</style>
         </div>
       );
     }
@@ -208,10 +209,10 @@ const WelcomeCard = () => {
   
         {/* Stats */}
         <div className="flex flex-wrap justify-center gap-3">
-          <div className="flex items-center gap-2 bg-white px-3 py-1 rounded-full shadow-sm">
-            <FiAward className="text-yellow-500" />
+          <div className="flex items-baseline gap-2 bg-white px-3 py-1 rounded-full shadow-sm">
+               <span className="text-xl">💎</span>
             <span className="font-bold">{stats.totalPoints}</span>
-            <span className="text-gray-600">Points</span>
+            <span className="text-gray-600">gems</span>
           </div>
   
           <div className="flex items-center gap-2 bg-white px-3 py-1 rounded-full shadow-sm">

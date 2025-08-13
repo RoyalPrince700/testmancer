@@ -1,22 +1,23 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { 
-  FiBook, 
-  FiEdit, 
-  FiGlobe,FiAward ,FiStar ,
+import {
+  FiBook,
+  FiEdit,
+  FiGlobe,
+  FiAward,
+  FiStar,
   FiZap
 } from "react-icons/fi";
 import { motion, AnimatePresence } from "framer-motion";
 import { useAuth } from "../../../provider/AuthContext";
 import { supabase } from "../../../supabase/supabaseClient";
-import FullNameModal from '../../components/FullNameModal';
-import WelcomeCard from '../../components/WelcomeCard';
-import StatsOverview from '../../components/StatsOverview';
+import FullNameModal from "../../components/FullNameModal";
+import WelcomeCard from "../../components/WelcomeCard";
 import TestMancerLoader from "../../components/TestMancer";
+import {englishQuizTopics} from "../../data/englishQuizTopics";
 
 
-
-const QuizHub = () => {
+export const QuizHub = () => {
   const navigate = useNavigate();
   const { user, isAuthenticated } = useAuth();
   const [loading, setLoading] = useState(true);
@@ -32,7 +33,7 @@ const QuizHub = () => {
       icon: FiBook,
       description: "Master grammar and comprehension! 📚",
       path: "/quiz-hub/english",
-      totalQuestions: 50,
+      totalQuizzes: 50,
       color: "from-pink-500 to-pink-600"
     },
     {
@@ -41,7 +42,7 @@ const QuizHub = () => {
       icon: FiEdit,
       description: "Crack numbers and win badges! 🔢",
       path: "/quiz-hub/mathematics",
-      totalQuestions: 40,
+      totalQuizzes: 40,
       color: "from-teal-400 to-teal-600"
     },
     {
@@ -50,82 +51,102 @@ const QuizHub = () => {
       icon: FiGlobe,
       description: "Stay updated, stay sharp! 🌍",
       path: "/quiz-hub/currentAffairs",
-      totalQuestions: 30,
+      totalQuizzes: 30,
       color: "from-purple-400 to-purple-600"
     }
   ];
 
   const fetchData = useCallback(async () => {
-    if (!isAuthenticated || !user) return;
-    setLoading(true);
+  if (!isAuthenticated || !user) return;
+  setLoading(true);
 
-    try {
-      // Fetch user profile
-      const { data: profileData, error: profileError } = await supabase
-        .from('profiles')
-        .select('full_name, avatar_url')
-        .eq('id', user.id)
-        .single();
+  try {
+    // Fetch profile
+    const { data: profileData, error: profileError } = await supabase
+      .from("profiles")
+      .select("full_name, avatar_url")
+      .eq("id", user.id)
+      .single();
 
-      if (profileError) {
-        console.error("Error fetching profile:", profileError.message);
-        return;
-      }
-
-      setUserData(profileData);
-      if (!profileData.full_name || !profileData.avatar_url) {
-        setShowModal(true);
-      }
-
-      // Fetch quiz statistics
-      const { data: quizData, error: quizError } = await supabase
-        .from('quiz_attempts')
-        .select('quiz_id, score, total_questions, points_earned, attempted_at');
-
-      if (quizError) {
-        console.error("Error fetching quiz data:", quizError.message);
-        return;
-      }
-
-      // Process quiz stats
-      const statsByCategory = { english: [], mathematics: [], currentAffairs: [] };
-      quizData?.forEach(attempt => {
-        if (attempt.quiz_id.includes('english')) {
-          statsByCategory.english.push(attempt);
-        } else if (attempt.quiz_id.includes('math')) {
-          statsByCategory.mathematics.push(attempt);
-        } else if (attempt.quiz_id.includes('affairs')) {
-          statsByCategory.currentAffairs.push(attempt);
-        }
-      });
-
-      const calculatedStats = quizConfig.map(category => {
-        const attempts = statsByCategory[category.id];
-        const highScore = attempts.length > 0 ? Math.max(...attempts.map(a => a.score)) : 0;
-        const totalScore = attempts.reduce((sum, a) => sum + a.score, 0);
-        const avgScore = attempts.length > 0 ? Math.round(totalScore / attempts.length) : 0;
-        const lastAttempt = attempts.length > 0 ? new Date(Math.max(...attempts.map(a => new Date(a.attempted_at)))).toLocaleDateString() : null;
-
-        return {
-          ...category,
-          stats: {
-            attempts: attempts.length,
-            highScore,
-            avgScore,
-            lastAttempt,
-            progress: Math.round((highScore / category.totalQuestions) * 100)
-          }
-        };
-      });
-
-      setQuizStats(calculatedStats);
-
-    } catch (error) {
-      console.error("Unexpected error:", error.message);
-    } finally {
-      setLoading(false);
+    if (profileError) {
+      console.error("Error fetching profile:", profileError.message);
+      return;
     }
-  }, [isAuthenticated, user]);
+
+    setUserData(profileData);
+    if (!profileData.full_name || !profileData.avatar_url) {
+      setShowModal(true);
+    }
+
+    // Fetch quiz progress for this user
+    const { data: progressData, error: progressError } = await supabase
+      .from("postutme_quiz_progress")
+      .select("quiz_id, completed, best_score, attempts")
+      .eq("user_id", user.id);
+
+    if (progressError) {
+      console.error("Error fetching quiz progress:", progressError.message);
+      return;
+    }
+
+    // Calculate stats per category
+    const calculatedStats = quizConfig.map((category) => {
+      // Get all quizIds for this category from englishQuizTopics
+      const categoryQuizIds = englishQuizTopics
+        .flatMap(topic => topic.subtopics)
+        .map(subtopic => subtopic.quizId)
+        .filter(quizId => quizId.includes(category.id)); // Or use exact matching if needed
+
+      // Filter progresses that match any of this category's quizIds
+      const progresses = progressData.filter((p) => 
+        categoryQuizIds.includes(p.quiz_id)
+      );
+
+      const completedQuizzes = progresses.filter((p) => p.completed).length;
+      const totalQuizzes = categoryQuizIds.length;
+      const attempts = progresses.reduce(
+        (sum, p) => sum + (p.attempts || 0),
+        0
+      );
+      const highScore =
+        progresses.length > 0
+          ? Math.max(...progresses.map((p) => p.best_score || 0))
+          : 0;
+      const avgScore =
+        progresses.length > 0
+          ? Math.round(
+              progresses.reduce(
+                (sum, p) => sum + (p.best_score || 0),
+                0
+              ) / progresses.length
+            )
+          : 0;
+
+      const progressPercent =
+        totalQuizzes > 0
+          ? Math.round((completedQuizzes / totalQuizzes) * 100)
+          : 0;
+
+      return {
+        ...category,
+        stats: {
+          attempts,
+          highScore,
+          avgScore,
+          completedQuizzes,
+          totalQuizzes,
+          progress: progressPercent
+        }
+      };
+    });
+
+    setQuizStats(calculatedStats);
+  } catch (error) {
+    console.error("Unexpected error:", error.message);
+  } finally {
+    setLoading(false);
+  }
+}, [isAuthenticated, user]);
 
   useEffect(() => {
     fetchData();
@@ -133,7 +154,11 @@ const QuizHub = () => {
 
   const badgeVariants = {
     hidden: { opacity: 0, scale: 0.8 },
-    visible: { opacity: 1, scale: 1, transition: { duration: 0.3, type: 'spring', stiffness: 120 } }
+    visible: {
+      opacity: 1,
+      scale: 1,
+      transition: { duration: 0.3, type: "spring", stiffness: 120 }
+    }
   };
 
   if (loading) {
@@ -145,7 +170,7 @@ const QuizHub = () => {
       <div className="container mx-auto px-4 py-6 max-w-6xl">
         <WelcomeCard />
 
-        {/* Main Header */}
+        {/* Header */}
         <motion.div
           initial={{ y: -20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
@@ -158,23 +183,19 @@ const QuizHub = () => {
           </div>
           <h1 className="text-4xl md:text-5xl font-extrabold text-gray-800 mb-3">
             {userData?.full_name ? (
-              <span>
-                🚀 Hey {userData.full_name.split(' ')[0]}, Ace Your Quizzes!
-              </span>
+              <>🚀 Hey {userData.full_name.split(" ")[0]}, Ace Your Quizzes!</>
             ) : (
-              <span>🚀 Quiz Challenge Hub</span>
+              <>🚀 Quiz Challenge Hub</>
             )}
           </h1>
           <p className="text-lg text-gray-500 max-w-2xl mx-auto">
-            {userData?.full_name 
-              ? `Test your knowledge, earn badges, and climb the leaderboard, ${userData.full_name.split(' ')[0]}!` 
+            {userData?.full_name
+              ? `Test your knowledge, earn badges, and climb the leaderboard, ${userData.full_name.split(" ")[0]}!`
               : "Test your knowledge, earn badges, and climb the leaderboard to show your skills!"}
           </p>
-
-          {/* <StatsOverview /> */}
         </motion.div>
 
-        {/* Personalized Callout */}
+        {/* Callout */}
         {userData?.full_name && (
           <motion.div
             initial={{ opacity: 0 }}
@@ -183,16 +204,16 @@ const QuizHub = () => {
             className="bg-gradient-to-r from-teal-400 to-teal-600 rounded-2xl p-6 text-white text-center mb-12 max-w-2xl mx-auto"
           >
             <h2 className="text-2xl font-bold mb-3">
-              {userData.full_name.split(' ')[0]}, You're on Fire! 🔥
+              {userData.full_name.split(" ")[0]}, You're on Fire! 🔥
             </h2>
             <p className="text-blue-100">
-              Keep quizzing to climb the leaderboard and unlock exclusive badges. 
+              Keep quizzing to climb the leaderboard and unlock exclusive badges.
               Every correct answer brings you closer to the top!
             </p>
           </motion.div>
         )}
 
-        {/* Quiz Category Cards */}
+        {/* Quiz Cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {quizStats.map((category, i) => (
             <motion.div
@@ -202,7 +223,7 @@ const QuizHub = () => {
               onHoverEnd={() => setHoveredCard(null)}
               className="relative"
             >
-              <Link to={category.path} className="group" aria-label={`Start ${category.title} quiz`}>
+              <Link to={category.path} className="group">
                 <div className="h-full bg-white rounded-2xl shadow-xl p-6 border border-gray-200 hover:border-gray-300 transition-all relative overflow-hidden">
                   {hoveredCard === i && (
                     <div className="absolute top-4 right-4 flex gap-2 z-10">
@@ -226,11 +247,13 @@ const QuizHub = () => {
                     </div>
                   )}
 
-                  {/* Progress Bar */}
+                  {/* Progress */}
                   <div className="mb-6">
                     <div className="flex justify-between text-sm mb-1">
-                      <span className="text-gray-500">High Score</span>
-                      <span className="font-medium text-blue-500">{category.stats.progress}%</span>
+                      <span className="text-gray-500">Progress</span>
+                      <span className="font-medium text-blue-500">
+                        {category.stats.progress}%
+                      </span>
                     </div>
                     <div className="w-full bg-gray-200 rounded-full h-2.5">
                       <div
@@ -244,19 +267,23 @@ const QuizHub = () => {
                   <div className="mb-5 flex justify-center">
                     <div className="relative">
                       <div className="absolute -inset-4 bg-blue-100 rounded-full blur-md opacity-70 group-hover:opacity-100 transition-opacity duration-300"></div>
-                      <div className={`relative bg-gradient-to-br ${category.color} rounded-2xl p-5 flex items-center justify-center w-20 h-20`}>
+                      <div
+                        className={`relative bg-gradient-to-br ${category.color} rounded-2xl p-5 flex items-center justify-center w-20 h-20`}
+                      >
                         <category.icon className="text-white text-3xl" />
                       </div>
                     </div>
                   </div>
 
-                  {/* Texts */}
+                  {/* Text */}
                   <h3 className="text-xl font-bold text-center text-gray-800 mb-3">
                     {category.title}
                   </h3>
-                  <p className="text-gray-500 text-center mb-6">{category.description}</p>
+                  <p className="text-gray-500 text-center mb-6">
+                    {category.description}
+                  </p>
 
-                  {/* Footer Stats */}
+                  {/* Footer */}
                   <div className="flex justify-center gap-4 text-sm text-blue-500 font-medium mb-6">
                     <div className="flex items-center gap-2">
                       <FiAward />
@@ -269,7 +296,10 @@ const QuizHub = () => {
                       onClick={() => navigate(category.path)}
                       className={`bg-gradient-to-r ${category.color} text-white font-semibold rounded-full px-6 py-2 hover:scale-105 hover:shadow-lg transition-all`}
                     >
-                      {userData?.full_name ? "Continue Quizzing" : "Start Quiz"} 🚀
+                      {userData?.full_name
+                        ? "Continue Quizzing"
+                        : "Start Quiz"}{" "}
+                      🚀
                     </button>
                   </div>
                 </div>
@@ -278,7 +308,7 @@ const QuizHub = () => {
           ))}
         </div>
 
-        {/* Personalized Encouragement */}
+        {/* Encouragement */}
         {userData?.full_name && (
           <motion.div
             initial={{ opacity: 0 }}
@@ -287,10 +317,10 @@ const QuizHub = () => {
             className="mt-12 text-center"
           >
             <h3 className="text-xl font-bold text-gray-800 mb-4">
-              Keep Going, {userData.full_name.split(' ')[0]}! ✨
+              Keep Going, {userData.full_name.split(" ")[0]}! ✨
             </h3>
             <p className="text-gray-500 max-w-2xl mx-auto">
-              Every quiz you take sharpens your skills and boosts your rank. 
+              Every quiz you take sharpens your skills and boosts your rank.
               Aim for the top and unlock all the badges!
             </p>
           </motion.div>
@@ -298,8 +328,8 @@ const QuizHub = () => {
 
         <AnimatePresence>
           {showModal && (
-            <FullNameModal 
-              userId={user?.id} 
+            <FullNameModal
+              userId={user?.id}
               onClose={() => setShowModal(false)}
               onSuccess={(updatedUser) => setUserData(updatedUser)}
             />

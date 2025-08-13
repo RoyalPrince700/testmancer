@@ -2,14 +2,11 @@ import React, { useState, useEffect } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { supabase } from "../../supabase/supabaseClient";
 import { useAuth } from "../../provider/AuthContext";
-import { FiLock, FiMail, FiArrowRight } from "react-icons/fi";
-import { FcGoogle } from "react-icons/fc";
+import { FiLock } from "react-icons/fi";
 import { motion } from "framer-motion";
 import { GoogleLogin } from "@react-oauth/google";
 
 export const Login = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
@@ -20,89 +17,94 @@ export const Login = () => {
 
   useEffect(() => {
     if (user) {
-      // Directly navigate to the intended page (defaults to home)
-      navigate(from, { replace: true });
+      // Check if profile exists in Supabase
+      checkProfile(user.id);
     }
-  }, [user, navigate, from]);
+  }, [user, navigate]);
 
-  const handleGoogleSuccess = async (credentialResponse) => {
-    try {
-      setLoading(true);
-      setError(null);
+  const checkProfile = async (userId) => {
+    const { data, error } = await supabase
+      .from("profiles")
+      .select("*")
+      .eq("id", userId)
+      .single();
 
-      const { data, error } = await supabase.auth.signInWithIdToken({
-        provider: "google",
-        token: credentialResponse.credential,
-      });
-
-      if (error) throw error;
-
-      const { data: userData, error: userError } = await supabase.auth.getUser();
-      if (userError || !userData.user) throw new Error("Failed to fetch user after Google login");
-
-      // Optionally upsert profile with email (if needed for other parts of the app)
-      const { error: profileError } = await supabase.from("profiles").upsert(
-        {
-          id: userData.user.id,
-          email: userData.user.email,
-          updated_at: new Date().toISOString(),
-        },
-        { onConflict: "id" }
-      );
-
-      if (profileError) throw profileError;
-
-      // Redirect to home (or intended page)
+    if (error || !data) {
+      // No profile exists, redirect to profile setup
+      navigate("/profile-setup", { state: { from } });
+    } else {
+      // Profile exists, navigate to intended page
       navigate(from, { replace: true });
-    } catch (err) {
-      console.error("Google login error:", err);
-      setError(err.message || "Failed to sign in with Google. Please try again.");
-    } finally {
-      setLoading(false);
     }
   };
 
-  const handleLogin = async (e) => {
-    e.preventDefault();
+ const handleGoogleSuccess = async (credentialResponse) => {
+  try {
     setLoading(true);
     setError(null);
 
-    try {
-      const { data, error: loginError } = await supabase.auth.signInWithPassword({
-        email,
-        password,
-      });
+    const { data, error } = await supabase.auth.signInWithIdToken({
+      provider: "google",
+      token: credentialResponse.credential,
+    });
 
-      if (loginError) throw loginError;
+    if (error) throw error;
 
-      // Redirect to home (or intended page)
-      navigate(from, { replace: true });
-    } catch (err) {
-      console.error("Unexpected login error:", err);
-      setError(err.message || "Something went wrong. Please try again.");
-    } finally {
-      setLoading(false);
+    const { user } = data;
+
+    // Check if profile already exists
+    const { data: existingProfile, error: profileError } = await supabase
+      .from("profiles")
+      .select("id")
+      .eq("id", user.id)
+      .single();
+
+    if (profileError && profileError.code !== "PGRST116") {
+      // Real error from Supabase (not "no rows found")
+      throw profileError;
     }
-  };
+
+    if (!existingProfile) {
+      // Insert new profile if doesn't exist
+      const { error: insertError } = await supabase.from("profiles").insert({
+        id: user.id,
+        email: user.email,
+      });
+      if (insertError) throw insertError;
+
+      // Redirect to profile setup for first-time users
+      navigate("/profile-setup", { state: { from } });
+    } else {
+      // Existing user, go to intended page
+      navigate(from, { replace: true });
+    }
+  } catch (err) {
+    console.error("Google signup error:", err);
+    setError(err.message || "Failed to sign up with Google. Please try again.");
+  } finally {
+    setLoading(false);
+  }
+};
+
 
   const containerVariants = {
     hidden: { opacity: 0, y: 20 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: "easeOut" } },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: "easeOut" } }
   };
 
   const iconVariants = {
     initial: { scale: 1, rotate: 0 },
-    hover: { scale: 1.2, rotate: 10, transition: { duration: 0.3 } },
+    hover: { scale: 1.2, rotate: 10, transition: { duration: 0.3 } }
   };
 
   const buttonVariants = {
     initial: { scale: 1, boxShadow: "0 0 0 rgba(45, 212, 191, 0)" },
-    hover: {
-      scale: 1.05,
+    hover: { 
+      scale: 1.05, 
       boxShadow: "0 0 15px rgba(45, 212, 191, 0.5)",
-      transition: { duration: 0.3, ease: "easeOut" },
+      transition: { duration: 0.3, ease: "easeOut" }
     },
-    tap: { scale: 0.95, transition: { duration: 0.2 } },
+    tap: { scale: 0.95, transition: { duration: 0.2 } }
   };
 
   return (
@@ -113,6 +115,7 @@ export const Login = () => {
         initial="hidden"
         animate="visible"
       >
+        {/* SignUp Form */}
         <div className="w-full md:w-3/5 bg-white backdrop-blur-lg p-10 border border-teal-200/20 rounded-2xl">
           <div className="text-center mb-10">
             <motion.div
@@ -129,9 +132,9 @@ export const Login = () => {
               animate={{ opacity: 1 }}
               transition={{ delay: 0.3 }}
             >
-              Login to TestMancer
+              Login for TestMancer
             </motion.h2>
-            <p className="text-gray-500">Unlock your learning adventure!</p>
+            <p className="text-gray-500">Resume your learning adventure!</p>
           </div>
 
           {error && (
@@ -146,6 +149,7 @@ export const Login = () => {
           )}
 
           <div className="space-y-6">
+            {/* Google SignUp Button */}
             <motion.div
               className="w-full flex items-center justify-center"
               variants={buttonVariants}
@@ -155,104 +159,21 @@ export const Login = () => {
             >
               <GoogleLogin
                 onSuccess={handleGoogleSuccess}
-                onError={() => setError("Google login failed. Please try again.")}
+                onError={() => setError("Google signup failed. Please try again.")}
                 shape="pill"
                 size="large"
-                text="continue_with"
+                text="signup_with"
               />
             </motion.div>
 
-            <div className="flex items-center justify-center">
-              <div className="h-px bg-gray-300 w-full"></div>
-              <span className="px-4 text-gray-500">or</span>
-              <div className="h-px bg-gray-300 w-full"></div>
-            </div>
-
-            <form onSubmit={handleLogin} className="space-y-6">
-              <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <motion.div variants={iconVariants} initial="initial" whileHover="hover">
-                    <FiMail className="text-teal-500 text-xl" />
-                  </motion.div>
-                </div>
-                <input
-                  id="email"
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="w-full pl-12 pr-4 py-3 bg-white/20 border border-teal-300/50 focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500/50 rounded-lg transition-all duration-300"
-                  placeholder="Your email"
-                  required
-                />
-              </div>
-
-              <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <motion.div variants={iconVariants} initial="initial" whileHover="hover">
-                    <FiLock className="text-teal-500 text-xl" />
-                  </motion.div>
-                </div>
-                <input
-                  id="password"
-                  type="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  className="w-full pl-12 pr-4 py-3 bg-white/20 border border-teal-300/50 focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500/50 rounded-lg transition-all duration-300"
-                  placeholder="Your password"
-                  required
-                />
-              </div>
-
-              <motion.button
-                type="submit"
-                disabled={loading}
-                className="w-full flex items-center justify-center gap-2 bg-teal-500 hover:bg-teal-600 text-white py-4 rounded-full font-semibold transition-all duration-300 transform hover:scale-105 disabled:bg-teal-300 disabled:transform-none"
-                variants={buttonVariants}
-                initial="initial"
-                whileHover={!loading ? "hover" : ""}
-                whileTap={!loading ? "tap" : ""}
+            <div className="mt-8 text-center">
+              <Link 
+                to="/signup" 
+                className="text-teal-400 hover:text-teal-600 text-sm font-semibold"
               >
-                {loading ? (
-                  <>
-                    <svg
-                      className="animate-spin -ml-1 mr-2 h-5 w-5 text-white"
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                    >
-                      <circle
-                        className="opacity-25"
-                        cx="12"
-                        cy="12"
-                        r="10"
-                        stroke="currentColor"
-                        strokeWidth="4"
-                      ></circle>
-                      <path
-                        className="opacity-75"
-                        fill="currentColor"
-                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                      ></path>
-                    </svg>
-                    Logging In...
-                  </>
-                ) : (
-                  <>
-                    Start Quest
-                    <FiArrowRight className="text-sm" />
-                  </>
-                )}
-              </motion.button>
-            </form>
-          </div>
-
-          <div className="mt-8 text-center">
-            <Link
-              to="/signup"
-              className="text-teal-400 hover:text-teal-600 text-sm font-semibold"
-            >
-              Don't have an account? Sign Up
-            </Link>
+                Don't have an account? Signup
+              </Link>
+            </div>
           </div>
         </div>
       </motion.div>

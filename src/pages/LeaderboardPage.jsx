@@ -1,20 +1,16 @@
-import React, { useState } from "react";
+// LeaderboardPage.jsx
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { FiAward, FiArrowLeft, FiBarChart2 } from "react-icons/fi";
 import Leaderboard from "../components/Leaderboard";
 import { useAuth } from "../../provider/AuthContext";
+import { supabase } from "../../supabase/supabaseClient";
 
 const LeaderboardPage = () => {
   const { user } = useAuth();
-  const [activeTab, setActiveTab] = useState("overall");
   const [timeRange, setTimeRange] = useState("all-time");
-
-  const tabs = [
-    { id: "overall", label: "Overall" },
-    { id: "english", label: "English" },
-    { id: "mathematics", label: "Mathematics" },
-    { id: "current-affairs", label: "Current Affairs" },
-  ];
+  const [userRank, setUserRank] = useState(null);
+  const [userPoints, setUserPoints] = useState(0);
 
   const timeRanges = [
     { id: "all-time", label: "All Time" },
@@ -22,7 +18,70 @@ const LeaderboardPage = () => {
     { id: "weekly", label: "This Week" },
   ];
 
-  const userRank = user ? 24 : null;
+  useEffect(() => {
+    const fetchUserRank = async () => {
+      if (!user) return;
+
+      try {
+        // First get the user's points for the current time range
+        let pointsQuery = supabase
+          .from("leaderboard")
+          .select("total_points")
+          .eq("user_id", user.id);
+
+        if (timeRange === "weekly") {
+          const oneWeekAgo = new Date();
+          oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+          pointsQuery = pointsQuery.gte("updated_at", oneWeekAgo.toISOString());
+        } else if (timeRange === "monthly") {
+          const oneMonthAgo = new Date();
+          oneMonthAgo.setMonth(oneMonthAgo.getMonth() - 1);
+          pointsQuery = pointsQuery.gte("updated_at", oneMonthAgo.toISOString());
+        }
+
+        const { data: pointsData, error: pointsError } = await pointsQuery;
+
+        if (pointsError) throw pointsError;
+        if (!pointsData || pointsData.length === 0) {
+          setUserRank(null);
+          setUserPoints(0);
+          return;
+        }
+
+        setUserPoints(pointsData[0].total_points);
+
+        // Then get the rank by counting how many users have more points
+        let rankQuery = supabase
+          .from("leaderboard")
+          .select("*", { count: "exact" });
+
+        if (timeRange === "weekly") {
+          const oneWeekAgo = new Date();
+          oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+          rankQuery = rankQuery.gte("updated_at", oneWeekAgo.toISOString());
+        } else if (timeRange === "monthly") {
+          const oneMonthAgo = new Date();
+          oneMonthAgo.setMonth(oneMonthAgo.getMonth() - 1);
+          rankQuery = rankQuery.gte("updated_at", oneMonthAgo.toISOString());
+        }
+
+        // Count users with higher points
+        const { count, error: rankError } = await rankQuery
+          .gt("total_points", pointsData[0].total_points)
+          .order("total_points", { ascending: false });
+
+        if (rankError) throw rankError;
+
+        // Rank is count + 1 (since count is number of users above you)
+        setUserRank(count !== null ? count + 1 : null);
+      } catch (error) {
+        console.error("Error fetching user rank:", error);
+        setUserRank(null);
+      }
+    };
+
+    fetchUserRank();
+  }, [user, timeRange]);
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-teal-50 to-white">
@@ -47,26 +106,14 @@ const LeaderboardPage = () => {
           {user && (
             <div className="bg-gradient-to-r from-teal-400 via-pink-400 to-orange-400 rounded-xl p-4 text-white shadow-lg">
               <p className="text-sm">Your Current Rank</p>
-              <p className="text-2xl font-bold">#{userRank || "Not Ranked"}</p>
+              <p className="text-2xl font-bold">
+                #{userRank || "Not Ranked"}
+              </p>
+              {userPoints > 0 && (
+                <p className="text-xs opacity-80">{userPoints} gems</p>
+              )}
             </div>
           )}
-        </div>
-
-        {/* Tabs */}
-        <div className="flex flex-wrap gap-2 mb-6">
-          {tabs.map((tab) => (
-            <button
-              key={tab.id}
-              onClick={() => setActiveTab(tab.id)}
-              className={`px-4 py-2 rounded-full font-medium transition-all shadow-sm ${
-                activeTab === tab.id
-                  ? "bg-gradient-to-r from-teal-400 to-pink-400 text-white scale-105"
-                  : "bg-teal-100 text-teal-700 hover:bg-teal-200"
-              }`}
-            >
-              {tab.label}
-            </button>
-          ))}
         </div>
 
         {/* Time Range Selector */}
@@ -90,8 +137,9 @@ const LeaderboardPage = () => {
         <div className="mb-12">
           <Leaderboard
             limit={20}
-            title={`${tabs.find((t) => t.id === activeTab)?.label} Leaderboard`}
+            title="Overall Leaderboard"
             className="mb-8"
+            timeRange={timeRange}
           />
 
           {user && (
@@ -100,20 +148,23 @@ const LeaderboardPage = () => {
                 <div>
                   <h3 className="text-xl font-bold mb-2">Your Progress</h3>
                   <p>
-                    You're currently ranked #{userRank} in the overall
-                    leaderboard. Keep going to reach the top!
+                    {userRank
+                      ? `You're currently ranked #${userRank} in the overall leaderboard with ${userPoints} gems. Keep going to reach the top!`
+                      : "You're not ranked yet. Start completing quizzes to appear on the leaderboard!"}
                   </p>
                 </div>
                 <FiBarChart2 className="text-3xl opacity-80" />
               </div>
-              <div className="mt-4 bg-white/20 rounded-full h-2 overflow-hidden">
-                <div
-                  className="bg-white h-2 rounded-full transition-all duration-500"
-                  style={{
-                    width: `${Math.min(100, 100 - (userRank || 100))}%`,
-                  }}
-                ></div>
-              </div>
+              {userRank && (
+                <div className="mt-4 bg-white/20 rounded-full h-2 overflow-hidden">
+                  <div
+                    className="bg-white h-2 rounded-full transition-all duration-500"
+                    style={{
+                      width: `${Math.min(100, 100 - (userRank || 100))}%`,
+                    }}
+                  ></div>
+                </div>
+              )}
             </div>
           )}
         </div>

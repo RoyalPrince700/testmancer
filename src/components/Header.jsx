@@ -292,6 +292,19 @@ export const Header = () => {
                     />
                   )}
                 </Link>
+                 <Link
+                  to="/post-utme/leaderboard"
+                  onClick={() => setSidebarOpen(false)}
+                  className="relative hover:text-teal-600"
+                >
+                  Leaderboard
+                  {isActive("/quiz-hub") && (
+                    <motion.span
+                      className="absolute left-0 bottom-0 h-0.5 w-full bg-teal-600 origin-right"
+                      {...underlineAnimation}
+                    />
+                  )}
+                </Link>
                 <Link
                   to="/how-it-works"
                   onClick={() => setSidebarOpen(false)}

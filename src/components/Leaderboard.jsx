@@ -1,7 +1,10 @@
+// Leaderboard.jsx
 import { useEffect, useState } from "react";
 import { supabase } from "../../supabase/supabaseClient";
 import { FiAward } from "react-icons/fi";
 import { motion } from "framer-motion";
+import { avatarList } from "../components/avatarList"; // Updated import path
+import TestMancerLoader from "./TestMancer";
 
 export default function Leaderboard({
   limit = 10,
@@ -9,15 +12,17 @@ export default function Leaderboard({
   showBadges = true,
   showRank = true,
   className = "",
+  activeTab = "overall",
+  timeRange = "all-time",
 }) {
   const [leaderboard, setLeaderboard] = useState([]);
   const [loading, setLoading] = useState(true);
 
   const rankColors = [
-    "from-yellow-400 to-yellow-500", // 1st
-    "from-gray-300 to-gray-400",     // 2nd
-    "from-orange-400 to-orange-500", // 3rd
-    "from-teal-400 to-teal-600",     // 4th+
+    "from-yellow-400 to-yellow-500",
+    "from-gray-300 to-gray-400",
+    "from-orange-400 to-orange-500",
+    "from-teal-400 to-teal-600",
     "from-pink-400 to-pink-600",
     "from-coral-400 to-orange-500",
   ];
@@ -25,38 +30,52 @@ export default function Leaderboard({
   useEffect(() => {
     const fetchLeaderboard = async () => {
       setLoading(true);
-      const { data, error } = await supabase
+      let query = supabase
         .from("leaderboard")
         .select("*")
         .order("total_points", { ascending: false })
         .limit(limit);
+
+      if (activeTab !== "overall") {
+        query = query.eq("category", activeTab);
+      }
+
+      if (timeRange === "weekly") {
+        const oneWeekAgo = new Date();
+        oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+        query = query.gte("updated_at", oneWeekAgo.toISOString());
+      } else if (timeRange === "monthly") {
+        const oneMonthAgo = new Date();
+        oneMonthAgo.setMonth(oneMonthAgo.getMonth() - 1);
+        query = query.gte("updated_at", oneMonthAgo.toISOString());
+      }
+
+      const { data, error } = await query;
 
       if (!error) setLeaderboard(data || []);
       setLoading(false);
     };
 
     fetchLeaderboard();
-  }, [limit]);
+  }, [limit, activeTab, timeRange]);
 
   return (
     <div className={`rounded-xl shadow-lg p-6 ${className}`}>
-      <h2 className="text-2xl font-bold mb-4 text-white">{title}</h2>
+      <h2 className="text-2xl font-bold mb-4 text-teal-700">{title}</h2>
 
       {loading ? (
-        <div className="text-center py-8 text-white">
-          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-white mx-auto mb-4"></div>
-          <p>Loading leaderboard...</p>
-        </div>
+       <TestMancerLoader/>
       ) : leaderboard.length === 0 ? (
         <p className="text-gray-100 text-center py-8">No data available yet</p>
       ) : (
         <div className="space-y-4">
           {leaderboard.map((entry, index) => {
-            const gradient = rankColors[index] || rankColors[(index % rankColors.length)];
+            const gradient = rankColors[index] || rankColors[index % rankColors.length];
             const percentage =
               leaderboard[0]?.total_points > 0
                 ? Math.round((entry.total_points / leaderboard[0].total_points) * 100)
                 : 0;
+            const defaultAvatar = avatarList[index % avatarList.length];
 
             return (
               <motion.div
@@ -67,7 +86,6 @@ export default function Leaderboard({
                 whileHover={{ scale: 1.02 }}
                 className="flex items-center gap-4 p-4 bg-white rounded-lg shadow-md"
               >
-                {/* Rank */}
                 {showRank && (
                   <div
                     className={`w-10 h-10 rounded-full flex items-center justify-center font-bold text-white bg-gradient-to-br ${gradient}`}
@@ -76,31 +94,23 @@ export default function Leaderboard({
                   </div>
                 )}
 
-                {/* Avatar + Info */}
                 <div className="flex items-center gap-3 flex-1">
-                  {entry.avatar_url ? (
-                    <div
-                      className={`p-1 rounded-full bg-gradient-to-br ${gradient}`}
-                    >
-                      <img
-                        src={entry.avatar_url}
-                        alt={entry.full_name}
-                        className="w-10 h-10 rounded-full object-cover border-2 border-white"
-                      />
-                    </div>
-                  ) : (
-                    <div
-                      className={`w-10 h-10 rounded-full bg-gradient-to-br ${gradient} border-2 border-white`}
+                  <div className={`p-1 rounded-full bg-gradient-to-br ${gradient}`}>
+                    <img
+                      src={entry.avatar_url || defaultAvatar}
+                      alt={entry.full_name || "User"}
+                      className="w-10 h-10 rounded-full object-cover border-2 border-white"
+                      onError={(e) => {
+                        e.target.src = defaultAvatar;
+                      }}
                     />
-                  )}
+                  </div>
 
                   <div className="flex-1">
                     <div className="font-medium text-gray-800 flex items-center gap-2">
                       {entry.full_name || "Anonymous"}
                       {index === 0 && <FiAward className="text-yellow-400" />}
                     </div>
-
-                    {/* Progress Bar */}
                     <div className="w-full bg-gray-200 rounded-full h-2 mt-2 overflow-hidden">
                       <motion.div
                         initial={{ width: 0 }}
@@ -109,14 +119,12 @@ export default function Leaderboard({
                         className={`h-2 bg-gradient-to-r ${gradient}`}
                       />
                     </div>
-
                     <div className="text-xs text-gray-500 mt-1">
-                      {entry.total_points} points
+                      {entry.total_points} gems
                     </div>
                   </div>
                 </div>
 
-                {/* Badges */}
                 {showBadges && (
                   <div className="flex gap-1">
                     {entry.gold_badges > 0 && (

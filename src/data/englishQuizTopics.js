@@ -9,11 +9,11 @@ export const englishQuizTopics = [
     subtopics: [
       { name: "Tenses", path: "/quiz-hub/english/quiz-tenses", quizId: "tenses_quiz" },
       { name: "Concord (subject-verb agreement)", path: "/quiz-hub/english-quiz/concord-quiz", quizId: "concord_quiz" },
-      { name: "Sentence Structure", path: "/quiz-hub/english-quiz/sentence-structure-quiz", quizId: "sentence_structure_quiz" },
+      { name: "Sentence Structure", path: "/quiz-hub/english-quiz/sentence-quiz", quizId: "sentence_quiz" },
       { name: "Types of Sentences", path: "/quiz-hub/english-quiz/sentence-types-quiz", quizId: "sentence_types_quiz" },
       { name: "Punctuation", path: "/quiz-hub/english-quiz/punctuation-quiz", quizId: "punctuation_quiz" },
       { name: "Subjunctive Mood", path: "/quiz-hub/english-quiz/subjunctive-quiz", quizId: "subjunctive_quiz" },
-      { name: "Real and Unreal Future", path: "/quiz-hub/english-quiz/future-quiz", quizId: "future_quiz" },
+      { name: "Real and Unreal Future", path: "/quiz-hub/english-quiz/real-quiz", quizId: "real_quiz" },
       { name: "Errors in English Language", path: "/quiz-hub/english-quiz/errors-quiz", quizId: "errors_quiz" },
       { name: "Question Tags", path: "/quiz-hub/english-quiz/question-tags-quiz", quizId: "question_tags_quiz" },
     ],
