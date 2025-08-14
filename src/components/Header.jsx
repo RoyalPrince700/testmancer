@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { FiMenu, FiX, FiUser } from "react-icons/fi";
+import {
+  FiMenu,FiX,FiUser,FiHome,FiBook,FiGrid,FiAward ,FiHelpCircle,FiInfo,FiShield,FiMessageCircle,
+} from "react-icons/fi";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { supabase } from "../../supabase/supabaseClient";
 import { useAuth } from "../../provider/AuthContext";
@@ -239,159 +241,215 @@ export const Header = () => {
 
       {/* Sidebar (Mobile) */}
       <AnimatePresence>
-        {sidebarOpen && (
-          <motion.div
-            className="fixed inset-0 z-[999] flex"
-            initial="hidden"
-            animate="visible"
-            exit="exit"
-            variants={sidebarVariants}
-            transition={{ duration: 0.3, ease: "easeInOut" }}
+  {sidebarOpen && (
+    <motion.div
+      className="fixed inset-0 z-[999] flex"
+      initial="hidden"
+      animate="visible"
+      exit="exit"
+      variants={sidebarVariants}
+      transition={{ duration: 0.3, ease: "easeInOut" }}
+    >
+      {/* Sidebar Panel */}
+      <div className="w-64 bg-white shadow-lg p-6 flex flex-col">
+        {/* Header */}
+        <div className="flex justify-between items-center mb-8">
+          <Link to="/" onClick={() => setSidebarOpen(false)} aria-label="Home">
+            <img src={LOGO} alt="TestMancer" className="h-6 w-10" />
+          </Link>
+          <button
+            onClick={() => setSidebarOpen(false)}
+            className="text-teal-600"
+            aria-label="Close menu"
           >
-            {/* Sidebar Panel */}
-            <div className="w-64 bg-white shadow-lg p-6 flex flex-col">
-              {/* Header */}
-              <div className="flex justify-between items-center mb-6">
-                <Link to="/" onClick={() => setSidebarOpen(false)} aria-label="Home">
-                  <img src={LOGO} alt="TestMancer" className="h-6 w-10" />
-                </Link>
-                <button
-                  onClick={() => setSidebarOpen(false)}
-                  className="text-teal-600"
-                  aria-label="Close menu"
-                >
-                  <FiX className="w-6 h-6" />
-                </button>
-              </div>
+            <FiX className="w-6 h-6" />
+          </button>
+        </div>
 
-              {/* Menu Links */}
-              <nav className="flex flex-col gap-4 text-gray-700">
-                <Link
-                  to="/post-utme"
-                  onClick={() => setSidebarOpen(false)}
-                  className="relative hover:text-teal-600"
-                >
-                  Post-UTME
-                  {isActive("/post-utme") && (
-                    <motion.span
-                      className="absolute left-0 bottom-0 h-0.5 w-full bg-teal-600 origin-right"
-                      {...underlineAnimation}
-                    />
-                  )}
-                </Link>
-                <Link
-                  to="/quiz-hub"
-                  onClick={() => setSidebarOpen(false)}
-                  className="relative hover:text-teal-600"
-                >
-                  Quiz Hub
-                  {isActive("/quiz-hub") && (
-                    <motion.span
-                      className="absolute left-0 bottom-0 h-0.5 w-full bg-teal-600 origin-right"
-                      {...underlineAnimation}
-                    />
-                  )}
-                </Link>
-                 <Link
-                  to="/post-utme/leaderboard"
-                  onClick={() => setSidebarOpen(false)}
-                  className="relative hover:text-teal-600"
-                >
-                  Leaderboard
-                  {isActive("/quiz-hub") && (
-                    <motion.span
-                      className="absolute left-0 bottom-0 h-0.5 w-full bg-teal-600 origin-right"
-                      {...underlineAnimation}
-                    />
-                  )}
-                </Link>
-                <Link
-                  to="/how-it-works"
-                  onClick={() => setSidebarOpen(false)}
-                  className="relative hover:text-teal-600"
-                >
-                  How It Works
-                  {location.pathname === "/how-it-works" && (
-                    <motion.span
-                      className="absolute left-0 bottom-0 h-0.5 w-full bg-teal-600 origin-right"
-                      {...underlineAnimation}
-                    />
-                  )}
-                </Link>
-                <Link
-                  to="/about-us"
-                  onClick={() => setSidebarOpen(false)}
-                  className="relative hover:text-teal-600"
-                >
-                  About Us
-                  {location.pathname === "/about-us" && (
-                    <motion.span
-                      className="absolute left-0 bottom-0 h-0.5 w-full bg-teal-600 origin-right"
-                      {...underlineAnimation}
-                    />
-                  )}
-                </Link>
-                {isAuthenticated && isAdmin && (
-                  <Link
-                    to="/admin"
-                    onClick={() => setSidebarOpen(false)}
-                    className="relative hover:text-teal-600 flex gap-2"
-                  >
-                    Admin Dashboard
-                    <span className="w-2 h-2 bg-teal-600 rounded-full"></span>
-                    {location.pathname === "/admin" && (
-                      <motion.span
-                        className="absolute left-0 bottom-0 h-0.5 w-full bg-teal-600 origin-right"
-                        {...underlineAnimation}
-                      />
-                    )}
-                  </Link>
-                )}
-              </nav>
+        {/* Menu Links */}
+        <nav className="flex flex-col gap-2 text-gray-700 flex-1">
+          <Link
+            to="/"
+            onClick={() => setSidebarOpen(false)}
+            className="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-50 hover:text-teal-600"
+          >
+            <FiHome className="w-5 h-5 text-gray-500" />
+            <span>Home</span>
+            {location.pathname === "/" && (
+              <motion.span
+                className="absolute right-0 w-1 h-6 bg-teal-600 rounded-l"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+              />
+            )}
+          </Link>
 
-              {/* Profile/Login at Bottom */}
-              <div className="mt-auto pt-6 border-t border-gray-200">
-                {isAuthenticated ? (
-                  <Link
-                    to="/profile"
-                    onClick={() => setSidebarOpen(false)}
-                    className="flex items-center gap-3 hover:bg-gray-50 p-2 rounded-lg"
-                  >
-                    {profileData?.avatar_url ? (
-                      <img
-                        src={profileData.avatar_url}
-                        alt={profileData.full_name || "Profile"}
-                        className="w-10 h-10 rounded-full object-cover border"
-                      />
-                    ) : (
-                      <div className="bg-gray-200 w-10 h-10 rounded-full flex items-center justify-center">
-                        <FiUser className="text-gray-500 text-lg" />
-                      </div>
-                    )}
-                    <span className="font-medium">
-                      {profileData?.full_name || "Profile"}
-                    </span>
-                  </Link>
-                ) : (
-                  <Link
-                    to="/login"
-                    onClick={() => setSidebarOpen(false)}
-                    className="block w-full text-center border border-teal-600 text-teal-600 py-2 rounded-lg hover:bg-teal-50"
-                  >
-                    Login
-                  </Link>
-                )}
-              </div>
-            </div>
+          <Link
+            to="/post-utme"
+            onClick={() => setSidebarOpen(false)}
+            className="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-50 hover:text-teal-600 relative"
+          >
+            <FiBook className="w-5 h-5 text-gray-500" />
+            <span>Post-UTME</span>
+            {isActive("/post-utme") && (
+              <motion.span
+                className="absolute right-0 w-1 h-6 bg-teal-600 rounded-l"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+              />
+            )}
+          </Link>
 
-            {/* Overlay */}
-            <div
-              className="flex-1 bg-black/40"
+          <Link
+            to="/quiz-hub"
+            onClick={() => setSidebarOpen(false)}
+            className="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-50 hover:text-teal-600 relative"
+          >
+            <FiGrid className="w-5 h-5 text-gray-500" />
+            <span>Quiz Hub</span>
+            {isActive("/quiz-hub") && (
+              <motion.span
+                className="absolute right-0 w-1 h-6 bg-teal-600 rounded-l"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+              />
+            )}
+          </Link>
+
+          <Link
+            to="/post-utme/leaderboard"
+            onClick={() => setSidebarOpen(false)}
+            className="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-50 hover:text-teal-600 relative"
+          >
+            <FiAward  className="w-5 h-5 text-gray-500" />
+            <span>Leaderboard</span>
+            {isActive("/post-utme/leaderboard") && (
+              <motion.span
+                className="absolute right-0 w-1 h-6 bg-teal-600 rounded-l"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+              />
+            )}
+          </Link>
+
+          <Link
+            to="/how-it-works"
+            onClick={() => setSidebarOpen(false)}
+            className="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-50 hover:text-teal-600 relative"
+          >
+            <FiHelpCircle className="w-5 h-5 text-gray-500" />
+            <span>How It Works</span>
+            {location.pathname === "/how-it-works" && (
+              <motion.span
+                className="absolute right-0 w-1 h-6 bg-teal-600 rounded-l"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+              />
+            )}
+          </Link>
+
+          <Link
+            to="/about-us"
+            onClick={() => setSidebarOpen(false)}
+            className="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-50 hover:text-teal-600 relative"
+          >
+            <FiInfo className="w-5 h-5 text-gray-500" />
+            <span>About Us</span>
+            {location.pathname === "/about-us" && (
+              <motion.span
+                className="absolute right-0 w-1 h-6 bg-teal-600 rounded-l"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+              />
+            )}
+          </Link>
+
+          {isAuthenticated && isAdmin && (
+            <Link
+              to="/admin"
               onClick={() => setSidebarOpen(false)}
-            />
-          </motion.div>
+              className="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-50 hover:text-teal-600 relative"
+            >
+              <FiShield className="w-5 h-5 text-gray-500" />
+              <span>Admin Dashboard</span>
+              <span className="w-2 h-2 bg-teal-600 rounded-full"></span>
+              {location.pathname === "/admin" && (
+                <motion.span
+                  className="absolute right-0 w-1 h-6 bg-teal-600 rounded-l"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                />
+              )}
+            </Link>
+          )}
+        </nav>
+
+        {/* WhatsApp Button (Only for logged-in users) */}
+        {isAuthenticated && (
+          <div className="mt-6">
+            <a
+              href="https://chat.whatsapp.com/JSIdeLAWNFK5VvV7XXnIek?mode=ac_t"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-3 p-3 bg-green-50 text-green-700 rounded-lg border border-green-200 hover:bg-green-100 transition"
+              onClick={() => setSidebarOpen(false)}
+            >
+              <FiMessageCircle className="w-5 h-5" />
+              <span className="font-medium">Join WhatsApp</span>
+            </a>
+          </div>
         )}
-      </AnimatePresence>
+
+        {/* Profile/Login at Bottom */}
+        <div className="mt-8 pt-6 border-t border-gray-200">
+          {isAuthenticated ? (
+            <Link
+              to="/profile"
+              onClick={() => setSidebarOpen(false)}
+              className="flex items-center gap-3 hover:bg-gray-50 p-2 rounded-lg"
+            >
+              {profileData?.avatar_url ? (
+                <img
+                  src={profileData.avatar_url}
+                  alt={profileData.full_name || "Profile"}
+                  className="w-10 h-10 rounded-full object-cover border"
+                />
+              ) : (
+                <div className="bg-gray-200 w-10 h-10 rounded-full flex items-center justify-center">
+                  <FiUser className="text-gray-500 text-lg" />
+                </div>
+              )}
+              <span className="font-medium">
+                {profileData?.full_name || "Profile"}
+              </span>
+            </Link>
+          ) : (
+            <Link
+              to="/login"
+              onClick={() => setSidebarOpen(false)}
+              className="block w-full text-center border border-teal-600 text-teal-600 py-2 rounded-lg hover:bg-teal-50"
+            >
+              Login
+            </Link>
+          )}
+        </div>
+      </div>
+
+      {/* Overlay */}
+      <div
+        className="flex-1 bg-black/40"
+        onClick={() => setSidebarOpen(false)}
+      />
+    </motion.div>
+  )}
+</AnimatePresence>
     </>
   );
 };

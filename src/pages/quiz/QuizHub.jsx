@@ -4,7 +4,7 @@ import {
   FiBook,
   FiEdit,
   FiGlobe,
-  FiAward,
+  FiBarChart2,
   FiStar,
   FiZap
 } from "react-icons/fi";
@@ -14,8 +14,7 @@ import { supabase } from "../../../supabase/supabaseClient";
 import FullNameModal from "../../components/FullNameModal";
 import WelcomeCard from "../../components/WelcomeCard";
 import TestMancerLoader from "../../components/TestMancer";
-import {englishQuizTopics} from "../../data/englishQuizTopics";
-
+import { englishQuizTopics } from "../../data/englishQuizTopics";
 
 export const QuizHub = () => {
   const navigate = useNavigate();
@@ -31,7 +30,7 @@ export const QuizHub = () => {
       id: "english",
       title: "English",
       icon: FiBook,
-      description: "Master grammar and comprehension! 📚",
+      description: "Master grammar! 📚",
       path: "/quiz-hub/english",
       totalQuizzes: 50,
       color: "from-pink-500 to-pink-600"
@@ -40,7 +39,7 @@ export const QuizHub = () => {
       id: "mathematics",
       title: "Mathematics",
       icon: FiEdit,
-      description: "Crack numbers and win badges! 🔢",
+      description: "Crack numbers! 🔢",
       path: "/quiz-hub/mathematics",
       totalQuizzes: 40,
       color: "from-teal-400 to-teal-600"
@@ -49,7 +48,7 @@ export const QuizHub = () => {
       id: "currentAffairs",
       title: "Current Affairs",
       icon: FiGlobe,
-      description: "Stay updated, stay sharp! 🌍",
+      description: "Stay updated! 🌍",
       path: "/quiz-hub/currentAffairs",
       totalQuizzes: 30,
       color: "from-purple-400 to-purple-600"
@@ -57,109 +56,95 @@ export const QuizHub = () => {
   ];
 
   const fetchData = useCallback(async () => {
-  if (!isAuthenticated || !user) return;
-  setLoading(true);
+    if (!isAuthenticated || !user) return;
+    setLoading(true);
 
-  try {
-    // Fetch profile
-    const { data: profileData, error: profileError } = await supabase
-      .from("profiles")
-      .select("full_name, avatar_url")
-      .eq("id", user.id)
-      .single();
+    try {
+      const { data: profileData, error: profileError } = await supabase
+        .from("profiles")
+        .select("full_name, avatar_url")
+        .eq("id", user.id)
+        .single();
 
-    if (profileError) {
-      console.error("Error fetching profile:", profileError.message);
-      return;
+      if (profileError) {
+        console.error("Error fetching profile:", profileError.message);
+        return;
+      }
+
+      setUserData(profileData);
+      if (!profileData.full_name || !profileData.avatar_url) {
+        setShowModal(true);
+      }
+
+      const { data: progressData, error: progressError } = await supabase
+        .from("postutme_quiz_progress")
+        .select("quiz_id, completed, best_score, attempts")
+        .eq("user_id", user.id);
+
+      if (progressError) {
+        console.error("Error fetching quiz progress:", progressError.message);
+        return;
+      }
+
+      const calculatedStats = quizConfig.map((category) => {
+        const categoryQuizIds = englishQuizTopics
+          .flatMap(topic => topic.subtopics)
+          .map(subtopic => subtopic.quizId)
+          .filter(quizId => quizId.includes(category.id));
+
+        const progresses = progressData.filter((p) => 
+          categoryQuizIds.includes(p.quiz_id)
+        );
+
+        const completedQuizzes = progresses.filter((p) => p.completed).length;
+        const totalQuizzes = categoryQuizIds.length;
+        const attempts = progresses.reduce(
+          (sum, p) => sum + (p.attempts || 0),
+          0
+        );
+        const highScore =
+          progresses.length > 0
+            ? Math.max(...progresses.map((p) => p.best_score || 0))
+            : 0;
+        const avgScore =
+          progresses.length > 0
+            ? Math.round(
+                progresses.reduce(
+                  (sum, p) => sum + (p.best_score || 0),
+                  0
+                ) / progresses.length
+              )
+            : 0;
+
+        const progressPercent =
+          totalQuizzes > 0
+            ? Math.round((completedQuizzes / totalQuizzes) * 100)
+            : 0;
+
+        return {
+          ...category,
+          stats: {
+            attempts,
+            highScore,
+            avgScore,
+            completedQuizzes,
+            totalQuizzes,
+            progress: progressPercent
+          }
+        };
+      });
+
+      setQuizStats(calculatedStats);
+    } catch (error) {
+      console.error("Unexpected error:", error.message);
+    } finally {
+      setLoading(false);
     }
-
-    setUserData(profileData);
-    if (!profileData.full_name || !profileData.avatar_url) {
-      setShowModal(true);
-    }
-
-    // Fetch quiz progress for this user
-    const { data: progressData, error: progressError } = await supabase
-      .from("postutme_quiz_progress")
-      .select("quiz_id, completed, best_score, attempts")
-      .eq("user_id", user.id);
-
-    if (progressError) {
-      console.error("Error fetching quiz progress:", progressError.message);
-      return;
-    }
-
-    // Calculate stats per category
-    const calculatedStats = quizConfig.map((category) => {
-      // Get all quizIds for this category from englishQuizTopics
-      const categoryQuizIds = englishQuizTopics
-        .flatMap(topic => topic.subtopics)
-        .map(subtopic => subtopic.quizId)
-        .filter(quizId => quizId.includes(category.id)); // Or use exact matching if needed
-
-      // Filter progresses that match any of this category's quizIds
-      const progresses = progressData.filter((p) => 
-        categoryQuizIds.includes(p.quiz_id)
-      );
-
-      const completedQuizzes = progresses.filter((p) => p.completed).length;
-      const totalQuizzes = categoryQuizIds.length;
-      const attempts = progresses.reduce(
-        (sum, p) => sum + (p.attempts || 0),
-        0
-      );
-      const highScore =
-        progresses.length > 0
-          ? Math.max(...progresses.map((p) => p.best_score || 0))
-          : 0;
-      const avgScore =
-        progresses.length > 0
-          ? Math.round(
-              progresses.reduce(
-                (sum, p) => sum + (p.best_score || 0),
-                0
-              ) / progresses.length
-            )
-          : 0;
-
-      const progressPercent =
-        totalQuizzes > 0
-          ? Math.round((completedQuizzes / totalQuizzes) * 100)
-          : 0;
-
-      return {
-        ...category,
-        stats: {
-          attempts,
-          highScore,
-          avgScore,
-          completedQuizzes,
-          totalQuizzes,
-          progress: progressPercent
-        }
-      };
-    });
-
-    setQuizStats(calculatedStats);
-  } catch (error) {
-    console.error("Unexpected error:", error.message);
-  } finally {
-    setLoading(false);
-  }
-}, [isAuthenticated, user]);
+  }, [isAuthenticated, user]);
 
   useEffect(() => {
     fetchData();
   }, [fetchData]);
-
-  const badgeVariants = {
-    hidden: { opacity: 0, scale: 0.8 },
-    visible: {
-      opacity: 1,
-      scale: 1,
-      transition: { duration: 0.3, type: "spring", stiffness: 120 }
-    }
-  };
 
   if (loading) {
     return <TestMancerLoader />;
@@ -168,53 +153,32 @@ export const QuizHub = () => {
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white">
       <div className="container mx-auto px-4 py-6 max-w-6xl">
-        <WelcomeCard />
-
-        {/* Header */}
-        <motion.div
-          initial={{ y: -20, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ duration: 0.5 }}
-          className="text-center mb-16"
-        >
-          <div className="inline-flex items-center gap-2 bg-yellow-100 text-yellow-800 px-4 py-2 rounded-full mb-6 font-medium">
-            <FiZap className="text-yellow-500 animate-pulse" />
-            Make Quizzing Fun & Rewarding!
-          </div>
-          <h1 className="text-4xl md:text-5xl font-extrabold text-gray-800 mb-3">
-            {userData?.full_name ? (
-              <>🚀 Hey {userData.full_name.split(" ")[0]}, Ace Your Quizzes!</>
-            ) : (
-              <>🚀 Quiz Challenge Hub</>
-            )}
-          </h1>
-          <p className="text-lg text-gray-500 max-w-2xl mx-auto">
-            {userData?.full_name
-              ? `Test your knowledge, earn badges, and climb the leaderboard, ${userData.full_name.split(" ")[0]}!`
-              : "Test your knowledge, earn badges, and climb the leaderboard to show your skills!"}
-          </p>
-        </motion.div>
-
         {/* Callout */}
         {userData?.full_name && (
           <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.3 }}
-            className="bg-gradient-to-r from-teal-400 to-teal-600 rounded-2xl p-6 text-white text-center mb-12 max-w-2xl mx-auto"
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.5 }}
+            className="relative bg-gradient-to-r from-blue-400 to-blue-600 rounded-3xl p-4 sm:p-6 text-white text-center mb-12 max-w-2xl mx-auto overflow-hidden"
+            aria-label="Quiz Hub welcome message"
           >
-            <h2 className="text-2xl font-bold mb-3">
-              {userData.full_name.split(" ")[0]}, You're on Fire! 🔥
+            {/* Quiz Hub Label (Mobile Only) */}
+            <div className="absolute top-2 left-2 sm:hidden bg-blue-700 bg-opacity-50 text-white text-xs font-medium rounded-full px-2 py-1">
+              Quiz Hub
+            </div>
+            {/* Background Icon */}
+            <FiStar className="absolute top-2 right-2 text-blue-200 opacity-30 text-4xl" />
+            <h2 className="text-xl sm:text-2xl font-bold mb-2 sm:mb-3">
+              Welcome to the Quiz Hub, {userData.full_name.split(" ")[0]}! 🔥
             </h2>
-            <p className="text-blue-100">
-              Keep quizzing to climb the leaderboard and unlock exclusive badges.
-              Every correct answer brings you closer to the top!
+            <p className="text-blue-100 text-sm sm:text-base">
+              Test your knowledge with fun quizzes and climb the leaderboard!
             </p>
           </motion.div>
         )}
 
         {/* Quiz Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
           {quizStats.map((category, i) => (
             <motion.div
               key={i}
@@ -224,80 +188,59 @@ export const QuizHub = () => {
               className="relative"
             >
               <Link to={category.path} className="group">
-                <div className="h-full bg-white rounded-2xl shadow-xl p-6 border border-gray-200 hover:border-gray-300 transition-all relative overflow-hidden">
-                  {hoveredCard === i && (
-                    <div className="absolute top-4 right-4 flex gap-2 z-10">
-                      <motion.div
-                        variants={badgeVariants}
-                        initial="hidden"
-                        animate="visible"
-                        className="bg-yellow-100 border border-yellow-500 rounded-full p-2"
-                      >
-                        <FiAward className="text-yellow-600" />
-                      </motion.div>
-                      <motion.div
-                        variants={badgeVariants}
-                        initial="hidden"
-                        animate="visible"
-                        transition={{ delay: 0.1 }}
-                        className="bg-blue-100 border border-blue-500 rounded-full p-2"
-                      >
-                        <FiStar className="text-blue-600" />
-                      </motion.div>
-                    </div>
-                  )}
-
+                <div className="h-full bg-white rounded-xl shadow-md p-4 border border-gray-200 hover:border-gray-300 transition-all relative overflow-hidden">
                   {/* Progress */}
-                  <div className="mb-6">
-                    <div className="flex justify-between text-sm mb-1">
+                  <div className="mb-4">
+                    <div className="flex justify-between text-xs mb-1">
                       <span className="text-gray-500">Progress</span>
                       <span className="font-medium text-blue-500">
                         {category.stats.progress}%
                       </span>
                     </div>
-                    <div className="w-full bg-gray-200 rounded-full h-2.5">
+                    <div className="w-full bg-gray-200 rounded-full h-2">
                       <div
-                        className={`bg-gradient-to-r ${category.color} h-2.5 rounded-full`}
+                        className={`bg-gradient-to-r ${category.color} h-2 rounded-full`}
                         style={{ width: `${category.stats.progress}%` }}
                       />
                     </div>
                   </div>
 
                   {/* Icon */}
-                  <div className="mb-5 flex justify-center">
+                  <div className="mb-4 flex justify-center">
                     <div className="relative">
-                      <div className="absolute -inset-4 bg-blue-100 rounded-full blur-md opacity-70 group-hover:opacity-100 transition-opacity duration-300"></div>
+                      <div className="absolute -inset-3 bg-blue-100 rounded-full blur-sm opacity-70 group-hover:opacity-100 transition-opacity duration-300"></div>
                       <div
-                        className={`relative bg-gradient-to-br ${category.color} rounded-2xl p-5 flex items-center justify-center w-20 h-20`}
+                        className={`relative bg-gradient-to-br ${category.color} rounded-xl p-4 flex items-center justify-center w-16 h-16`}
                       >
-                        <category.icon className="text-white text-3xl" />
+                        <category.icon className="text-white text-2xl" />
                       </div>
                     </div>
                   </div>
 
                   {/* Text */}
-                  <h3 className="text-xl font-bold text-center text-gray-800 mb-3">
+                  <h3 className="text-lg font-bold text-center text-gray-800 mb-2">
                     {category.title}
                   </h3>
-                  <p className="text-gray-500 text-center mb-6">
+                  <p className="text-gray-500 text-center text-sm mb-4">
                     {category.description}
                   </p>
 
                   {/* Footer */}
-                  <div className="flex justify-center gap-4 text-sm text-blue-500 font-medium mb-6">
-                    <div className="flex items-center gap-2">
-                      <FiAward />
-                      <span>{category.stats.attempts} attempts</span>
-                    </div>
+                  <div className="flex justify-center gap-3 text-xs text-blue-500 font-medium mb-4">
+                    <Link to="/post-utme/leaderboard" className="flex items-center gap-1">
+                      <FiBarChart2 />
+                      <span>Leaderboard</span>
+                    </Link>
                   </div>
 
                   <div className="flex justify-center">
                     <button
                       onClick={() => navigate(category.path)}
-                      className={`bg-gradient-to-r ${category.color} text-white font-semibold rounded-full px-6 py-2 hover:scale-105 hover:shadow-lg transition-all`}
+                      className={`w-full bg-gradient-to-r ${category.color} text-white font-semibold rounded-full px-4 py-2 text-sm hover:scale-105 hover:shadow-lg transition-all`}
+                      aria-label={`Start or resume ${category.title} quiz`}
                     >
                       {userData?.full_name
-                        ? "Continue Quizzing"
+                        ? "Resume Quiz"
                         : "Start Quiz"}{" "}
                       🚀
                     </button>

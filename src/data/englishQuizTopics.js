@@ -39,8 +39,8 @@ export const englishQuizTopics = [
     description: "Develop skills in understanding and summarizing texts",
     color: "white",
     subtopics: [
-      { name: "Comprehension Passages", path: "/quiz-hub/english-quiz/comprehension-quiz", quizId: "comprehension_quiz" },
-      { name: "Summary Skills", path: "/quiz-hub/english-quiz/summary-quiz", quizId: "summary_quiz" },
+      { name: "Comprehension", path: "/quiz-hub/english-quiz/comprehension-quiz", quizId: "comprehension_quiz" },
+      { name: "Summary", path: "/quiz-hub/english-quiz/summary-quiz", quizId: "summary_quiz" },
     ],
   },
   {
@@ -61,9 +61,9 @@ export const englishQuizTopics = [
     description: "Master sentence expansion and detail clarity",
     color: "white",
     subtopics: [
-      { name: "Adverbial and Adjectival Order", path: "/quiz-hub/english-quiz/modifiers-quiz", quizId: "modifiers_quiz" },
-      { name: "Participial Forms", path: "/quiz-hub/english-quiz/participial-quiz", quizId: "participial_quiz" },
-      { name: "Infinitive and Gerund Forms", path: "/quiz-hub/english-quiz/infinitive-gerund-quiz", quizId: "infinitive_gerund_quiz" },
+      { name: "Adverbial", path: "/quiz-hub/english-quiz/adverbial-quiz", quizId: "modifiers_quiz" },
+      { name: "Participial", path: "/quiz-hub/english-quiz/participial-quiz", quizId: "participial_quiz" },
+      { name: "Infinitive", path: "/quiz-hub/english-quiz/infinitive-quiz", quizId: "infinitive_quiz" },
     ],
   },
 ];

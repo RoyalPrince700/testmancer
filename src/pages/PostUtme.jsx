@@ -1,11 +1,9 @@
-
 import React, { useState, useEffect, useCallback } from "react";
 import { Link } from "react-router-dom";
 import {
   FiBook,
   FiDivide,
   FiGlobe,
-  FiAward,
   FiBarChart2,
   FiStar,
   FiCheckCircle,
@@ -18,8 +16,6 @@ import { supabase } from '../../supabase/supabaseClient';
 import WelcomeCard from '../components/WelcomeCard';
 import TestMancerLoader from "../components/TestMancer";
 import ScrollToTop from "../components/ScrollToTop";
-
-
 
 const PostUtme = () => {
   const { user } = useAuth();
@@ -35,7 +31,7 @@ const PostUtme = () => {
     {
       title: "English",
       icon: FiBook,
-      description: "Master grammar and comprehension! 📚",
+      description: "Master grammar! 📚",
       path: "/post-utme/english",
       totalSubtopics: 21,
       color: "from-pink-500 to-pink-600",
@@ -43,7 +39,7 @@ const PostUtme = () => {
     {
       title: "Mathematics",
       icon: FiDivide,
-      description: "Crack numbers and win badges! 🔢",
+      description: "Crack numbers! 🔢",
       path: "/mathematics",
       totalSubtopics: 20,
       color: "from-teal-400 to-teal-600",
@@ -51,7 +47,7 @@ const PostUtme = () => {
     {
       title: "Current Affairs",
       icon: FiGlobe,
-      description: "Stay updated, stay sharp! 🌍",
+      description: "Stay updated! 🌍",
       path: "/current-affairs",
       totalSubtopics: 15,
       color: "from-purple-400 to-purple-600",
@@ -141,7 +137,7 @@ const PostUtme = () => {
 
       setAchievements([
         { icon: FiStar, title: "Daily Streak", value: `${streakData?.streak || 0} days`, color: "text-yellow-500" },
-        { icon: FiAward, title: "Badges Earned", value: totalBadges.toString(), color: "text-green-500" },
+        { icon: FiStar, title: "Badges Earned", value: totalBadges.toString(), color: "text-green-500" },
         { icon: FiBarChart2, title: "Leaderboard Rank", value: "#24", color: "text-pink-500" },
         { icon: FiCheckCircle, title: "Topics Mastered", value: `${totalTopicsMastered}/${totalSubtopics}`, color: "text-teal-500" },
       ]);
@@ -157,36 +153,35 @@ const PostUtme = () => {
     fetchUserData();
   }, [fetchUserData]);
 
-  const badgeVariants = {
-    hidden: { opacity: 0, scale: 0.8 },
-    visible: { opacity: 1, scale: 1, transition: { duration: 0.3, type: 'spring', stiffness: 120 } },
-  };
-
   if (loading) {
-    return <TestMancerLoader />
+    return <TestMancerLoader />;
   }
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white">
       <div className="container mx-auto px-4 py-6 max-w-6xl">
-    <ScrollToTop />
+        <ScrollToTop />
 
-        {/* <WelcomeCard /> */}
-
-         {/* Personalized Callout */}
+        {/* Personalized Callout */}
         {userData?.full_name && (
           <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.3 }}
-            className="bg-gradient-to-r from-teal-400 to-teal-600 rounded-2xl p-6 text-white text-center mb-12 max-w-2xl mx-auto"
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.5 }}
+            className="relative bg-gradient-to-r from-green-400 to-green-600 rounded-3xl p-4 sm:p-6 text-white text-center mb-12 max-w-2xl mx-auto overflow-hidden"
+            aria-label="Study Hub welcome message"
           >
-            <h2 className="text-2xl font-bold mb-3">
-              {userData.full_name.split(' ')[0]}, You're on Fire! 🔥
+            {/* Study Hub Label (Mobile Only) */}
+            <div className="absolute top-2 left-2 sm:hidden bg-green-700 bg-opacity-50 text-white text-xs font-medium rounded-full px-2 py-1">
+              Study Hub
+            </div>
+            {/* Background Icon */}
+            <FiBook className="absolute top-2 right-2 text-green-200 opacity-30 text-4xl" />
+            <h2 className="text-xl sm:text-2xl font-bold mb-2 sm:mb-3">
+              Welcome to the Study Hub, {userData.full_name.split(' ')[0]}! 📚
             </h2>
-            <p className="text-teal-100">
-              Keep going to climb the leaderboard and unlock exclusive badges. 
-              Every topic you master brings you closer to the top!
+            <p className="text-green-100 text-sm sm:text-base">
+              Dive into your lessons and master every topic to excel!
             </p>
           </motion.div>
         )}
@@ -198,52 +193,10 @@ const PostUtme = () => {
           transition={{ duration: 0.5 }}
           className="text-center mb-4"
         >
-          {/* <div className="inline-flex items-center gap-2 bg-yellow-100 text-yellow-800 px-4 py-2 rounded-full mb-6 font-medium">
-            <FiZap className="text-yellow-500 animate-pulse" />
-            Make Learning Fun & Rewarding!
-          </div> */}
-
-          {/* <h1 className="text-4xl md:text-5xl font-extrabold text-gray-800 mb-3">
-            {userData?.full_name ? (
-              <span>
-                🚀 Hey {userData.full_name.split(' ')[0]}, Crush Your Post-UTME!
-              </span>
-            ) : (
-              <span>🚀 Post-UTME Gamified Practice</span>
-            )}
-          </h1> */}
-          
-          {/* <p className="text-lg text-gray-500 max-w-2xl mx-auto">
-            {userData?.full_name 
-              ? `Earn rewards, track your progress, and rise to the top, ${userData.full_name.split(' ')[0]}!` 
-              : "Earn rewards, track your progress, and rise to the top as you prepare for success!"}
-          </p> */}
-
-          {/* <div className="mt-10 grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto">
-            {achievements.map((a, i) => (
-              <motion.div
-                key={i}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: i * 0.1 }}
-                className="bg-white rounded-xl p-4 shadow-md flex items-center gap-3"
-              >
-                <div className={`p-3 rounded-lg bg-gray-100 ${a.color}`}>
-                  <a.icon className="text-xl" />
-                </div>
-                <div>
-                  <p className="text-gray-500 text-sm">{a.title}</p>
-                  <p className="font-bold text-lg text-gray-800">{a.value}</p>
-                </div>
-              </motion.div>
-            ))}
-          </div> */}
         </motion.div>
 
-       
-
         {/* Subject Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
           {subjects.map((s, i) => (
             <motion.div
               key={i}
@@ -253,74 +206,48 @@ const PostUtme = () => {
               className="relative"
             >
               <Link to={s.path} className="group" aria-label={`Start ${s.title} practice`}>
-                <div className="h-full bg-white rounded-2xl shadow-xl p-6 border border-gray-200 hover:border-gray-300 transition-all relative overflow-hidden">
-                  {hoveredCard === i && (
-                    <div className="absolute top-4 right-4 flex gap-2 z-10">
-                      <motion.div
-                        variants={badgeVariants}
-                        initial="hidden"
-                        animate="visible"
-                        className="bg-yellow-100 border border-yellow-500 rounded-full p-2"
-                      >
-                        <FiAward className="text-yellow-600" />
-                      </motion.div>
-                      <motion.div
-                        variants={badgeVariants}
-                        initial="hidden"
-                        animate="visible"
-                        transition={{ delay: 0.1 }}
-                        className="bg-teal-100 border border-teal-500 rounded-full p-2"
-                      >
-                        <FiStar className="text-teal-600" />
-                      </motion.div>
-                    </div>
-                  )}
-
+                <div className="h-full bg-white rounded-xl shadow-md p-4 border border-gray-200 hover:border-gray-300 transition-all relative overflow-hidden">
                   {/* PROGRESS */}
-                  <div className="mb-6">
-                    <div className="flex justify-between text-sm mb-1">
+                  <div className="mb-4">
+                    <div className="flex justify-between text-xs mb-1">
                       <span className="text-gray-500">Progress</span>
                       <span className="font-medium text-pink-500">{s.progress}%</span>
                     </div>
-                    <div className="w-full bg-gray-200 rounded-full h-2.5">
+                    <div className="w-full bg-gray-200 rounded-full h-2">
                       <div
-                        className={`bg-gradient-to-r ${s.color} h-2.5 rounded-full`}
+                        className={`bg-gradient-to-r ${s.color} h-2 rounded-full`}
                         style={{ width: `${s.progress}%` }}
                       />
                     </div>
                   </div>
 
                   {/* ICON */}
-                  <div className="mb-5 flex justify-center">
+                  <div className="mb-4 flex justify-center">
                     <div className="relative">
-                      <div className="absolute -inset-4 bg-teal-100 rounded-full blur-md opacity-70 group-hover:opacity-100 transition-opacity duration-300"></div>
-                      <div className={`relative bg-gradient-to-br ${s.color} rounded-2xl p-5 flex items-center justify-center w-20 h-20`}>
-                        <s.icon className="text-white text-3xl" />
+                      <div className="absolute -inset-3 bg-teal-100 rounded-full blur-sm opacity-70 group-hover:opacity-100 transition-opacity duration-300"></div>
+                      <div className={`relative bg-gradient-to-br ${s.color} rounded-xl p-4 flex items-center justify-center w-16 h-16`}>
+                        <s.icon className="text-white text-2xl" />
                       </div>
                     </div>
                   </div>
 
                   {/* TEXTS */}
-                  <h3 className="text-xl font-bold text-center text-gray-800 mb-3">
+                  <h3 className="text-lg font-bold text-center text-gray-800 mb-2">
                     {s.title}
                   </h3>
-                  <p className="text-gray-500 text-center mb-6">{s.description}</p>
+                  <p className="text-gray-500 text-center text-sm mb-4">{s.description}</p>
 
                   {/* FOOTER ACTIONS */}
-                  <div className="flex justify-center gap-4 text-sm text-teal-500 font-medium mb-6">
-                    <div className="flex items-center gap-2">
-                      <FiAward />
-                      <span>{s.badgeCount} badges</span>
-                    </div>
-                    <div className="flex items-center gap-2">
+                  <div className="flex justify-center gap-3 text-xs text-teal-500 font-medium mb-4">
+                    <Link to="/post-utme/leaderboard" className="flex items-center gap-1">
                       <FiBarChart2 />
                       <span>Leaderboard</span>
-                    </div>
+                    </Link>
                   </div>
 
                   <div className="flex justify-center">
-                    <button className={`bg-gradient-to-r ${s.color} text-white font-semibold rounded-full px-6 py-2 hover:scale-105 hover:shadow-lg transition-all`}>
-                      {userData?.full_name ? "Continue Journey" : "Start Practice"} 🚀
+                    <button className={`w-full bg-gradient-to-r ${s.color} text-white font-semibold rounded-full px-4 py-2 text-sm hover:scale-105 hover:shadow-lg transition-all`}>
+                      {userData?.full_name ? "Resume" : "Start Practice"} 🚀
                     </button>
                   </div>
                 </div>

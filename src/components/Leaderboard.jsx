@@ -24,7 +24,7 @@ export default function Leaderboard({
     "from-orange-400 to-orange-500",
     "from-teal-400 to-teal-600",
     "from-pink-400 to-pink-600",
-    "from-coral-400 to-orange-500",
+    "from-blue-400 to-blue-500",
   ];
 
   useEffect(() => {

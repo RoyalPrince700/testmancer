@@ -25,11 +25,11 @@ export const ENGLISH_TOPICS = [
     description: "Enhance your word knowledge and usage accuracy",
     color: "from-indigo-600 to-purple-600",
     subtopics: [
-      { name: "Synonyms", path: "/english/synonyms" },
-      { name: "Antonyms", path: "/english/antonyms" },
-      { name: "Word Meanings", path: "/english/word-meanings" },
-      { name: "Idioms", path: "/english/idioms" },
-      { name: "Homonyms", path: "/english/homonyms" }
+      { name: "Synonyms", path: "/post-utme/english/synonyms" },
+      { name: "Antonyms", path: "/post-utme/english/antonyms" },
+      { name: "Word-Meanings", path: "/post-utme/english/word-meanings" },
+      { name: "Idioms", path: "/post-utme/english/idioms" },
+      { name: "Homonyms", path: "/post-utme/english/homonyms" }
     ]
   },
   {
@@ -39,8 +39,8 @@ export const ENGLISH_TOPICS = [
     description: "Develop skills in understanding and summarizing texts",
     color: "from-indigo-700 to-blue-600",
     subtopics: [
-      { name: "Comprehension Passages", path: "/english/comprehension" },
-      { name: "Summary Skills", path: "/english/summary" }
+      { name: "Comprehension", path: "/english/comprehension" },
+      { name: "Summary", path: "/english/summary" }
     ]
   },
   {
@@ -50,8 +50,8 @@ export const ENGLISH_TOPICS = [
     description: "Improve speaking and spelling conventions",
     color: "from-purple-500 to-indigo-600",
     subtopics: [
-      { name: "Spelling", path: "/english/spelling" },
-      { name: "Oral English", path: "/english/oral" }
+      { name: "Spelling", path: "/post-utme/english/spelling" },
+      { name: "Oral", path: "/post-utme/english/oral" }
     ]
   },
   {
@@ -61,9 +61,9 @@ export const ENGLISH_TOPICS = [
     description: "Master sentence expansion and detail clarity",
     color: "from-blue-600 to-indigo-700",
     subtopics: [
-      { name: "Adverbial and Adjectival Order", path: "/english/modifiers" },
-      { name: "Participial Forms", path: "/english/participial" },
-      { name: "Infinitive and Gerund Forms", path: "/english/infinitive-gerund" }
+      { name: "Adverbial", path: "/post-utme/english/adverbial" },
+      { name: "Participal", path: "/post-utme/english/participal" },
+      { name: "Infinitive", path: "/post-utme/english/infinitive" }
     ]
   }
 ];

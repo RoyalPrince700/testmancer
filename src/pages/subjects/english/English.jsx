@@ -1,4 +1,4 @@
-//src/pages/subjects/english/English.jsx
+// src/pages/subjects/english/English.jsx
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { 
@@ -40,10 +40,10 @@ const English = () => {
   const [streak, setStreak] = useState(0);
   const [userData, setUserData] = useState(null);
   const [showLockedModal, setShowLockedModal] = useState(null);
-
-  // NEW: popup states
   const [showUnlockPopup, setShowUnlockPopup] = useState(null);
   const [showBadgePopup, setShowBadgePopup] = useState(null);
+  // NEW: State to store admin status
+  const [isAdmin, setIsAdmin] = useState(false);
 
   const userProgress = useMemo(() => {
     const completed = Object.values(completedSubtopics)
@@ -53,11 +53,14 @@ const English = () => {
   }, [completedSubtopics]);
 
   const isTopicUnlocked = useCallback((index) => {
+    // If user is admin, unlock all topics
+    if (isAdmin) return true;
+    // Existing logic for non-admin users
     if (index === 0) return true;
     const prevTopic = ENGLISH_TOPICS[index - 1];
     const prevProgress = calculateProgress(prevTopic.id);
     return prevProgress.completed === prevProgress.total;
-  }, [completedSubtopics]);
+  }, [completedSubtopics, isAdmin]);
 
   useEffect(() => {
     if (!user) return;
@@ -65,10 +68,15 @@ const English = () => {
       try {
         const { data, error } = await supabase
           .from("profiles")
-          .select("*")
+          .select("*, role") // Updated to include role
           .eq("id", user.id)
           .single();
-        if (!error) setUserData(data);
+        if (!error) {
+          setUserData(data);
+          setIsAdmin(data.role === 'admin'); // Set admin status
+        } else {
+          console.error("Error fetching user profile:", error.message);
+        }
       } catch (err) {
         console.error("Unexpected error:", err.message);
       }
@@ -133,7 +141,6 @@ const English = () => {
 
   const toggleCard = (index) => {
     if (isTopicUnlocked(index)) {
-      // Show unlock popup if first time expanding an unlocked topic with no completed subtopics
       if (expandedCard !== index && !completedSubtopics[ENGLISH_TOPICS[index].id].some(Boolean)) {
         setShowUnlockPopup(index);
       }
@@ -181,7 +188,6 @@ const English = () => {
         ? userProgress.completed - 1 
         : userProgress.completed + 1;
 
-      // Badge logic
       if (!isCurrentlyCompleted && newCompletedCount === 21) {
         const { data: existingBadges } = await supabase
           .from('postutme_badges')
@@ -235,7 +241,6 @@ const English = () => {
   const closeLockedModal = () => setShowLockedModal(null);
   const firstName = userData?.full_name?.split(' ')[0] || 'Champion';
 
-  // Components
   const LockedTopicModal = ({ topicIndex }) => {
     const prevTopic = ENGLISH_TOPICS[topicIndex - 1];
     return (
@@ -276,21 +281,6 @@ const English = () => {
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white">
       <div className="container mx-auto px-4 py-8 max-w-6xl">
-        <motion.div initial={{ y: -20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ duration: 0.5 }} className="text-center mb-12">
-          <div className="inline-flex items-center gap-2 bg-yellow-100 text-yellow-800 px-4 py-2 rounded-full mb-6 font-medium">
-            <FiZap className="text-yellow-500 animate-pulse" />
-            We Make Learning Fun & Rewarding!
-          </div>
-          <h1 className="text-4xl md:text-5xl font-extrabold text-gray-800 mb-3">
-            🚀 Hey {firstName}, Master English Grammar!
-          </h1>
-          <p className="text-lg text-gray-500 max-w-2xl mx-auto">
-            Earn badges and climb the leaderboard, {firstName}!
-          </p>
-        </motion.div>
-
-        <ProgressCard userProgress={userProgress} badgeCount={badgeCount} streak={streak} />
-
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.3 }} className="space-y-8">
           {ENGLISH_TOPICS.map((topic, index) => {
             const progress = calculateProgress(topic.id);
@@ -328,7 +318,7 @@ const English = () => {
         )}
 
         <AnimatePresence>
-          {showLockedModal !== null && (
+          {showLockedModal !== null && !isAdmin && ( // Only show modal for non-admins
             <LockedTopicModal topicIndex={showLockedModal} />
           )}
           {showUnlockPopup !== null && (

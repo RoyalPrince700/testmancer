@@ -53,6 +53,28 @@ import QuizSubjunctive from './pages/quiz/QuizSubjunctive';
 import QuizReal from './pages/quiz/QuizReal';
 import QuizError from './pages/quiz/QuizErrors';
 import QuizQuestionTag from './pages/quiz/QuizQuestionTag';
+import Antonyms from './pages/subjects/english/vocabulary/Antonyms';
+import Synonyms from './pages/subjects/english/vocabulary/Synonyms';
+import Homonyms from './pages/subjects/english/vocabulary/Homonyms';
+import Idioms from './pages/subjects/english/vocabulary/Idioms';
+import WordMeaning from './pages/subjects/english/vocabulary/WordMeaning';
+import Oral from './pages/subjects/english/orals/Oral';
+import Spelling from './pages/subjects/english/orals/Spelling';
+import Comprehension from './pages/subjects/english/comprehension/Comprehension';
+import Summary from './pages/subjects/english/comprehension/Summary';
+import Adverbial from './pages/subjects/english/modifier/Adverbial';
+import Participial from './pages/subjects/english/modifier/Participle';
+import Infinitive from './pages/subjects/english/modifier/Infinity';
+import QuizSummary from './pages/subjects/english/comprehension/QuizSummary';
+import QuizComprehension from './pages/subjects/english/comprehension/QuizComprehension';
+import QuizAdverbial from './pages/subjects/english/modifier/QuizAdverbial';
+import QuizInfinitive from './pages/subjects/english/modifier/QuizInfinitive';
+import QuizParticiple from './pages/subjects/english/modifier/QuizParticiple';
+import QuizSynonyms from './pages/subjects/english/vocabulary/QuizSynonyms';
+import QuizAntonyms from './pages/subjects/english/vocabulary/QuizAntonyms';
+import QuizIdioms from './pages/subjects/english/vocabulary/QuizIdioms';
+import QuizHomonyms from './pages/subjects/english/vocabulary/QuizHomonyms';
+import QuizWordMeaning from './pages/subjects/english/vocabulary/QuizWordMeaning';
 
 const ProtectedRoute = ({ children }) => {
   const { user, loading } = useAuth();
@@ -127,10 +149,20 @@ function App() {
         <Route path="/post-utme/english/real" element={<ProtectedRoute><Real /></ProtectedRoute>} />
         <Route path="/post-utme/english/errors" element={<ProtectedRoute><Errors /></ProtectedRoute>} />
         <Route path="/post-utme/english/question" element={<ProtectedRoute><Question /></ProtectedRoute>} />
+        <Route path="/post-utme/english/antonyms" element={<ProtectedRoute><Antonyms /></ProtectedRoute>} />
+        <Route path="/post-utme/english/synonyms" element={<ProtectedRoute><Synonyms /></ProtectedRoute>} />
+        <Route path="/post-utme/english/homonyms" element={<ProtectedRoute><Homonyms /></ProtectedRoute>} />
+        <Route path="/post-utme/english/idioms" element={<ProtectedRoute><Idioms /></ProtectedRoute>} />
+        <Route path="/post-utme/english/word-meanings" element={<ProtectedRoute><WordMeaning /></ProtectedRoute>} />
+        <Route path="/post-utme/english/oral" element={<ProtectedRoute><Oral /></ProtectedRoute>} />
+        <Route path="/post-utme/english/spelling" element={<ProtectedRoute><Spelling /></ProtectedRoute>} />
+        <Route path="/post-utme/english/comprehension" element={<ProtectedRoute><Comprehension /></ProtectedRoute>} />
+        <Route path="/post-utme/english/summary" element={<ProtectedRoute><Summary /></ProtectedRoute>} />
+        <Route path="/post-utme/english/adverbial" element={<ProtectedRoute><Adverbial /></ProtectedRoute>} />
+        <Route path="/post-utme/english/participal" element={<ProtectedRoute><Participial /></ProtectedRoute>} />
+        <Route path="/post-utme/english/infinitive" element={<ProtectedRoute><Infinitive /></ProtectedRoute>} />
 
-        
-
-
+      
           {/* Quiz */}
           <Route path="/quiz-hub" element={<ProtectedRoute><QuizHub /></ProtectedRoute>} />
           <Route path="/quiz-hub/english" element={<ProtectedRoute><EnglishQuiz /></ProtectedRoute>} />
@@ -143,6 +175,16 @@ function App() {
           <Route path="/quiz-hub/english-quiz/real-quiz" element={<ProtectedRoute><QuizReal subtopic="real_quiz"/></ProtectedRoute>} />
           <Route path="/quiz-hub/english-quiz/errors-quiz" element={<ProtectedRoute><QuizError subtopic="errors_quiz"/></ProtectedRoute>} />
           <Route path="/quiz-hub/english-quiz/question-tags-quiz" element={<ProtectedRoute><QuizQuestionTag subtopic="question_tags_quiz"/></ProtectedRoute>} />
+          <Route path="/quiz-hub/english-quiz/summary-quiz" element={<ProtectedRoute><QuizSummary subtopic="summary_quiz"/></ProtectedRoute>} />
+          <Route path="/quiz-hub/english-quiz/comprehension-quiz" element={<ProtectedRoute><QuizComprehension subtopic="comprehension_quiz"/></ProtectedRoute>} />
+          <Route path="/quiz-hub/english-quiz/adverbial-quiz" element={<ProtectedRoute><QuizAdverbial subtopic="modifiers_quiz"/></ProtectedRoute>} />
+          <Route path="/quiz-hub/english-quiz/infinitive-quiz" element={<ProtectedRoute><QuizInfinitive subtopic="infinitive_quiz"/></ProtectedRoute>} />
+          <Route path="/quiz-hub/english-quiz/participial-quiz" element={<ProtectedRoute><QuizParticiple subtopic="participial_quiz"/></ProtectedRoute>} />
+          <Route path="/quiz-hub/english-quiz/synonyms-quiz" element={<ProtectedRoute><QuizSynonyms subtopic="synonyms_quiz" /></ProtectedRoute>} />
+          <Route path="/quiz-hub/english-quiz/antonyms-quiz" element={<ProtectedRoute><QuizAntonyms subtopic="antonyms_quiz" /></ProtectedRoute>} />
+          <Route path="/quiz-hub/english-quiz/homonyms-quiz" element={<ProtectedRoute><QuizHomonyms subtopic="homonyms_quiz" /></ProtectedRoute>} />
+          <Route path="/quiz-hub/english-quiz/idioms-quiz" element={<ProtectedRoute><QuizIdioms subtopic="idioms_quiz" /></ProtectedRoute>} />
+          <Route path="/quiz-hub/english-quiz/word-meanings-quiz" element={<ProtectedRoute><QuizWordMeaning subtopic="word_meanings_quiz" /></ProtectedRoute>} />
 
 
 

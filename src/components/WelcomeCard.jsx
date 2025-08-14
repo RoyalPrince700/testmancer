@@ -16,61 +16,75 @@ const WelcomeCard = () => {
 
   // Update user streak when they log in for the first time in a day
   const updateStreak = async () => {
-    if (!user) return;
+  if (!user) return 0; // Return 0 if no user
+
+  try {
+    // Get current date in YYYY-MM-DD format (UTC)
+    const today = new Date().toISOString().split('T')[0];
     
-    try {
-      // Get current UTC date (to avoid timezone issues)
-      const today = new Date().toISOString().split('T')[0];
-      
-      // Fetch user's last login date
-      const { data: activityData } = await supabase
-        .from("user_activity")
-        .select("last_active_at, streak")
-        .eq("user_id", user.id)
-        .single();
+    // Fetch user's current activity data
+    const { data: activityData, error: fetchError } = await supabase
+      .from('user_activity')
+      .select('streak, last_active_at')
+      .eq('user_id', user.id)
+      .single();
 
-      let newStreak = 1;
-      let shouldUpdate = false;
+    // Handle fetch errors (except "not found" which we handle below)
+    if (fetchError && fetchError.code !== 'PGRST116') {
+      throw fetchError;
+    }
 
-      if (activityData) {
-        // Calculate yesterday's date
-        const yesterday = new Date();
-        yesterday.setDate(yesterday.getDate() - 1);
-        const yesterdayStr = yesterday.toISOString().split('T')[0];
+    let newStreak = 1;
+    let shouldUpdate = false;
 
-        if (activityData.last_login === yesterdayStr) {
-          // Consecutive day: increment streak
-          newStreak = activityData.streak + 1;
-          shouldUpdate = true;
-        } else if (activityData.last_active_at !== today) {
-          // Broken streak: reset to 1
-          newStreak = 1;
-          shouldUpdate = true;
-        }
-      } else {
-        // First-time user
+    if (activityData) {
+      // Get the last active date in YYYY-MM-DD format
+      const lastActiveDate = activityData.last_active_at 
+        ? new Date(activityData.last_active_at).toISOString().split('T')[0]
+        : null;
+
+      // Calculate yesterday's date
+      const yesterday = new Date();
+      yesterday.setDate(yesterday.getDate() - 1);
+      const yesterdayStr = yesterday.toISOString().split('T')[0];
+
+      if (lastActiveDate === yesterdayStr) {
+        // Consecutive day login - increment streak
+        newStreak = activityData.streak + 1;
+        shouldUpdate = true;
+      } else if (lastActiveDate !== today) {
+        // Not consecutive - reset streak
+        newStreak = 1;
         shouldUpdate = true;
       }
-
-      // Update database if needed
-      if (shouldUpdate) {
-        await supabase
-          .from("user_activity")
-          .upsert({ 
-            user_id: user.id, 
-            streak: newStreak, 
-            last_active_at: today 
-          }, {
-            onConflict: 'user_id'
-          });
-      }
-
-      return shouldUpdate ? newStreak : activityData?.streak || 0;
-    } catch (error) {
-      console.error("Error updating streak:", error);
-      return stats.streak;
+      // If lastActiveDate === today, do nothing (already logged in today)
+    } else {
+      // No existing record - first time user
+      shouldUpdate = true;
     }
-  };
+
+    // Update database if needed
+    if (shouldUpdate) {
+      const { error: updateError } = await supabase
+        .from('user_activity')
+        .upsert({
+          user_id: user.id,
+          streak: newStreak,
+          last_active_at: today,
+          updated_at: new Date().toISOString()
+        }, {
+          onConflict: 'user_id'
+        });
+
+      if (updateError) throw updateError;
+    }
+
+    return newStreak;
+  } catch (error) {
+    console.error('Error updating streak:', error);
+    return stats.streak || 1; // Fallback to current streak or 1
+  }
+};
 
   useEffect(() => {
     if (!isAuthenticated || !user) return;
