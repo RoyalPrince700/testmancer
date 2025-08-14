@@ -1,4 +1,4 @@
- import React, { useState, useEffect, useCallback, useMemo } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import {
   FiEdit,
@@ -14,8 +14,6 @@ import {
   FiArrowRight,
   FiLoader,
   FiZap,
-  FiLock,
-  FiX,
 } from "react-icons/fi";
 import { motion, AnimatePresence } from "framer-motion";
 import { useAuth } from "../../../provider/AuthContext";
@@ -47,10 +45,7 @@ export const EnglishQuiz = () => {
   const [topics, setTopics] = useState([]);
   const [loading, setLoading] = useState(true);
   const [firstName, setFirstName] = useState("");
-  const [showLockedModal, setShowLockedModal] = useState(null);
-  const [showSubtopicLockedModal, setShowSubtopicLockedModal] = useState(null);
   const [completedLearningSubtopics, setCompletedLearningSubtopics] = useState({});
-  const [showBanner, setShowBanner] = useState(true); // State for unlock banner
 
   const iconComponents = {
     FiEdit,
@@ -78,27 +73,6 @@ export const EnglishQuiz = () => {
     const total = topics.reduce((sum, topic) => sum + topic.total, 0);
     return { completed, total, percentage: total > 0 ? Math.round((completed / total) * 100) : 0 };
   }, [topics]);
-
-  const isTopicUnlocked = useCallback(
-    (index) => {
-      if (index === 0) return true;
-      const prevTopic = topics[index - 1];
-      return prevTopic.completed === prevTopic.total;
-    },
-    [topics]
-  );
-
-  // Dismiss banner and remember in localStorage
-  const dismissBanner = () => {
-    setShowBanner(false);
-    localStorage.setItem('englishQuizBannerDismissed', 'true');
-  };
-
-  // Check if banner was previously dismissed
-  useEffect(() => {
-    const isDismissed = localStorage.getItem('englishQuizBannerDismissed') === 'true';
-    setShowBanner(!isDismissed);
-  }, []);
 
   const fetchCompletedLearningSubtopics = async (userId) => {
     const { data, error } = await supabase
@@ -233,11 +207,7 @@ export const EnglishQuiz = () => {
   }, [isAuthenticated, user]);
 
   const toggleTopic = (index) => {
-    if (isTopicUnlocked(index)) {
-      setExpandedTopic(expandedTopic === index ? null : index);
-    } else {
-      setShowLockedModal(index);
-    }
+    setExpandedTopic(expandedTopic === index ? null : index);
   };
 
   const calculatePercentage = (completed, total) => {
@@ -245,90 +215,12 @@ export const EnglishQuiz = () => {
   };
 
   const handleQuizStart = (subtopic) => {
-    const isUnlocked = subtopic.completed || isLearningSubtopicCompleted(subtopic.topicId, subtopic.name);
-    if (isUnlocked) {
-      navigate(subtopic.path);
-    } else {
-      setShowSubtopicLockedModal(subtopic.name);
-    }
+    navigate(subtopic.path);
   };
 
   const handlePracticeAll = (topic) => {
-    const allCompleted = topic.subtopics.every(subtopic => 
-      subtopic.completed || isLearningSubtopicCompleted(topic.id, subtopic.name)
-    );
-    
-    if (allCompleted) {
-      navigate(`/english-quiz/${topic.id}`);
-    } else {
-      setShowSubtopicLockedModal("all quizzes in this topic");
-    }
+    navigate(`/english-quiz/${topic.id}`);
   };
-
-  const LockedTopicModal = ({ topicIndex }) => {
-    const prevTopic = topics[topicIndex - 1];
-    return (
-      <motion.div
-        initial={{ opacity: 0, scale: 0.8 }}
-        animate={{ opacity: 1, scale: 1 }}
-        exit={{ opacity: 0, scale: 0.8 }}
-        className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50"
-      >
-        <div className="bg-white rounded-2xl p-6 max-w-md mx-auto text-center shadow-lg">
-          <motion.div animate={{ rotate: [0, 10, -10, 0] }} transition={{ repeat: 2, duration: 0.5 }} className="text-4xl mb-4">
-            🔒
-          </motion.div>
-          <h3 className="text-xl font-bold text-gray-800 mb-3">
-            Whoa, {firstName}! This Topic is Locked! 🚀
-          </h3>
-          <p className="text-gray-500 mb-4">
-            Complete <span className="font-semibold text-teal-500">{prevTopic.title}</span> first!
-          </p>
-          <button
-            onClick={() => setShowLockedModal(null)}
-            className="bg-gradient-to-r from-teal-400 to-teal-600 text-white font-medium rounded-full px-6 py-2"
-          >
-            Got It!
-          </button>
-        </div>
-      </motion.div>
-    );
-  };
-
-  const LockedSubtopicModal = ({ subtopicName, onClose }) => (
-    <motion.div 
-      initial={{ opacity: 0, scale: 0.8 }} 
-      animate={{ opacity: 1, scale: 1 }}
-      className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50"
-    >
-      <div className="bg-white rounded-2xl p-6 max-w-md mx-auto text-center shadow-lg">
-        <div className="text-4xl mb-4">🔒</div>
-        <h3 className="text-xl font-bold text-gray-800 mb-3">
-          Quiz Locked
-        </h3>
-        <p className="text-gray-500 mb-4">
-          Complete the <span className="font-semibold text-teal-500">
-            {subtopicName}
-          </span> learning module first to unlock this quiz.
-        </p>
-        <div className="mb-6">
-          <Link 
-            to="/post-utme/english" 
-            className="inline-flex items-center gap-2 bg-gradient-to-r from-teal-400 to-teal-600 text-white font-medium rounded-full px-6 py-2"
-            onClick={onClose}
-          >
-            <FiBookOpen /> Study Now
-          </Link>
-        </div>
-        <button 
-          onClick={onClose}
-          className="text-gray-500 hover:text-gray-700 underline text-sm"
-        >
-          I'll do it later
-        </button>
-      </div>
-    </motion.div>
-  );
 
   if (loading) {
     return <TestMancerLoader />;
@@ -337,50 +229,10 @@ export const EnglishQuiz = () => {
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white">
       <div className="container mx-auto px-4 py-8 max-w-6xl">
-        {/* Locked Quizzes Banner */}
-        <AnimatePresence>
-          {showBanner && (
-            <motion.div
-              initial={{ opacity: 0, y: -20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              className="bg-gradient-to-r from-blue-500 to-indigo-600 rounded-2xl p-4 text-white flex flex-wrap items-center justify-between gap-3 mb-8"
-            >
-              <div className="flex items-start gap-3">
-                <FiLock className="text-2xl mt-0.5 flex-shrink-0" />
-                <div>
-                  <h3 className="font-bold text-lg mb-1">Unlock Quizzes by Studying First</h3>
-                  <p className="text-sm opacity-90 max-w-3xl">
-                    Each quiz is locked until you complete the corresponding learning module. 
-                    Head to the study page to unlock quizzes.
-                  </p>
-                </div>
-              </div>
-              <div className="flex items-center gap-2">
-                <Link 
-                  to="/post-utme/english" 
-                  className="bg-white text-blue-600 font-medium rounded-full px-4 py-2 text-sm hover:bg-gray-100 transition flex items-center gap-2"
-                  onClick={dismissBanner}
-                >
-                  <FiBookOpen /> Study English Now
-                </Link>
-                <button 
-                  onClick={dismissBanner}
-                  className="text-white hover:text-gray-200 p-2 rounded-full hover:bg-white/10 transition"
-                  aria-label="Dismiss banner"
-                >
-                  <FiX className="text-xl" />
-                </button>
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
-
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.3 }} className="space-y-8">
           {topics.map((topic, index) => {
             const completionPercentage = calculatePercentage(topic.completed, topic.total);
             const isTopicCompleted = topic.completed === topic.total;
-            const isUnlocked = isTopicUnlocked(index);
             const theme = topic.color;
 
             return (
@@ -389,8 +241,8 @@ export const EnglishQuiz = () => {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.1 }}
-                className={`bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-200 relative ${!isUnlocked ? 'opacity-50 cursor-not-allowed' : ''}`}
-                whileHover={{ scale: isUnlocked ? 1.02 : 1 }}
+                className="bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-200 relative"
+                whileHover={{ scale: 1.02 }}
                 onClick={() => toggleTopic(index)}
                 aria-label={`Toggle ${topic.title} subtopics`}
               >
@@ -405,21 +257,10 @@ export const EnglishQuiz = () => {
                     <FiAward className="text-white text-xl" />
                   </motion.div>
                 )}
-                {!isUnlocked && (
-                  <motion.div
-                    initial={{ scale: 0, opacity: 0 }}
-                    animate={{ scale: 1, opacity: 1 }}
-                    transition={{ duration: 0.5, type: "spring", stiffness: 120 }}
-                    className={`absolute top-4 left-4 ${theme.bg} rounded-full p-2 shadow-md border ${theme.border}`}
-                    title="Topic Locked"
-                  >
-                    <FiLock className="text-white text-xl" />
-                  </motion.div>
-                )}
                 <div className="p-4 sm:p-6">
                   <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-3">
                     <div className="flex items-start gap-3">
-                      <div className={`bg-gradient-to-br ${theme.gradient} rounded-xl p-3 ${!isUnlocked ? 'pl-10' : ''}`}>
+                      <div className={`bg-gradient-to-br ${theme.gradient} rounded-xl p-3`}>
                         <topic.icon className="text-white text-xl" />
                       </div>
                       <div>
@@ -440,7 +281,6 @@ export const EnglishQuiz = () => {
                     <div className="relative flex flex-col items-end">
                       <motion.button
                         className={`p-3 rounded-full ${theme.bg} text-white hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 ${theme.border}`}
-                        disabled={!isUnlocked}
                         onClick={(e) => {
                           e.stopPropagation();
                           toggleTopic(index);
@@ -448,8 +288,8 @@ export const EnglishQuiz = () => {
                         aria-label={expandedTopic === index ? `Collapse subtopics for ${topic.title}` : `Expand subtopics for ${topic.title}`}
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
-                        animate={{ scale: isUnlocked ? [1, 1.05, 1] : 1 }}
-                        transition={{ duration: 0.8, repeat: isUnlocked ? Infinity : 0, repeatType: "reverse" }}
+                        animate={{ scale: [1, 1.05, 1] }}
+                        transition={{ duration: 0.8, repeat: Infinity, repeatType: "reverse" }}
                       >
                         {expandedTopic === index ? (
                           <FiChevronUp className="text-xl" />
@@ -475,7 +315,7 @@ export const EnglishQuiz = () => {
                   </div>
                 </div>
 
-                {expandedTopic === index && isUnlocked && (
+                {expandedTopic === index && (
                   <motion.div
                     initial={{ height: 0, opacity: 0 }}
                     animate={{ height: "auto", opacity: 1 }}
@@ -487,107 +327,64 @@ export const EnglishQuiz = () => {
                         Subtopics ({topic.completed}/{topic.total} completed)
                       </h4>
                       <div className="space-y-2">
-                        {topic.subtopics.map((subtopic, subIndex) => {
-                          const isQuizUnlocked = subtopic.completed || isLearningSubtopicCompleted(topic.id, subtopic.name);
-                          return (
-                            <div
-                              key={subIndex}
-                              className={`flex flex-col sm:flex-row sm:items-center justify-between p-3 rounded-lg transition-colors ${
-                                isQuizUnlocked
-                                  ? `${theme.bg} bg-opacity-10 hover:bg-opacity-20`
-                                  : "bg-gray-50 hover:bg-gray-100"
-                              }`}
-                            >
-                              <div className="flex items-center gap-2 mb-2 sm:mb-0">
-                                <div
-                                  className={`w-5 h-5 rounded-full flex items-center justify-center border-2 ${
-                                    isQuizUnlocked
-                                      ? subtopic.completed
-                                        ? `${theme.border} ${theme.bg} text-white`
-                                        : `${theme.border} bg-white`
-                                      : "border-gray-300"
+                        {topic.subtopics.map((subtopic, subIndex) => (
+                          <div
+                            key={subIndex}
+                            className={`flex flex-col sm:flex-row sm:items-center justify-between p-3 rounded-lg transition-colors ${theme.bg} bg-opacity-10 hover:bg-opacity-20`}
+                          >
+                            <div className="flex items-center gap-2 mb-2 sm:mb-0">
+                              <div
+                                className={`w-5 h-5 rounded-full flex items-center justify-center border-2 ${
+                                  subtopic.completed
+                                    ? `${theme.border} ${theme.bg} text-white`
+                                    : `${theme.border} bg-white`
+                                }`}
+                              >
+                                {subtopic.completed ? <FiAward size={12} /> : <FiBook size={12} />}
+                              </div>
+                              <div>
+                                <span
+                                  className={`font-medium text-sm ${
+                                    subtopic.completed
+                                      ? theme.text
+                                      : theme.text
                                   }`}
                                 >
-                                  {isQuizUnlocked ? (
-                                    subtopic.completed ? <FiAward size={12} /> : <FiBook size={12} />
-                                  ) : (
-                                    <FiLock size={12} />
-                                  )}
-                                </div>
-                                <div>
-                                  <span
-                                    className={`font-medium text-sm ${
-                                      isQuizUnlocked
-                                        ? subtopic.completed
-                                          ? theme.text
-                                          : theme.text
-                                        : "text-gray-700"
-                                    }`}
-                                  >
-                                    {subtopic.name}
-                                  </span>
-                                  {!isQuizUnlocked && (
-                                    <div className="text-xs text-gray-500 mt-1">
-                                      Complete the learning module to unlock this quiz
-                                    </div>
-                                  )}
-                                  {/* How to unlock tooltip */}
-                                  <div className="group relative inline-block">
-                                    {!isQuizUnlocked && (
-                                      <>
-                                        <span className="text-xs text-blue-500 mt-1 cursor-help underline decoration-dotted">
-                                          How to unlock?
-                                        </span>
-                                        <div className="absolute hidden group-hover:block bottom-full left-0 mb-2 p-2 bg-white text-gray-700 text-xs rounded shadow-lg z-10 min-w-[200px] border border-gray-200">
-                                          <FiLock className="inline mr-1" />
-                                          Complete the "{subtopic.name}" module in Study Mode to unlock this quiz. 
-                                          <Link 
-                                            to="/post-utme/english" 
-                                            className="mt-1 block text-blue-500 font-medium hover:underline"
-                                          >
-                                            Go to Study Page
-                                          </Link>
-                                        </div>
-                                      </>
-                                    )}
-                                  </div>
-                                  {isQuizUnlocked && (
-                                    <div className="flex flex-col sm:flex-row sm:items-center gap-2 mt-1 text-xs text-gray-500">
-                                      {subtopic.attempts > 0 ? (
-                                        <>
-                                          <span>Best Score: {subtopic.bestScore}%</span>
-                                          <span>Attempts: {subtopic.attempts}</span>
-                                          {subtopic.pointsEarned > 0 && (
-                                            <span>Points Earned: {subtopic.pointsEarned}</span>
-                                          )}
-                                        </>
-                                      ) : (
-                                        <span>Ready to attempt</span>
+                                  {subtopic.name}
+                                </span>
+                                <div className="flex flex-col sm:flex-row sm:items-center gap-2 mt-1 text-xs text-gray-500">
+                                  {subtopic.attempts > 0 ? (
+                                    <>
+                                      <span>Best Score: {subtopic.bestScore}%</span>
+                                      <span>Attempts: {subtopic.attempts}</span>
+                                      {subtopic.pointsEarned > 0 && (
+                                        <span>Points Earned: {subtopic.pointsEarned}</span>
                                       )}
-                                    </div>
+                                    </>
+                                  ) : (
+                                    <span>Ready to attempt</span>
                                   )}
                                 </div>
                               </div>
-                              {isQuizUnlocked ? (
-                                <GamifiedButton 
-                                  onClick={() => handleQuizStart(subtopic)}
-                                  icon={FiArrowRight}
-                                  className={`w-full sm:w-auto ${theme.bg} text-white px-4 py-1.5 text-sm`}
-                                >
-                                  {subtopic.attempts > 0 ? "Retake Quiz" : "Start Quiz"}
-                                </GamifiedButton>
-                              ) : (
-                                <button
-                                  className="w-full sm:w-auto px-4 py-1.5 bg-gray-200 text-gray-500 rounded-lg flex items-center gap-2 text-sm cursor-not-allowed"
-                                  disabled
-                                >
-                                  <FiLock />
-                                  Locked
-                                </button>
-                              )}
                             </div>
-                          );
-                        })}
+                            <GamifiedButton 
+                              onClick={() => handleQuizStart(subtopic)}
+                              icon={FiArrowRight}
+                              className={`w-full sm:w-auto ${theme.bg} text-white px-4 py-1.5 text-sm`}
+                            >
+                              {subtopic.attempts > 0 ? "Retake Quiz" : "Start Quiz"}
+                            </GamifiedButton>
+                          </div>
+                        ))}
+                      </div>
+                      <div className="mt-4 flex justify-end">
+                        <GamifiedButton
+                          onClick={() => handlePracticeAll(topic)}
+                          icon={FiBook}
+                          className={`w-full sm:w-auto ${theme.bg} text-white px-4 py-1.5 text-sm`}
+                        >
+                          Practice All Quizzes
+                        </GamifiedButton>
                       </div>
                     </div>
                   </motion.div>
@@ -596,16 +393,6 @@ export const EnglishQuiz = () => {
             );
           })}
         </motion.div>
-
-        <AnimatePresence>
-          {showLockedModal !== null && <LockedTopicModal topicIndex={showLockedModal} />}
-          {showSubtopicLockedModal && (
-            <LockedSubtopicModal 
-              subtopicName={showSubtopicLockedModal} 
-              onClose={() => setShowSubtopicLockedModal(null)} 
-            />
-          )}
-        </AnimatePresence>
       </div>
     </div>
   );

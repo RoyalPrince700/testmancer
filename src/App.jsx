@@ -79,6 +79,8 @@ import GamesHub from './pages/games/Games';
 // import GemQuest from './components/games/GemQuest';
 import SynonymsSprint from './components/games/synonymssprint/SynonymsSprint';
 import ScoreScreen from './components/games/synonymssprint/ScoreScreen';
+import QuizOral from './pages/subjects/english/orals/QuizOral';
+import QuizSpelling from './pages/subjects/english/orals/QuizSpelling';
 
 const ProtectedRoute = ({ children }) => {
   const { user, loading } = useAuth();
@@ -195,7 +197,9 @@ function App() {
           <Route path="/quiz-hub/english-quiz/homonyms-quiz" element={<ProtectedRoute><QuizHomonyms subtopic="homonyms_quiz" /></ProtectedRoute>} />
           <Route path="/quiz-hub/english-quiz/idioms-quiz" element={<ProtectedRoute><QuizIdioms subtopic="idioms_quiz" /></ProtectedRoute>} />
           <Route path="/quiz-hub/english-quiz/word-meanings-quiz" element={<ProtectedRoute><QuizWordMeaning subtopic="word_meanings_quiz" /></ProtectedRoute>} />
+          <Route path="/quiz-hub/english-quiz/spelling-quiz" element={<ProtectedRoute><QuizSpelling subtopic="spelling_quiz" /></ProtectedRoute>} />
 
+          <Route path="/quiz-hub/english-quiz/oral-quiz" element={<ProtectedRoute><QuizOral subtopic="oral_quiz" /></ProtectedRoute>} />
 
 
 

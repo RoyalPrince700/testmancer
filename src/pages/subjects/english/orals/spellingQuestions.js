@@ -1,4 +1,4 @@
-const spellingQuestions = [
+const questions = [
   {
     id: 1,
     text: "Which spelling is correct in British English?",
@@ -391,4 +391,4 @@ const spellingQuestions = [
   }
 ];
 
-export default spellingQuestions;
+export default questions;

@@ -1,4 +1,4 @@
-export const oralEnglishQuestions = [
+export const questions = [
   {
     id: 1,
     text: "How do you pronounce the word 'chair' correctly?",
@@ -420,4 +420,4 @@ export const oralEnglishQuestions = [
   }
 ];
 
-export default oralEnglishQuestions;
+export default questions;

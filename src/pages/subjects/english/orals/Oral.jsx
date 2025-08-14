@@ -5,7 +5,7 @@ import { FiBook } from "react-icons/fi";
 import LearningModule from "../../../../components/LearningModule";
 import { OralEnglishPages as pages } from './OralEnglishPages';
 
-const Oral = () => (
+export const Oral = () => (
   <LearningModule
     moduleId="oral"
     subject="English"

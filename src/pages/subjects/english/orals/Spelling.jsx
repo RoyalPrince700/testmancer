@@ -5,7 +5,7 @@ import { FiBook } from "react-icons/fi";
 import LearningModule from "../../../../components/LearningModule";
 import { SpellingPages as pages } from './SpellingPages';
 
-const Spelling = () => (
+export const Spelling = () => (
   <LearningModule
     moduleId="spelling"
     subject="English"
