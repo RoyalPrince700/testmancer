@@ -9,7 +9,7 @@ const Hero = () => {
 
   if (isAuthenticated) {
     return (
-      <div className="bg-white min-h-[90vh] py-12 px-4 sm:px-8 md:px-16">
+      <div className="bg-white min-h-[90vh] py-2 px-4 sm:px-8 md:px-16">
         {/* Welcome Message */}
         <div className="text-center mb-8">
           <Welcome />

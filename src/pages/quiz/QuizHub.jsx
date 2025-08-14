@@ -152,7 +152,7 @@ export const QuizHub = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white">
-      <div className="container mx-auto px-4 py-6 max-w-6xl">
+      <div className="container mx-auto px-4 py-2 max-w-6xl">
         {/* Callout */}
         {userData?.full_name && (
           <motion.div
@@ -163,12 +163,12 @@ export const QuizHub = () => {
             aria-label="Quiz Hub welcome message"
           >
             {/* Quiz Hub Label (Mobile Only) */}
-            <div className="absolute top-2 left-2 sm:hidden bg-blue-700 bg-opacity-50 text-white text-xs font-medium rounded-full px-2 py-1">
+            <div className="absolute top-1 left-2 sm:hidden bg-blue-700 bg-opacity-50 text-white text-xs font-medium rounded-full px-2 py-1">
               Quiz Hub
             </div>
             {/* Background Icon */}
             <FiStar className="absolute top-2 right-2 text-blue-200 opacity-30 text-4xl" />
-            <h2 className="text-xl sm:text-2xl font-bold mb-2 sm:mb-3">
+            <h2 className="text-xl sm:text-2xl font-bold py-2 mb-2 sm:mb-3">
               Welcome to the Quiz Hub, {userData.full_name.split(" ")[0]}! 🔥
             </h2>
             <p className="text-blue-100 text-sm sm:text-base">
@@ -240,7 +240,7 @@ export const QuizHub = () => {
                       aria-label={`Start or resume ${category.title} quiz`}
                     >
                       {userData?.full_name
-                        ? "Resume Quiz"
+                        ? "Resume"
                         : "Start Quiz"}{" "}
                       🚀
                     </button>
