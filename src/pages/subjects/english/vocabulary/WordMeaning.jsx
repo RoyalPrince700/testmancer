@@ -13,7 +13,7 @@ const WordMeaning = () => (
     subtopic="Word-Meaning"
     pages={pages}
     points={3}
-    quizPath="/quiz-hub/english-quiz/wordMeaning-quiz"
+    quizPath="/quiz-hub/english-quiz/word-meanings-quiz" 
     backPath="/post-utme/english"
    badges={[
   { name: "Vocabulary Champion", color: "bg-gradient-to-r from-indigo-500 to-indigo-700", emoji: "🏆", points: 50 },

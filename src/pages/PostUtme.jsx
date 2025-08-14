@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { Link } from "react-router-dom";
+import { Link,useNavigate  } from "react-router-dom";
 import {
   FiBook,
   FiDivide,
@@ -25,6 +25,9 @@ const PostUtme = () => {
   const [subjects, setSubjects] = useState([]);
   const [achievements, setAchievements] = useState([]);
   const [loading, setLoading] = useState(true);
+
+  const navigate = useNavigate();
+  // ... rest of your code
 
   // Subject configuration with total subtopics
   const subjectConfig = [
@@ -239,10 +242,16 @@ const PostUtme = () => {
 
                   {/* FOOTER ACTIONS */}
                   <div className="flex justify-center gap-3 text-xs text-teal-500 font-medium mb-4">
-                    <Link to="/post-utme/leaderboard" className="flex items-center gap-1">
+                    <button 
+                              className="flex items-center gap-1 hover:text-teal-700"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                navigate("/post-utme/leaderboard");
+                              }}
+                            >
                       <FiBarChart2 />
                       <span>Leaderboard</span>
-                    </Link>
+                     </button>
                   </div>
 
                   <div className="flex justify-center">

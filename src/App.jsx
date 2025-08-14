@@ -75,6 +75,10 @@ import QuizAntonyms from './pages/subjects/english/vocabulary/QuizAntonyms';
 import QuizIdioms from './pages/subjects/english/vocabulary/QuizIdioms';
 import QuizHomonyms from './pages/subjects/english/vocabulary/QuizHomonyms';
 import QuizWordMeaning from './pages/subjects/english/vocabulary/QuizWordMeaning';
+import GamesHub from './pages/games/Games';
+// import GemQuest from './components/games/GemQuest';
+import SynonymsSprint from './components/games/synonymssprint/SynonymsSprint';
+import ScoreScreen from './components/games/synonymssprint/ScoreScreen';
 
 const ProtectedRoute = ({ children }) => {
   const { user, loading } = useAuth();
@@ -140,6 +144,12 @@ function App() {
         <Route path="/post-utme/english" element={<ProtectedRoute><English /></ProtectedRoute>} />
         <Route path="/post-utme/english/tenses" element={<ProtectedRoute><Tenses /></ProtectedRoute>} />
         <Route path="/post-utme/leaderboard" element={<ProtectedRoute><LeaderboardPage /></ProtectedRoute>} />
+        <Route path="/games-hub" element={<ProtectedRoute><GamesHub /></ProtectedRoute>} />
+        {/* <Route path="/games-hub/gem-quest" element={<ProtectedRoute><GemQuest /></ProtectedRoute>} /> */}
+        <Route path="/games-hub/synonyms-sprint" element={<ProtectedRoute><SynonymsSprint /></ProtectedRoute>} />
+        <Route path="/games-hub/synonyms-sprint/score" element={<ProtectedRoute><ScoreScreen /></ProtectedRoute>} />
+
+
 
         <Route path="/post-utme/english/concord" element={<ProtectedRoute><Concord /></ProtectedRoute>} />
         <Route path="/post-utme/english/sentence" element={<ProtectedRoute><Sentence /></ProtectedRoute>} />
@@ -185,6 +195,7 @@ function App() {
           <Route path="/quiz-hub/english-quiz/homonyms-quiz" element={<ProtectedRoute><QuizHomonyms subtopic="homonyms_quiz" /></ProtectedRoute>} />
           <Route path="/quiz-hub/english-quiz/idioms-quiz" element={<ProtectedRoute><QuizIdioms subtopic="idioms_quiz" /></ProtectedRoute>} />
           <Route path="/quiz-hub/english-quiz/word-meanings-quiz" element={<ProtectedRoute><QuizWordMeaning subtopic="word_meanings_quiz" /></ProtectedRoute>} />
+
 
 
 

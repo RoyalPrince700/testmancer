@@ -13,7 +13,7 @@ const Errors = () => (
     subtopic="Errors"
     pages={pages}
     points={3}
-    quizPath="/quiz-hub/english/quiz-errors"
+    quizPath="/quiz-hub/english-quiz/quiz-errors"
     backPath="/post-utme/english"
     badges={[
       { name: "Errors Champion", color: "from-indigo-500 to-indigo-700" },
