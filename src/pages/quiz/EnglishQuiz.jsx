@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useMemo } from "react";
+ import React, { useState, useEffect, useCallback, useMemo } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import {
   FiEdit,
@@ -16,7 +16,6 @@ import {
   FiZap,
   FiLock,
   FiX,
-  FiShield,
 } from "react-icons/fi";
 import { motion, AnimatePresence } from "framer-motion";
 import { useAuth } from "../../../provider/AuthContext";
@@ -51,8 +50,7 @@ export const EnglishQuiz = () => {
   const [showLockedModal, setShowLockedModal] = useState(null);
   const [showSubtopicLockedModal, setShowSubtopicLockedModal] = useState(null);
   const [completedLearningSubtopics, setCompletedLearningSubtopics] = useState({});
-  const [showBanner, setShowBanner] = useState(true);
-  const [isAdmin, setIsAdmin] = useState(false); // Track admin status
+  const [showBanner, setShowBanner] = useState(true); // State for unlock banner
 
   const iconComponents = {
     FiEdit,
@@ -65,7 +63,7 @@ export const EnglishQuiz = () => {
   const initialTopics = englishQuizTopics.map((topic, index) => ({
     ...topic,
     icon: iconComponents[topic.icon] || FiBook,
-    color: colorMap[index % colorMap.length],
+    color: colorMap[index % colorMap.length], // Assign unique color theme
     subtopics: topic.subtopics.map((subtopic) => ({
       ...subtopic,
       completed: false,
@@ -83,16 +81,20 @@ export const EnglishQuiz = () => {
 
   const isTopicUnlocked = useCallback(
     (index) => {
-      return isAdmin || index === 0 || topics[index - 1].completed === topics[index - 1].total;
+      if (index === 0) return true;
+      const prevTopic = topics[index - 1];
+      return prevTopic.completed === prevTopic.total;
     },
-    [topics, isAdmin]
+    [topics]
   );
 
+  // Dismiss banner and remember in localStorage
   const dismissBanner = () => {
     setShowBanner(false);
     localStorage.setItem('englishQuizBannerDismissed', 'true');
   };
 
+  // Check if banner was previously dismissed
   useEffect(() => {
     const isDismissed = localStorage.getItem('englishQuizBannerDismissed') === 'true';
     setShowBanner(!isDismissed);
@@ -139,14 +141,13 @@ export const EnglishQuiz = () => {
             { data: leaderboard, error: lbError },
             { data: quizProgress, error: quizProgressError },
           ] = await Promise.all([
-            supabase.from("profiles").select("full_name, is_admin").eq("id", user.id).single(),
+            supabase.from("profiles").select("full_name").eq("id", user.id).single(),
             supabase.from("leaderboard").select("total_points, rank").eq("user_id", user.id).single(),
             supabase.from("postutme_quiz_progress").select("quiz_id, completed, best_score, attempts").eq("user_id", user.id),
           ]);
 
           if (profile?.full_name) {
             setFirstName(profile.full_name.split(" ")[0] || "Champion");
-            setIsAdmin(!!profile.is_admin); // Set admin status
           }
 
           if (leaderboard) {
@@ -244,7 +245,7 @@ export const EnglishQuiz = () => {
   };
 
   const handleQuizStart = (subtopic) => {
-    const isUnlocked = isAdmin || subtopic.completed || isLearningSubtopicCompleted(subtopic.topicId, subtopic.name);
+    const isUnlocked = subtopic.completed || isLearningSubtopicCompleted(subtopic.topicId, subtopic.name);
     if (isUnlocked) {
       navigate(subtopic.path);
     } else {
@@ -253,10 +254,10 @@ export const EnglishQuiz = () => {
   };
 
   const handlePracticeAll = (topic) => {
-    const allCompleted = isAdmin || topic.subtopics.every(subtopic =>
+    const allCompleted = topic.subtopics.every(subtopic => 
       subtopic.completed || isLearningSubtopicCompleted(topic.id, subtopic.name)
     );
-
+    
     if (allCompleted) {
       navigate(`/english-quiz/${topic.id}`);
     } else {
@@ -295,27 +296,31 @@ export const EnglishQuiz = () => {
   };
 
   const LockedSubtopicModal = ({ subtopicName, onClose }) => (
-    <motion.div
-      initial={{ opacity: 0, scale: 0.8 }}
+    <motion.div 
+      initial={{ opacity: 0, scale: 0.8 }} 
       animate={{ opacity: 1, scale: 1 }}
       className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50"
     >
       <div className="bg-white rounded-2xl p-6 max-w-md mx-auto text-center shadow-lg">
         <div className="text-4xl mb-4">🔒</div>
-        <h3 className="text-xl font-bold text-gray-800 mb-3">Quiz Locked</h3>
+        <h3 className="text-xl font-bold text-gray-800 mb-3">
+          Quiz Locked
+        </h3>
         <p className="text-gray-500 mb-4">
-          Complete the <span className="font-semibold text-teal-500">{subtopicName}</span> learning module first to unlock this quiz.
+          Complete the <span className="font-semibold text-teal-500">
+            {subtopicName}
+          </span> learning module first to unlock this quiz.
         </p>
         <div className="mb-6">
-          <Link
-            to="/post-utme/english"
+          <Link 
+            to="/post-utme/english" 
             className="inline-flex items-center gap-2 bg-gradient-to-r from-teal-400 to-teal-600 text-white font-medium rounded-full px-6 py-2"
             onClick={onClose}
           >
             <FiBookOpen /> Study Now
           </Link>
         </div>
-        <button
+        <button 
           onClick={onClose}
           className="text-gray-500 hover:text-gray-700 underline text-sm"
         >
@@ -330,19 +335,11 @@ export const EnglishQuiz = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white relative">
-      {/* Admin Mode Badge (Top Right) */}
-      {isAdmin && (
-        <div className="fixed top-4 right-4 z-50 flex items-center gap-2 bg-red-600 text-white text-sm font-bold px-4 py-2 rounded-full shadow-lg animate-pulse">
-          <FiShield className="text-lg" />
-          ADMIN MODE
-        </div>
-      )}
-
+    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white">
       <div className="container mx-auto px-4 py-8 max-w-6xl">
-        {/* Locked Quizzes Banner (Hidden for Admins) */}
+        {/* Locked Quizzes Banner */}
         <AnimatePresence>
-          {showBanner && !isAdmin && (
+          {showBanner && (
             <motion.div
               initial={{ opacity: 0, y: -20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -360,14 +357,14 @@ export const EnglishQuiz = () => {
                 </div>
               </div>
               <div className="flex items-center gap-2">
-                <Link
-                  to="/post-utme/english"
+                <Link 
+                  to="/post-utme/english" 
                   className="bg-white text-blue-600 font-medium rounded-full px-4 py-2 text-sm hover:bg-gray-100 transition flex items-center gap-2"
                   onClick={dismissBanner}
                 >
                   <FiBookOpen /> Study English Now
                 </Link>
-                <button
+                <button 
                   onClick={dismissBanner}
                   className="text-white hover:text-gray-200 p-2 rounded-full hover:bg-white/10 transition"
                   aria-label="Dismiss banner"
@@ -392,8 +389,8 @@ export const EnglishQuiz = () => {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.1 }}
-                className={`bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-200 relative ${!isUnlocked && !isAdmin ? 'opacity-50 cursor-not-allowed' : ''}`}
-                whileHover={{ scale: isUnlocked || isAdmin ? 1.02 : 1 }}
+                className={`bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-200 relative ${!isUnlocked ? 'opacity-50 cursor-not-allowed' : ''}`}
+                whileHover={{ scale: isUnlocked ? 1.02 : 1 }}
                 onClick={() => toggleTopic(index)}
                 aria-label={`Toggle ${topic.title} subtopics`}
               >
@@ -408,7 +405,7 @@ export const EnglishQuiz = () => {
                     <FiAward className="text-white text-xl" />
                   </motion.div>
                 )}
-                {!isUnlocked && !isAdmin && (
+                {!isUnlocked && (
                   <motion.div
                     initial={{ scale: 0, opacity: 0 }}
                     animate={{ scale: 1, opacity: 1 }}
@@ -422,7 +419,7 @@ export const EnglishQuiz = () => {
                 <div className="p-4 sm:p-6">
                   <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-3">
                     <div className="flex items-start gap-3">
-                      <div className={`bg-gradient-to-br ${theme.gradient} rounded-xl p-3 ${!isUnlocked && !isAdmin ? 'pl-10' : ''}`}>
+                      <div className={`bg-gradient-to-br ${theme.gradient} rounded-xl p-3 ${!isUnlocked ? 'pl-10' : ''}`}>
                         <topic.icon className="text-white text-xl" />
                       </div>
                       <div>
@@ -443,7 +440,7 @@ export const EnglishQuiz = () => {
                     <div className="relative flex flex-col items-end">
                       <motion.button
                         className={`p-3 rounded-full ${theme.bg} text-white hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 ${theme.border}`}
-                        disabled={!isUnlocked && !isAdmin}
+                        disabled={!isUnlocked}
                         onClick={(e) => {
                           e.stopPropagation();
                           toggleTopic(index);
@@ -451,8 +448,8 @@ export const EnglishQuiz = () => {
                         aria-label={expandedTopic === index ? `Collapse subtopics for ${topic.title}` : `Expand subtopics for ${topic.title}`}
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
-                        animate={{ scale: isUnlocked || isAdmin ? [1, 1.05, 1] : 1 }}
-                        transition={{ duration: 0.8, repeat: (isUnlocked || isAdmin) ? Infinity : 0, repeatType: "reverse" }}
+                        animate={{ scale: isUnlocked ? [1, 1.05, 1] : 1 }}
+                        transition={{ duration: 0.8, repeat: isUnlocked ? Infinity : 0, repeatType: "reverse" }}
                       >
                         {expandedTopic === index ? (
                           <FiChevronUp className="text-xl" />
@@ -478,7 +475,7 @@ export const EnglishQuiz = () => {
                   </div>
                 </div>
 
-                {expandedTopic === index && (isUnlocked || isAdmin) && (
+                {expandedTopic === index && isUnlocked && (
                   <motion.div
                     initial={{ height: 0, opacity: 0 }}
                     animate={{ height: "auto", opacity: 1 }}
@@ -491,7 +488,7 @@ export const EnglishQuiz = () => {
                       </h4>
                       <div className="space-y-2">
                         {topic.subtopics.map((subtopic, subIndex) => {
-                          const isQuizUnlocked = isAdmin || subtopic.completed || isLearningSubtopicCompleted(topic.id, subtopic.name);
+                          const isQuizUnlocked = subtopic.completed || isLearningSubtopicCompleted(topic.id, subtopic.name);
                           return (
                             <div
                               key={subIndex}
@@ -529,29 +526,31 @@ export const EnglishQuiz = () => {
                                   >
                                     {subtopic.name}
                                   </span>
-                                  {!isAdmin && !isQuizUnlocked && (
+                                  {!isQuizUnlocked && (
                                     <div className="text-xs text-gray-500 mt-1">
                                       Complete the learning module to unlock this quiz
                                     </div>
                                   )}
-                                  {/* How to unlock tooltip (hidden for admins) */}
-                                  {!isAdmin && !isQuizUnlocked && (
-                                    <div className="group relative inline-block">
-                                      <span className="text-xs text-blue-500 mt-1 cursor-help underline decoration-dotted">
-                                        How to unlock?
-                                      </span>
-                                      <div className="absolute hidden group-hover:block bottom-full left-0 mb-2 p-2 bg-white text-gray-700 text-xs rounded shadow-lg z-10 min-w-[200px] border border-gray-200">
-                                        <FiLock className="inline mr-1" />
-                                        Complete the "{subtopic.name}" module in Study Mode to unlock this quiz.
-                                        <Link
-                                          to="/post-utme/english"
-                                          className="mt-1 block text-blue-500 font-medium hover:underline"
-                                        >
-                                          Go to Study Page
-                                        </Link>
-                                      </div>
-                                    </div>
-                                  )}
+                                  {/* How to unlock tooltip */}
+                                  <div className="group relative inline-block">
+                                    {!isQuizUnlocked && (
+                                      <>
+                                        <span className="text-xs text-blue-500 mt-1 cursor-help underline decoration-dotted">
+                                          How to unlock?
+                                        </span>
+                                        <div className="absolute hidden group-hover:block bottom-full left-0 mb-2 p-2 bg-white text-gray-700 text-xs rounded shadow-lg z-10 min-w-[200px] border border-gray-200">
+                                          <FiLock className="inline mr-1" />
+                                          Complete the "{subtopic.name}" module in Study Mode to unlock this quiz. 
+                                          <Link 
+                                            to="/post-utme/english" 
+                                            className="mt-1 block text-blue-500 font-medium hover:underline"
+                                          >
+                                            Go to Study Page
+                                          </Link>
+                                        </div>
+                                      </>
+                                    )}
+                                  </div>
                                   {isQuizUnlocked && (
                                     <div className="flex flex-col sm:flex-row sm:items-center gap-2 mt-1 text-xs text-gray-500">
                                       {subtopic.attempts > 0 ? (
@@ -570,7 +569,7 @@ export const EnglishQuiz = () => {
                                 </div>
                               </div>
                               {isQuizUnlocked ? (
-                                <GamifiedButton
+                                <GamifiedButton 
                                   onClick={() => handleQuizStart(subtopic)}
                                   icon={FiArrowRight}
                                   className={`w-full sm:w-auto ${theme.bg} text-white px-4 py-1.5 text-sm`}
@@ -601,9 +600,9 @@ export const EnglishQuiz = () => {
         <AnimatePresence>
           {showLockedModal !== null && <LockedTopicModal topicIndex={showLockedModal} />}
           {showSubtopicLockedModal && (
-            <LockedSubtopicModal
-              subtopicName={showSubtopicLockedModal}
-              onClose={() => setShowSubtopicLockedModal(null)}
+            <LockedSubtopicModal 
+              subtopicName={showSubtopicLockedModal} 
+              onClose={() => setShowSubtopicLockedModal(null)} 
             />
           )}
         </AnimatePresence>

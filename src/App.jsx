@@ -169,7 +169,7 @@ function App() {
         <Route path="/post-utme/english/comprehension" element={<ProtectedRoute><Comprehension /></ProtectedRoute>} />
         <Route path="/post-utme/english/summary" element={<ProtectedRoute><Summary /></ProtectedRoute>} />
         <Route path="/post-utme/english/adverbial" element={<ProtectedRoute><Adverbial /></ProtectedRoute>} />
-        <Route path="/post-utme/english/participal" element={<ProtectedRoute><Participial /></ProtectedRoute>} />
+        <Route path="/post-utme/english/participial" element={<ProtectedRoute><Participial /></ProtectedRoute>} />
         <Route path="/post-utme/english/infinitive" element={<ProtectedRoute><Infinitive /></ProtectedRoute>} />
 
       

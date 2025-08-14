@@ -1,330 +1,332 @@
+//src/pages/subjects/english/English.jsx
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { 
-  FiBook,
-  FiStar,
-  FiMessageSquare,
-  FiHeart,
+  FiChevronDown, 
+  FiChevronUp, 
+  FiCheckCircle,
+  FiBarChart2,
   FiZap,
-  FiThumbsUp,
-  FiEdit,
   FiAward,
-  FiAlertCircle,
-  FiList,
-  FiCheckCircle
-} from "react-icons/fi";
-import { motion } from "framer-motion";
+  FiLock,
+  FiBook
+} from 'react-icons/fi';
+import { motion, AnimatePresence } from 'framer-motion';
+import { useAuth } from '../../../../provider/AuthContext';
+import { supabase } from '../../../../supabase/supabaseClient';
+import Leaderboard from '../../../components/Leaderboard';
+import WelcomeCard from '../../../components/WelcomeCard';
+import ProgressCard from '../../../components/ProgressCard';
+import { ENGLISH_TOPICS } from '../../../data/englishTopics';
+import * as Icons from 'react-icons/fi';
+import GamifiedButton from '../../../components/GamifiedButton';
+import EnglishCard from '../../../components/EnglishCard';
+import LoadingSpinner from '../../../components/LoadingSpinner';
+import TestMancerLoader from '../../../components/TestMancer';
 
-export const WordMeaningPages = [
-  {
-    title: "🤔 What Are Word Meanings?",
-    icon: <FiBook className="text-indigo-600" />,
-    content: (
-      <div className="space-y-6">
-        <p className="text-lg">
-          Word meanings are like the <span className="font-bold text-indigo-700">suya spice</span> of language — 
-          they give flavor to your communication! Understanding them is key to <span className="font-bold">nailing that JAMB essay</span> or vibing in a Naija convo! 🇳🇬
-        </p>
+const English = () => {
+  const navigate = useNavigate();
+  const { user } = useAuth();
+  const [expandedCard, setExpandedCard] = useState(null);
+  const [completedSubtopics, setCompletedSubtopics] = useState({
+    grammatical: Array(9).fill(false),
+    vocabulary: Array(5).fill(false),
+    comprehension: Array(2).fill(false),
+    oral: Array(2).fill(false),
+    modifiers: Array(3).fill(false)
+  });
+  const [loading, setLoading] = useState(true);
+  const [badgeCount, setBadgeCount] = useState(0);
+  const [streak, setStreak] = useState(0);
+  const [userData, setUserData] = useState(null);
+  const [showLockedModal, setShowLockedModal] = useState(null);
+
+  // NEW: popup states
+  const [showUnlockPopup, setShowUnlockPopup] = useState(null);
+  const [showBadgePopup, setShowBadgePopup] = useState(null);
+
+  const userProgress = useMemo(() => {
+    const completed = Object.values(completedSubtopics)
+      .flat()
+      .filter(status => status).length;
+    return { completed, total: 21 };
+  }, [completedSubtopics]);
+
+  const isTopicUnlocked = useCallback((index) => {
+    if (index === 0) return true;
+    const prevTopic = ENGLISH_TOPICS[index - 1];
+    const prevProgress = calculateProgress(prevTopic.id);
+    return prevProgress.completed === prevProgress.total;
+  }, [completedSubtopics]);
+
+  useEffect(() => {
+    if (!user) return;
+    const fetchUserProfile = async () => {
+      try {
+        const { data, error } = await supabase
+          .from("profiles")
+          .select("*")
+          .eq("id", user.id)
+          .single();
+        if (!error) setUserData(data);
+      } catch (err) {
+        console.error("Unexpected error:", err.message);
+      }
+    };
+    fetchUserProfile();
+  }, [user]);
+
+  const fetchUserProgress = useCallback(async () => {
+    if (!user?.id) return;
+    setLoading(true);
+    try {
+      const { data: progressData } = await supabase
+        .from('postutme_progress')
+        .select('*')
+        .eq('user_id', user.id)
+        .eq('subject', 'English');
+      const newCompleted = {
+        grammatical: Array(9).fill(false),
+        vocabulary: Array(5).fill(false),
+        comprehension: Array(2).fill(false),
+        oral: Array(2).fill(false),
+        modifiers: Array(3).fill(false)
+      };
+      if (progressData) {
+        progressData.forEach(item => {
+          const topicIndex = ENGLISH_TOPICS.findIndex(t => t.id === item.topic);
+          if (topicIndex !== -1) {
+            const subtopicIndex = ENGLISH_TOPICS[topicIndex].subtopics.findIndex(
+              sub => sub.name === item.subtopic
+            );
+            if (subtopicIndex !== -1) {
+              newCompleted[item.topic][subtopicIndex] = true;
+            }
+          }
+        });
+      }
+      setCompletedSubtopics(newCompleted);
+
+      const { count: badgeCount } = await supabase
+        .from('postutme_badges')
+        .select('*', { count: 'exact' })
+        .eq('user_id', user.id)
+        .eq('subject', 'English');
+      setBadgeCount(badgeCount || 0);
+
+      const { data: streakData } = await supabase
+        .from('user_activity')
+        .select('streak')
+        .eq('user_id', user.id)
+        .single();
+      setStreak(streakData?.streak || 0);
+    } catch (error) {
+      console.error("Error fetching user progress:", error);
+    } finally {
+      setLoading(false);
+    }
+  }, [user?.id]);
+
+  useEffect(() => {
+    fetchUserProgress();
+  }, [fetchUserProgress]);
+
+  const toggleCard = (index) => {
+    if (isTopicUnlocked(index)) {
+      // Show unlock popup if first time expanding an unlocked topic with no completed subtopics
+      if (expandedCard !== index && !completedSubtopics[ENGLISH_TOPICS[index].id].some(Boolean)) {
+        setShowUnlockPopup(index);
+      }
+      setExpandedCard(expandedCard === index ? null : index);
+    } else {
+      setShowLockedModal(index);
+    }
+  };
+
+  const toggleSubTopic = async (category, index) => {
+    const topic = ENGLISH_TOPICS.find(t => t.id === category);
+    const subtopic = topic.subtopics[index];
+    const isCurrentlyCompleted = completedSubtopics[category][index];
+    try {
+      if (isCurrentlyCompleted) {
+        await supabase
+          .from('postutme_progress')
+          .delete()
+          .eq('user_id', user.id)
+          .eq('subject', 'English')
+          .eq('topic', category)
+          .eq('subtopic', subtopic.name);
+      } else {
+        await supabase
+          .from('postutme_progress')
+          .insert([{
+            user_id: user.id,
+            subject: 'English',
+            topic: category,
+            subtopic: subtopic.name,
+            completed: true,
+            completed_at: new Date().toISOString(),
+            points_earned: 3
+          }]);
+      }
+
+      setCompletedSubtopics(prev => ({
+        ...prev,
+        [category]: prev[category].map((val, i) =>
+          i === index ? !val : val
+        )
+      }));
+
+      const newCompletedCount = isCurrentlyCompleted 
+        ? userProgress.completed - 1 
+        : userProgress.completed + 1;
+
+      // Badge logic
+      if (!isCurrentlyCompleted && newCompletedCount === 21) {
+        const { data: existingBadges } = await supabase
+          .from('postutme_badges')
+          .select('id')
+          .eq('user_id', user.id)
+          .eq('subject', 'English')
+          .eq('badge_type', 'bronze');
+        if (!existingBadges?.length) {
+          await supabase
+            .from('postutme_badges')
+            .insert([{
+              user_id: user.id,
+              badge_type: 'bronze',
+              subject: 'English',
+              topic: category,
+              earned_at: new Date().toISOString()
+            }]);
+          setBadgeCount(prev => prev + 1);
+          setShowBadgePopup({
+            type: 'bronze',
+            message: `🎉 Congratulations ${firstName}! You've earned the Bronze Badge in English!`
+          });
+        }
+      }
+
+      const { count: updatedBadgeCount } = await supabase
+        .from('postutme_badges')
+        .select('*', { count: 'exact' })
+        .eq('user_id', user.id)
+        .eq('subject', 'English');
+      setBadgeCount(updatedBadgeCount || 0);
+    } catch (error) {
+      console.error('Error in toggleSubTopic:', error.message);
+    }
+  };
+
+  const calculateProgress = (category) => {
+    const completed = completedSubtopics[category].filter(Boolean).length;
+    const total = completedSubtopics[category].length;
+    return { completed, total, percentage: Math.round((completed / total) * 100) };
+  };
+
+  const handleStartPractice = (path, topicIndex) => {
+    if (isTopicUnlocked(topicIndex)) {
+      navigate(path);
+    } else {
+      setShowLockedModal(topicIndex);
+    }
+  };
+
+  const closeLockedModal = () => setShowLockedModal(null);
+  const firstName = userData?.full_name?.split(' ')[0] || 'Champion';
+
+  // Components
+  const LockedTopicModal = ({ topicIndex }) => {
+    const prevTopic = ENGLISH_TOPICS[topicIndex - 1];
+    return (
+      <motion.div initial={{ opacity: 0, scale: 0.8 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.8 }} transition={{ duration: 0.3, type: 'spring', stiffness: 120 }} className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+        <div className="bg-white rounded-2xl p-6 max-w-md mx-auto text-center shadow-lg">
+          <div className="text-4xl mb-4">🔒</div>
+          <h3 className="text-xl font-bold text-gray-800 mb-3">Whoa, {firstName}! This Topic is Locked! 🚀</h3>
+          <p className="text-gray-500 mb-4">You need to conquer <span className="font-semibold text-teal-500">{prevTopic.title}</span> first to unlock this adventure! Keep pushing, champ!</p>
+          <button onClick={closeLockedModal} className="bg-gradient-to-r from-teal-400 to-teal-600 text-white font-medium rounded-full px-6 py-2">Got It!</button>
+        </div>
+      </motion.div>
+    );
+  };
+
+  const UnlockPopup = ({ topicIndex, onClose }) => (
+    <motion.div initial={{ opacity: 0, scale: 0.8 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.8 }} className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+      <div className="bg-white rounded-2xl p-6 max-w-md mx-auto text-center shadow-lg">
+        <h3 className="text-2xl font-bold text-green-600 mb-3">🔥 New Topic Unlocked!</h3>
+        <p className="mb-4">Well done, {firstName}! You’ve unlocked <b>{ENGLISH_TOPICS[topicIndex].title}</b>. Keep up the momentum!</p>
+        <button onClick={onClose} className="bg-green-500 text-white px-6 py-2 rounded-full">Let’s Go 🚀</button>
+      </div>
+    </motion.div>
+  );
+
+  const BadgePopup = ({ badge, onClose }) => (
+    <motion.div initial={{ opacity: 0, y: -50 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -50 }} className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+      <div className="bg-white rounded-2xl p-6 max-w-md mx-auto text-center shadow-lg">
+        <div className="text-5xl mb-3">🏅</div>
+        <h3 className="text-xl font-bold text-yellow-600 mb-3">Badge Earned!</h3>
+        <p className="mb-4">{badge.message}</p>
+        <button onClick={onClose} className="bg-yellow-500 text-white px-6 py-2 rounded-full">Awesome! 🎯</button>
+      </div>
+    </motion.div>
+  );
+
+  if (loading || !userData) return <TestMancerLoader />;
+
+  return (
+    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white">
+      <div className="container mx-auto px-4 py-8 max-w-6xl">
         
-        <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4 rounded">
-          <p className="text-gray-700">
-            <span className="font-bold">❌ Common Naija Error:</span> 
-            <span className="line-through">"The place is sick."</span> → 
-            <span className="font-bold">✅ "The place is cool!"</span> (Context matters!)
-          </p>
-        </div>
-        
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
-          {[
-            { icon: "😊", word: "Happy", meaning: "Feeling joyful or content", desc: "Pure vibes" },
-            { icon: "🏃‍♂️", word: "Run", meaning: "Move quickly or operate", desc: "Action word" }
-          ].map((item, index) => (
-            <motion.div 
-              key={index}
-              whileHover={{ scale: 1.05 }}
-              className="bg-white p-4 rounded-xl shadow-sm border border-gray-100 text-center"
-            >
-              <span className="text-2xl block mb-2">{item.icon}</span>
-              <h3 className="font-bold">{item.word}</h3>
-              <p className="text-sm font-mono">{item.meaning}</p>
-              <p className="text-xs text-gray-500 mt-1">{item.desc}</p>
-            </motion.div>
-          ))}
-        </div>
-        
-        <div className="mt-8 bg-indigo-50 p-4 rounded-xl">
-          <p className="font-medium text-indigo-700 flex items-center gap-2">
-            <FiStar className="text-yellow-500" />
-            Pro Tip:
-          </p>
-          <p className="mt-2">
-            Think of word meanings as <span className="font-bold">Nollywood dialogues</span> — 
-            the right word can make your message pop like a blockbuster! 🎬
-          </p>
-        </div>
-      </div>
-    )
-  },
-  {
-    title: "Denotation & Connotation",
-    icon: <FiEdit className="text-indigo-600" />,
-    content: (
-      <div className="space-y-8">
-        <div className="p-4 border-b border-gray-100">
-          <div className="flex items-center gap-3 mb-2">
-            <span className="text-2xl">📝</span>
-            <h3 className="font-bold text-xl flex items-center gap-2">
-              <FiMessageSquare />
-              Denotation - The Literal Meaning
-            </h3>
-          </div>
-          <p>Denotation is the <span className="font-bold">dictionary definition</span>, like the price tag on a market item. It’s the straight-up meaning!</p>
-          
-          <div className="mt-4 bg-green-50 p-3 rounded-lg">
-            <p className="font-medium text-green-700">✅ Examples:</p>
-            <ul className="mt-2 space-y-2">
-              {[
-                "Home: A place where one lives 🏠",
-                "Run: To move quickly or operate 🏃‍♂️"
-              ].map((item, i) => (
-                <li key={i} className="flex items-start gap-2">
-                  <span className="text-green-500">✔</span>
-                  <span>{item}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
-        </div>
-
-        <div className="p-4">
-          <div className="flex items-center gap-3 mb-2">
-            <span className="text-2xl">❤</span>
-            <h3 className="font-bold text-xl flex items-center gap-2">
-              <FiHeart />
-              Connotation - The Emotional Vibe
-            </h3>
-          </div>
-          <p>Connotation is the <span className="font-bold">feeling</span> a word gives, like the warmth of egusi soup! It’s about the vibes, not just the facts.</p>
-          
-          <div className="mt-4 bg-blue-50 p-3 rounded-lg">
-            <p className="font-medium text-blue-700">✅ Examples:</p>
-            <ul className="mt-2 space-y-2">
-              {[
-                "Home: Warmth, comfort, security 🏡",
-                "Mother: Love, care, nurturing 🤱"
-              ].map((item, i) => (
-                <li key={i} className="flex items-start gap-2">
-                  <span className="text-blue-500">✔</span>
-                  <span>{item}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
-        </div>
-      </div>
-    )
-  },
-  {
-    title: "Synonyms, Antonyms & More",
-    icon: <FiList className="text-indigo-600" />,
-    content: (
-      <div className="space-y-8">
-        <div className="bg-indigo-50 p-4 rounded-xl">
-          <div className="flex items-center gap-3 mb-2">
-            <span className="text-2xl">📚</span>
-            <h3 className="font-bold text-xl">
-              Synonyms & Antonyms
-            </h3>
-          </div>
-          <p>Synonyms are like twins, antonyms are opposites — both make your writing <span className="font-bold">shine like Lagos at night</span>!</p>
-          
-          <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="bg-white p-3 rounded-lg border border-indigo-200">
-              <p className="font-medium text-indigo-700">Synonyms:</p>
-              <ul className="mt-2 space-y-2">
-                {["Big: Large, Huge, Enormous 🤯"].map((item, i) => (
-                  <li key={i} className="flex items-start gap-2">
-                    <span className="text-indigo-500">✔</span>
-                    <span>{item}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-            <div className="bg-white p-3 rounded-lg border border-indigo-200">
-              <p className="font-medium text-indigo-700">Antonyms:</p>
-              <ul className="mt-2 space-y-2">
-                {["Hot vs. Cold ❄"].map((item, i) => (
-                  <li key={i} className="flex items-start gap-2">
-                    <span className="text-indigo-500">✔</span>
-                    <span>{item}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </div>
-        </div>
-
-        <div className="bg-yellow-50 p-4 rounded-xl mt-6">
-          <div className="flex items-center gap-3 mb-2">
-            <span className="text-2xl">🗣️</span>
-            <h3 className="font-bold text-xl">
-              Homophones & Homographs
-            </h3>
-          </div>
-          <p>Homophones sound the same, homographs look the same — but their meanings can trick you like a Lagos traffic jam!</p>
-          
-          <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="bg-white p-3 rounded-lg border border-yellow-200">
-              <p className="font-medium text-yellow-700">Homophones:</p>
-              <p className="mt-2">To, Too, Two 🤯</p>
-            </div>
-            <div className="bg-white p-3 rounded-lg border border-yellow-200">
-              <p className="font-medium text-yellow-700">Homographs:</p>
-              <p className="mt-2">Bank (money) vs. Bank (river) 🏦</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    )
-  },
-  {
-    title: "Context & Figurative Language",
-    icon: <FiZap className="text-indigo-600" />,
-    content: (
-      <div className="space-y-8">
-        <div className="bg-blue-50 p-4 rounded-xl">
-          <div className="flex items-center gap-3 mb-2">
-            <span className="text-2xl">📖</span>
-            <h3 className="font-bold text-xl">
-              Contextual Meaning
-            </h3>
-          </div>
-          <p>Words change meaning like a chameleon, depending on the situation — just like "sick" in Naija slang!</p>
-          
-          <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4">
-            {[
-              { word: "Break", meaning: "Shatter or pause ⏸" },
-              { word: "Cloud", meaning: "Weather or digital storage ☁" }
-            ].map((item, i) => (
-              <motion.div 
-                key={i}
-                whileHover={{ scale: 1.02 }}
-                className="bg-white p-3 rounded-lg border border-blue-200"
-              >
-                <p className="font-bold">{item.word}</p>
-                <p className="text-sm">{item.meaning}</p>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-
-        <div className="bg-green-50 p-4 rounded-xl mt-6">
-          <div className="flex items-center gap-3 mb-2">
-            <span className="text-2xl">🎨</span>
-            <h3 className="font-bold text-xl">
-              Figurative Language
-            </h3>
-          </div>
-          <p>Add color to your writing with metaphors and similes, like a Nollywood scene!</p>
-          
-          <div className="mt-4 space-y-4">
-            {[
-              { type: "Metaphor", example: "He's a shining light in a dark room 💡" },
-              { type: "Simile", example: "He runs like a cheetah 🐯" }
-            ].map((item, i) => (
-              <motion.div 
-                key={i}
-                whileHover={{ scale: 1.02 }}
-                className="bg-white p-3 rounded-lg border border-green-200"
-              >
-                <p className="font-medium text-green-700">{item.type}:</p>
-                <p className="mt-1">{item.example}</p>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-
-        <div className="bg-purple-50 p-4 rounded-xl mt-6">
-          <div className="flex items-center gap-3 mb-2">
-            <span className="text-2xl">🧠</span>
-            <h3 className="font-bold text-xl">
-              Word Meaning Quiz
-            </h3>
-          </div>
-          <p>Fix these common Nigerian mix-ups!</p>
-          
-          <div className="mt-4 space-y-4">
-            {[
-              { question: "It's raining cats and dogs", answer: "It's raining heavily ☔" },
-              { question: "The bank is by the river", answer: "Riverbank, not financial bank 🏞️" },
-              { question: "This party is sick!", answer: "This party is cool! 🎉" }
-            ].map((item, i) => (
-              <div key={i} className="bg-white p-4 rounded-lg shadow-sm">
-                <p className="font-medium">Challenge #{i+1}:</p>
-                <p className="font-mono bg-gray-100 p-2 rounded mt-1">{item.question}</p>
-                <details className="mt-2">
-                  <summary className="text-blue-600 cursor-pointer">Reveal Answer</summary>
-                  <p className="mt-1 font-mono bg-green-100 p-2 rounded">{item.answer}</p>
-                </details>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-    )
-  },
-  {
-    title: "Word Meaning Master",
-    icon: <FiAward className="text-indigo-600" />,
-    content: (
-      <div className="text-center py-8">
-        <motion.div 
-          animate={{ rotate: [0, 10, -10, 0] }}
-          transition={{ repeat: Infinity, duration: 2 }}
-          className="inline-block bg-gradient-to-r from-purple-500 to-indigo-600 rounded-full p-4 mb-6"
-        >
-          <FiAward className="text-white text-4xl" />
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.3 }} className="space-y-8">
+          {ENGLISH_TOPICS.map((topic, index) => {
+            const progress = calculateProgress(topic.id);
+            const IconComponent = Icons[topic.icon];
+            const isTopicCompleted = progress.completed === progress.total;
+            const isUnlocked = isTopicUnlocked(index);
+            return (
+              <EnglishCard
+                key={index}
+                topic={{ ...topic, iconComponent: IconComponent }}
+                index={index}
+                expandedCard={expandedCard}
+                toggleCard={toggleCard}
+                isTopicUnlocked={isUnlocked}
+                isTopicCompleted={isTopicCompleted}
+                completedSubtopics={completedSubtopics}
+                toggleSubTopic={toggleSubTopic}
+                handleStartPractice={handleStartPractice}
+                calculateProgress={calculateProgress}
+              />
+            );
+          })}
         </motion.div>
-        
-        <h2 className="text-3xl font-bold text-gray-900 mb-4">
-          Become a Word Meaning Wizard! 🧙‍♂️
-        </h2>
-        
-        <p className="text-xl text-gray-700 max-w-2xl mx-auto mb-8">
-          Take our challenge to decode tricky Nigerian phrases and earn your "Lexis Oga" badge! 🏅
-        </p>
-        
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto mb-10">
-          {[
-            { title: "Levels", value: "5", icon: "📶", color: "text-purple-600", desc: "From SSCE to Masters level" },
-            { title: "Badges", value: "3", icon: "🏆", color: "text-yellow-500", desc: "Earn shiny rewards" },
-            { title: "Examples", value: "100+", icon: "🇳🇬", color: "text-green-600", desc: "Real Naija contexts" }
-          ].map((item, index) => (
-            <motion.div 
-              key={index}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: index * 0.1 }}
-              className="bg-white p-6 rounded-xl shadow-md border border-gray-100"
-            >
-              <span className={`text-3xl mb-2 block ${item.color}`}>{item.icon}</span>
-              <h3 className="font-bold text-gray-900 text-2xl">{item.value}</h3>
-              <p className="text-gray-600 font-medium">{item.title}</p>
-              <p className="text-xs text-gray-500 mt-1">{item.desc}</p>
-            </motion.div>
-          ))}
-        </div>
-        
-        <motion.button
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-          className="bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white font-bold py-3 px-8 rounded-full text-lg shadow-lg"
-        >
-          Start Word Meaning Drill
-        </motion.button>
-        
-        <p className="text-gray-600 max-w-2xl mx-auto mt-8">
-          Features real-life examples like market slang, WAEC questions, and social media vibes!
-        </p>
+
+        {firstName && (
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5 }} className="mt-12 text-center">
+            <h3 className="text-xl font-bold text-gray-800 mb-4">
+              Keep Going, {firstName}! ✨
+            </h3>
+            <p className="text-gray-500 max-w-2xl mx-auto">
+              Every topic you master brings you closer to your dream university. 
+              Remember, champions aren't born - they're made one practice session at a time!
+            </p>
+          </motion.div>
+        )}
+
+        <AnimatePresence>
+          {showLockedModal !== null && (
+            <LockedTopicModal topicIndex={showLockedModal} />
+          )}
+          {showUnlockPopup !== null && (
+            <UnlockPopup topicIndex={showUnlockPopup} onClose={() => setShowUnlockPopup(null)} />
+          )}
+          {showBadgePopup && (
+            <BadgePopup badge={showBadgePopup} onClose={() => setShowBadgePopup(null)} />
+          )}
+        </AnimatePresence>
       </div>
-    )
-  }
-];
+    </div>
+  );
+};
+
+export default English;

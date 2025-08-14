@@ -151,22 +151,25 @@ const English = () => {
   };
 
   const toggleSubTopic = async (category, index) => {
-    const topic = ENGLISH_TOPICS.find(t => t.id === category);
-    const subtopic = topic.subtopics[index];
-    const isCurrentlyCompleted = completedSubtopics[category][index];
-    try {
-      if (isCurrentlyCompleted) {
-        await supabase
-          .from('postutme_progress')
-          .delete()
-          .eq('user_id', user.id)
-          .eq('subject', 'English')
-          .eq('topic', category)
-          .eq('subtopic', subtopic.name);
-      } else {
-        await supabase
-          .from('postutme_progress')
-          .insert([{
+  const topic = ENGLISH_TOPICS.find(t => t.id === category);
+  const subtopic = topic.subtopics[index];
+  const isCurrentlyCompleted = completedSubtopics[category][index];
+
+  try {
+    if (isCurrentlyCompleted) {
+      const { error } = await supabase
+        .from('postutme_progress')
+        .delete()
+        .eq('user_id', user.id)
+        .eq('subject', 'English')
+        .eq('topic', category)
+        .eq('subtopic', subtopic.name);
+      if (error) throw new Error(`Failed to delete progress: ${error.message}`);
+    } else {
+      const { error } = await supabase
+        .from('postutme_progress')
+        .upsert(
+          [{
             user_id: user.id,
             subject: 'English',
             topic: category,
@@ -174,55 +177,62 @@ const English = () => {
             completed: true,
             completed_at: new Date().toISOString(),
             points_earned: 3
-          }]);
-      }
-
-      setCompletedSubtopics(prev => ({
-        ...prev,
-        [category]: prev[category].map((val, i) =>
-          i === index ? !val : val
-        )
-      }));
-
-      const newCompletedCount = isCurrentlyCompleted 
-        ? userProgress.completed - 1 
-        : userProgress.completed + 1;
-
-      if (!isCurrentlyCompleted && newCompletedCount === 21) {
-        const { data: existingBadges } = await supabase
-          .from('postutme_badges')
-          .select('id')
-          .eq('user_id', user.id)
-          .eq('subject', 'English')
-          .eq('badge_type', 'bronze');
-        if (!existingBadges?.length) {
-          await supabase
-            .from('postutme_badges')
-            .insert([{
-              user_id: user.id,
-              badge_type: 'bronze',
-              subject: 'English',
-              topic: category,
-              earned_at: new Date().toISOString()
-            }]);
-          setBadgeCount(prev => prev + 1);
-          setShowBadgePopup({
-            type: 'bronze',
-            message: `🎉 Congratulations ${firstName}! You've earned the Bronze Badge in English!`
-          });
-        }
-      }
-
-      const { count: updatedBadgeCount } = await supabase
-        .from('postutme_badges')
-        .select('*', { count: 'exact' })
-        .eq('user_id', user.id)
-        .eq('subject', 'English');
-      setBadgeCount(updatedBadgeCount || 0);
-    } catch (error) {
-      console.error('Error in toggleSubTopic:', error.message);
+          }],
+          {
+            onConflict: ['user_id', 'subject', 'topic', 'subtopic'], // Specify the unique constraint columns
+            ignoreDuplicates: false // Update existing record
+          }
+        );
+      if (error) throw new Error(`Failed to upsert progress: ${error.message}`);
     }
-  };
+
+    setCompletedSubtopics(prev => ({
+      ...prev,
+      [category]: prev[category].map((val, i) =>
+        i === index ? !val : val
+      )
+    }));
+
+    const newCompletedCount = isCurrentlyCompleted
+      ? userProgress.completed - 1
+      : userProgress.completed + 1;
+
+    if (!isCurrentlyCompleted && newCompletedCount === 21) {
+      const { data: existingBadges } = await supabase
+        .from('postutme_badges')
+        .select('id')
+        .eq('user_id', user.id)
+        .eq('subject', 'English')
+        .eq('badge_type', 'bronze');
+      if (!existingBadges?.length) {
+        await supabase
+          .from('postutme_badges')
+          .insert([{
+            user_id: user.id,
+            badge_type: 'bronze',
+            subject: 'English',
+            topic: category,
+            earned_at: new Date().toISOString()
+          }]);
+        setBadgeCount(prev => prev + 1);
+        setShowBadgePopup({
+          type: 'bronze',
+          message: `🎉 Congratulations ${firstName}! You've earned the Bronze Badge in English!`
+        });
+      }
+    }
+
+    const { count: updatedBadgeCount } = await supabase
+      .from('postutme_badges')
+      .select('*', { count: 'exact' })
+      .eq('user_id', user.id)
+      .eq('subject', 'English');
+    setBadgeCount(updatedBadgeCount || 0);
+  } catch (error) {
+    console.error('Error in toggleSubTopic:', error.message);
+    alert('Failed to update progress. Please try again or contact support.');
+  }
+};
 
   const calculateProgress = (category) => {
     const completed = completedSubtopics[category].filter(Boolean).length;

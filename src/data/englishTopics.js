@@ -39,8 +39,8 @@ export const ENGLISH_TOPICS = [
     description: "Develop skills in understanding and summarizing texts",
     color: "from-indigo-700 to-blue-600",
     subtopics: [
-      { name: "Comprehension", path: "/english/comprehension" },
-      { name: "Summary", path: "/english/summary" }
+      { name: "Comprehension", path: "/post-utme/english/comprehension" },
+      { name: "Summary", path: "/post-utme/english/summary" }
     ]
   },
   {
@@ -62,7 +62,7 @@ export const ENGLISH_TOPICS = [
     color: "from-blue-600 to-indigo-700",
     subtopics: [
       { name: "Adverbial", path: "/post-utme/english/adverbial" },
-      { name: "Participal", path: "/post-utme/english/participal" },
+      { name: "Participial", path: "/post-utme/english/participial" },
       { name: "Infinitive", path: "/post-utme/english/infinitive" }
     ]
   }

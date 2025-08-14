@@ -1,3 +1,4 @@
+// This file contains the English quiz topics and their respective subtopics for the quiz hub.
 export const englishQuizTopics = [
   {
     id: "grammatical",
@@ -8,14 +9,14 @@ export const englishQuizTopics = [
     progressColor: "bg-blue-500",
     subtopics: [
       { name: "Tenses", path: "/quiz-hub/english/quiz-tenses", quizId: "tenses_quiz" },
-      { name: "Concord (subject-verb agreement)", path: "/quiz-hub/english-quiz/concord-quiz", quizId: "concord_quiz" },
-      { name: "Sentence Structure", path: "/quiz-hub/english-quiz/sentence-quiz", quizId: "sentence_quiz" },
-      { name: "Types of Sentences", path: "/quiz-hub/english-quiz/sentence-types-quiz", quizId: "sentence_types_quiz" },
+      { name: "Concord", path: "/quiz-hub/english-quiz/concord-quiz", quizId: "concord_quiz" },
+      { name: "Sentence", path: "/quiz-hub/english-quiz/sentence-quiz", quizId: "sentence_quiz" },
+      { name: "Sentence-Types", path: "/quiz-hub/english-quiz/sentence-types-quiz", quizId: "sentence_types_quiz" },
       { name: "Punctuation", path: "/quiz-hub/english-quiz/punctuation-quiz", quizId: "punctuation_quiz" },
-      { name: "Subjunctive Mood", path: "/quiz-hub/english-quiz/subjunctive-quiz", quizId: "subjunctive_quiz" },
-      { name: "Real and Unreal Future", path: "/quiz-hub/english-quiz/real-quiz", quizId: "real_quiz" },
-      { name: "Errors in English Language", path: "/quiz-hub/english-quiz/errors-quiz", quizId: "errors_quiz" },
-      { name: "Question Tags", path: "/quiz-hub/english-quiz/question-tags-quiz", quizId: "question_tags_quiz" },
+      { name: "Subjunctive", path: "/quiz-hub/english-quiz/subjunctive-quiz", quizId: "subjunctive_quiz" },
+      { name: "Real", path: "/quiz-hub/english-quiz/real-quiz", quizId: "real_quiz" },
+      { name: "Errors", path: "/quiz-hub/english-quiz/errors-quiz", quizId: "errors_quiz" },
+      { name: "Question", path: "/quiz-hub/english-quiz/question-tags-quiz", quizId: "question_tags_quiz" },
     ],
   },
   {
@@ -27,7 +28,7 @@ export const englishQuizTopics = [
     subtopics: [
       { name: "Synonyms", path: "/quiz-hub/english-quiz/synonyms-quiz", quizId: "synonyms_quiz" },
       { name: "Antonyms", path: "/quiz-hub/english-quiz/antonyms-quiz", quizId: "antonyms_quiz" },
-      { name: "Word Meanings", path: "/quiz-hub/english-quiz/word-meanings-quiz", quizId: "word_meanings_quiz" },
+      { name: "Word-Meanings", path: "/quiz-hub/english-quiz/word-meanings-quiz", quizId: "word_meanings_quiz" },
       { name: "Idioms", path: "/quiz-hub/english-quiz/idioms-quiz", quizId: "idioms_quiz" },
       { name: "Homonyms", path: "/quiz-hub/english-quiz/homonyms-quiz", quizId: "homonyms_quiz" },
     ],
@@ -51,7 +52,7 @@ export const englishQuizTopics = [
     color: "white",
     subtopics: [
       { name: "Spelling", path: "/quiz-hub/english-quiz/spelling-quiz", quizId: "spelling_quiz" },
-      { name: "Oral English", path: "/quiz-hub/english-quiz/oral-quiz", quizId: "oral_quiz" },
+      { name: "Oral", path: "/quiz-hub/english-quiz/oral-quiz", quizId: "oral_quiz" },
     ],
   },
   {
