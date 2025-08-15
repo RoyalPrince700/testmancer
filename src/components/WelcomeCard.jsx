@@ -15,7 +15,7 @@ const WelcomeCard = () => {
   });
 
   // Update user streak when they log in for the first time in a day
-  const updateStreak = async () => {
+ const updateStreak = async () => {
   if (!user) return 0; // Return 0 if no user
 
   try {
@@ -70,13 +70,15 @@ const WelcomeCard = () => {
         .upsert({
           user_id: user.id,
           streak: newStreak,
-          last_active_at: today,
-          updated_at: new Date().toISOString()
+          last_active_at: today
         }, {
           onConflict: 'user_id'
         });
 
-      if (updateError) throw updateError;
+      if (updateError) {
+        console.error('Upsert error:', updateError);
+        throw updateError;
+      }
     }
 
     return newStreak;

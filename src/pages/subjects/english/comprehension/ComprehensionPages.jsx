@@ -1,15 +1,8 @@
-import { 
-  FiBook,
-  FiStar,
-  FiMessageSquare,
-  FiHeart,
-  FiZap,
-  FiThumbsUp,
-  FiEdit,
-  FiAward,
-  FiAlertCircle,
-  FiList,
-  FiCheckCircle
+import { FiBook,FiStar,
+  FiMessageSquare,FiHeart,
+  FiZap,FiThumbsUp,
+  FiEdit,FiAward,
+  FiAlertCircle,FiList,FiCheckCircle
 } from "react-icons/fi";
 import { motion } from "framer-motion";
 

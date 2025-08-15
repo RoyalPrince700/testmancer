@@ -3,7 +3,7 @@ const questions = [
     id: 1,
     text: "___ it rained, we played football.",
     options: [
-      { id: 'a', text: "Although" },
+      { id: 'a', text: "Although", correct: true },
       { id: 'b', text: "Because" },
       { id: 'c', text: "And" },
       { id: 'd', text: "So" }
@@ -18,7 +18,7 @@ const questions = [
     options: [
       { id: 'a', text: "Dogs bark." },
       { id: 'b', text: "After the concert." },
-      { id: 'c', text: "Yemi cooked; Kemi cleaned." },
+      { id: 'c', text: "Yemi cooked; Kemi cleaned.", correct: true },
       { id: 'd', text: "When the bell rings." }
     ],
     correctAnswer: "Yemi cooked; Kemi cleaned.",
@@ -30,7 +30,7 @@ const questions = [
     text: "The teacher ___ gave notes ___ explained them. (Parallel)",
     options: [
       { id: 'a', text: "not only / but" },
-      { id: 'b', text: "not only / but also" },
+      { id: 'b', text: "not only / but also", correct: true },
       { id: 'c', text: "neither / or" },
       { id: 'd', text: "either / also" }
     ],
@@ -44,7 +44,7 @@ const questions = [
     options: [
       { id: 'a', text: "Run!" },
       { id: 'b', text: "Go home." },
-      { id: 'c', text: "While you slept." },
+      { id: 'c', text: "While you slept.", correct: true },
       { id: 'd', text: "Birds fly." }
     ],
     correctAnswer: "While you slept.",
@@ -56,7 +56,7 @@ const questions = [
     text: "She sells bags; ___, she repairs shoes.",
     options: [
       { id: 'a', text: "and" },
-      { id: 'b', text: "however" },
+      { id: 'b', text: "however", correct: true },
       { id: 'c', text: "but" },
       { id: 'd', text: "because" }
     ],
@@ -69,7 +69,7 @@ const questions = [
     text: "Which is COMPOUND-COMPLEX?",
     options: [
       { id: 'a', text: "I came, I saw, I conquered." },
-      { id: 'b', text: "After the party, we cleaned, and Mum praised us." },
+      { id: 'b', text: "After the party, we cleaned, and Mum praised us.", correct: true },
       { id: 'c', text: "Jide laughed." },
       { id: 'd', text: "Although tired, he smiled." }
     ],
@@ -82,7 +82,7 @@ const questions = [
     text: "The woman ___ won the lottery is my aunt.",
     options: [
       { id: 'a', text: "which" },
-      { id: 'b', text: "who" },
+      { id: 'b', text: "who", correct: true },
       { id: 'c', text: "where" },
       { id: 'd', text: "when" }
     ],
@@ -96,7 +96,7 @@ const questions = [
     options: [
       { id: 'a', text: "He studied all night he passed." },
       { id: 'b', text: "He studied all night, he passed." },
-      { id: 'c', text: "He studied all night; he passed." },
+      { id: 'c', text: "He studied all night; he passed.", correct: true },
       { id: 'd', text: "Studying all night he passed." }
     ],
     correctAnswer: "He studied all night; he passed.",
@@ -109,7 +109,7 @@ const questions = [
     options: [
       { id: 'a', text: "so" },
       { id: 'b', text: "unless" },
-      { id: 'c', text: "if" },
+      { id: 'c', text: "if", correct: true },
       { id: 'd', text: "but" }
     ],
     correctAnswer: "if",
@@ -122,7 +122,7 @@ const questions = [
     options: [
       { id: 'a', text: "The bus broke down, and we walked." },
       { id: 'b', text: "When the rain stopped." },
-      { id: 'c', text: "Goats ate the crops." },
+      { id: 'c', text: "Goats ate the crops.", correct: true },
       { id: 'd', text: "Although she tried." }
     ],
     correctAnswer: "Goats ate the crops.",
@@ -133,7 +133,7 @@ const questions = [
     id: 11,
     text: "The students protested ___ the fee hike was unfair.",
     options: [
-      { id: 'a', text: "because" },
+      { id: 'a', text: "because", correct: true },
       { id: 'b', text: "so" },
       { id: 'c', text: "and" },
       { id: 'd', text: "yet" }
@@ -147,7 +147,7 @@ const questions = [
     text: "Identify the NOUN clause:",
     options: [
       { id: 'a', text: "When the exam starts" },
-      { id: 'b', text: "That she passed" },
+      { id: 'b', text: "That she passed", correct: true },
       { id: 'c', text: "Who stole the phone" },
       { id: 'd', text: "Near the market" }
     ],
@@ -159,7 +159,7 @@ const questions = [
     id: 13,
     text: "___ Danfo buses are old, ___ they still run.",
     options: [
-      { id: 'a', text: "Although / yet" },
+      { id: 'a', text: "Although / yet", correct: true },
       { id: 'b', text: "Because / so" },
       { id: 'c', text: "If / then" },
       { id: 'd', text: "Since / and" }
@@ -172,7 +172,7 @@ const questions = [
     id: 14,
     text: "Which is a RUN-ON?",
     options: [
-      { id: 'a', text: "She cooks he cleans." },
+      { id: 'a', text: "She cooks he cleans.", correct: true },
       { id: 'b', text: "He ran; she followed." },
       { id: 'c', text: "After class ended." },
       { id: 'd', text: "Birds sing." }
@@ -188,7 +188,7 @@ const questions = [
       { id: 'a', text: "who" },
       { id: 'b', text: "when" },
       { id: 'c', text: "where" },
-      { id: 'd', text: "that" }
+      { id: 'd', text: "that", correct: true }
     ],
     correctAnswer: "that",
     explanation: "'That' introduces adjective clause for things",
@@ -199,7 +199,7 @@ const questions = [
     text: "To pass POST-UTME, you must: study, ___, and revise.",
     options: [
       { id: 'a', text: "practicing" },
-      { id: 'b', text: "practice" },
+      { id: 'b', text: "practice", correct: true },
       { id: 'c', text: "to practice" },
       { id: 'd', text: "practiced" }
     ],
@@ -213,7 +213,7 @@ const questions = [
     options: [
       { id: 'a', text: "is / their" },
       { id: 'b', text: "are / its" },
-      { id: 'c', text: "is / its" },
+      { id: 'c', text: "is / its", correct: true },
       { id: 'd', text: "are / their" }
     ],
     correctAnswer: "is / its",
@@ -226,7 +226,7 @@ const questions = [
     options: [
       { id: 'a', text: "Are you leaving?" },
       { id: 'b', text: "What a goal!" },
-      { id: 'c', text: "Submit your form." },
+      { id: 'c', text: "Submit your form.", correct: true },
       { id: 'd', text: "JAMB released results." }
     ],
     correctAnswer: "Submit your form.",
@@ -238,7 +238,7 @@ const questions = [
     text: "___ raining, the match continued.",
     options: [
       { id: 'a', text: "Although" },
-      { id: 'b', text: "Despite" },
+      { id: 'b', text: "Despite", correct: true },
       { id: 'c', text: "Because" },
       { id: 'd', text: "Yet" }
     ],
@@ -252,7 +252,7 @@ const questions = [
     options: [
       { id: 'a', text: "which" },
       { id: 'b', text: "whom" },
-      { id: 'c', text: "who" },
+      { id: 'c', text: "who", correct: true },
       { id: 'd', text: "whose" }
     ],
     correctAnswer: "who",
@@ -263,7 +263,7 @@ const questions = [
     id: 21,
     text: "She forgot her keys; ___, she waited outside.",
     options: [
-      { id: 'a', text: "therefore" },
+      { id: 'a', text: "therefore", correct: true },
       { id: 'b', text: "so" },
       { id: 'c', text: "and" },
       { id: 'd', text: "because" }
@@ -277,7 +277,7 @@ const questions = [
     text: "Which is COMPLEX?",
     options: [
       { id: 'a', text: "We ate rice and beans." },
-      { id: 'b', text: "After she left, we ate." },
+      { id: 'b', text: "After she left, we ate.", correct: true },
       { id: 'c', text: "He smiled and laughed." },
       { id: 'd', text: "Lagos is busy; Abuja is calm." }
     ],
@@ -290,7 +290,7 @@ const questions = [
     text: "Fix: 'Lola likes dancing, singing, and to act.'",
     options: [
       { id: 'a', text: "dancing, singing, and to act" },
-      { id: 'b', text: "dancing, singing, and acting" },
+      { id: 'b', text: "dancing, singing, and acting", correct: true },
       { id: 'c', text: "to dance, singing, and acting" },
       { id: 'd', text: "dance, sing, and to act" }
     ],
@@ -303,7 +303,7 @@ const questions = [
     text: "Neither the teacher nor the students ___ present.",
     options: [
       { id: 'a', text: "was" },
-      { id: 'b', text: "were" },
+      { id: 'b', text: "were", correct: true },
       { id: 'c', text: "is" },
       { id: 'd', text: "are" }
     ],
@@ -315,7 +315,7 @@ const questions = [
     id: 25,
     text: "Give me ___ you borrowed. (Noun clause)",
     options: [
-      { id: 'a', text: "what" },
+      { id: 'a', text: "what", correct: true },
       { id: 'b', text: "when" },
       { id: 'c', text: "where" },
       { id: 'd', text: "why" }
@@ -329,7 +329,7 @@ const questions = [
     text: "The market ___ burned down was rebuilt.",
     options: [
       { id: 'a', text: "who" },
-      { id: 'b', text: "which" },
+      { id: 'b', text: "which", correct: true },
       { id: 'c', text: "where" },
       { id: 'd', text: "when" }
     ],
@@ -343,7 +343,7 @@ const questions = [
     options: [
       { id: 'a', text: "so" },
       { id: 'b', text: "and" },
-      { id: 'c', text: "when" },
+      { id: 'c', text: "when", correct: true },
       { id: 'd', text: "but" }
     ],
     correctAnswer: "when",
@@ -355,7 +355,7 @@ const questions = [
     text: "Which is EXCLAMATORY?",
     options: [
       { id: 'a', text: "Close the door." },
-      { id: 'b', text: "Wow, amazing!" },
+      { id: 'b', text: "Wow, amazing!", correct: true },
       { id: 'c', text: "Are you sure?" },
       { id: 'd', text: "She arrived early." }
     ],
@@ -367,7 +367,7 @@ const questions = [
     id: 29,
     text: "JAMB ___ released results; UTME ___ next month.",
     options: [
-      { id: 'a', text: "has / is" },
+      { id: 'a', text: "has / is", correct: true },
       { id: 'b', text: "have / are" },
       { id: 'c', text: "has / are" },
       { id: 'd', text: "have / is" }
@@ -380,7 +380,7 @@ const questions = [
     id: 30,
     text: "Jide passed ___ he studied hard.",
     options: [
-      { id: 'a', text: "because" },
+      { id: 'a', text: "because", correct: true },
       { id: 'b', text: "so" },
       { id: 'c', text: "but" },
       { id: 'd', text: "although" }
