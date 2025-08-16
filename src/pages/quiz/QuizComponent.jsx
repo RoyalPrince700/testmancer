@@ -214,9 +214,22 @@ export const QuizComponent = ({
     };
     setUserAnswers(answers);
 
+    // DEBUG: Log the answer processing
+    console.log('Answer selected:', {
+      questionId: questions[currentQuestion].id,
+      selectedText: option.text,
+      isCorrect: option.correct,
+      currentScore: score,
+      optionData: option
+    });
+
     // FIXED: Only increment score, never decrement - prevents manipulation
     if (option.correct) {
-      setScore(score + 1);
+      const newScore = score + 1;
+      setScore(newScore);
+      console.log('Score incremented:', { oldScore: score, newScore, optionCorrect: option.correct });
+    } else {
+      console.log('Answer incorrect, score not incremented:', { currentScore: score, optionCorrect: option.correct });
     }
 
     // Show brief feedback before auto-advancing
@@ -281,9 +294,9 @@ export const QuizComponent = ({
           .select("completed, attempts, best_score")
           .eq("user_id", user.id)
           .eq("quiz_id", quizId)
-          .single();
+          .maybeSingle(); // Changed from .single() to .maybeSingle() to handle no rows
 
-        if (progressError && !progressError.message.includes('No rows found')) {
+        if (progressError) {
           throw progressError;
         }
 
