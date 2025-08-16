@@ -17,10 +17,10 @@ import { supabase } from '../../../../supabase/supabaseClient';
 import Leaderboard from '../../../components/Leaderboard';
 import WelcomeCard from '../../../components/WelcomeCard';
 import ProgressCard from '../../../components/ProgressCard';
-import { ENGLISH_TOPICS } from '../../../data/englishTopics';
+import { MATHEMATICS_TOPICS } from './study/algebra/mathTopics';
 import * as Icons from 'react-icons/fi';
 import GamifiedButton from '../../../components/GamifiedButton';
-import EnglishCard from '../../../components/EnglishCard';
+import MathematicsCard from './MathematicsCard';
 import LoadingSpinner from '../../../components/LoadingSpinner';
 import TestMancerLoader from '../../../components/TestMancer';
 
@@ -29,11 +29,9 @@ const Mathematics = () => {
   const { user } = useAuth();
   const [expandedCard, setExpandedCard] = useState(null);
   const [completedSubtopics, setCompletedSubtopics] = useState({
-    grammatical: Array(9).fill(false),
-    vocabulary: Array(5).fill(false),
-    comprehension: Array(2).fill(false),
-    oral: Array(2).fill(false),
-    modifiers: Array(3).fill(false)
+    algebra: Array(4).fill(false),
+    calculus: Array(3).fill(false),
+    numbertheory: Array(3).fill(false),
   });
   const [loading, setLoading] = useState(true);
   const [badgeCount, setBadgeCount] = useState(0);
@@ -57,7 +55,7 @@ const Mathematics = () => {
     if (isAdmin) return true;
     // Existing logic for non-admin users
     if (index === 0) return true;
-    const prevTopic = ENGLISH_TOPICS[index - 1];
+    const prevTopic = MATHEMATICS_TOPICS[index - 1];
     const prevProgress = calculateProgress(prevTopic.id);
     return prevProgress.completed === prevProgress.total;
   }, [completedSubtopics, isAdmin]);
@@ -92,19 +90,17 @@ const Mathematics = () => {
         .from('postutme_progress')
         .select('*')
         .eq('user_id', user.id)
-        .eq('subject', 'English');
+        .eq('subject', 'Mathematics');
       const newCompleted = {
-        grammatical: Array(9).fill(false),
-        vocabulary: Array(5).fill(false),
-        comprehension: Array(2).fill(false),
-        oral: Array(2).fill(false),
-        modifiers: Array(3).fill(false)
+        algebra: Array(4).fill(false),
+    calculus: Array(3).fill(false),
+    numbertheory: Array(3).fill(false),
       };
       if (progressData) {
         progressData.forEach(item => {
-          const topicIndex = ENGLISH_TOPICS.findIndex(t => t.id === item.topic);
+          const topicIndex = MATHEMATICS_TOPICS.findIndex(t => t.id === item.topic);
           if (topicIndex !== -1) {
-            const subtopicIndex = ENGLISH_TOPICS[topicIndex].subtopics.findIndex(
+            const subtopicIndex = MATHEMATICS_TOPICS[topicIndex].subtopics.findIndex(
               sub => sub.name === item.subtopic
             );
             if (subtopicIndex !== -1) {
@@ -141,7 +137,7 @@ const Mathematics = () => {
 
   const toggleCard = (index) => {
     if (isTopicUnlocked(index)) {
-      if (expandedCard !== index && !completedSubtopics[ENGLISH_TOPICS[index].id].some(Boolean)) {
+      if (expandedCard !== index && !completedSubtopics[MATHEMATICS_TOPICS[index].id].some(Boolean)) {
         setShowUnlockPopup(index);
       }
       setExpandedCard(expandedCard === index ? null : index);
@@ -151,7 +147,7 @@ const Mathematics = () => {
   };
 
   const toggleSubTopic = async (category, index) => {
-  const topic = ENGLISH_TOPICS.find(t => t.id === category);
+  const topic = MATHEMATICS_TOPICS.find(t => t.id === category);
   const subtopic = topic.subtopics[index];
   const isCurrentlyCompleted = completedSubtopics[category][index];
 
@@ -252,7 +248,7 @@ const Mathematics = () => {
   const firstName = userData?.full_name?.split(' ')[0] || 'Champion';
 
   const LockedTopicModal = ({ topicIndex }) => {
-    const prevTopic = ENGLISH_TOPICS[topicIndex - 1];
+    const prevTopic = MATHEMATICS_TOPICS[topicIndex - 1];
     return (
       <motion.div initial={{ opacity: 0, scale: 0.8 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.8 }} transition={{ duration: 0.3, type: 'spring', stiffness: 120 }} className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
         <div className="bg-white rounded-2xl p-6 max-w-md mx-auto text-center shadow-lg">
@@ -269,7 +265,7 @@ const Mathematics = () => {
     <motion.div initial={{ opacity: 0, scale: 0.8 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.8 }} className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
       <div className="bg-white rounded-2xl p-6 max-w-md mx-auto text-center shadow-lg">
         <h3 className="text-2xl font-bold text-green-600 mb-3">🔥 New Topic Unlocked!</h3>
-        <p className="mb-4">Well done, {firstName}! You’ve unlocked <b>{ENGLISH_TOPICS[topicIndex].title}</b>. Keep up the momentum!</p>
+        <p className="mb-4">Well done, {firstName}! You’ve unlocked <b>{MATHEMATICS_TOPICS[topicIndex].title}</b>. Keep up the momentum!</p>
         <button onClick={onClose} className="bg-green-500 text-white px-6 py-2 rounded-full">Let’s Go 🚀</button>
       </div>
     </motion.div>
@@ -292,13 +288,13 @@ const Mathematics = () => {
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white">
       <div className="container mx-auto px-4 py-4 max-w-6xl">
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.3 }} className="space-y-8">
-          {ENGLISH_TOPICS.map((topic, index) => {
+          {MATHEMATICS_TOPICS.map((topic, index) => {
             const progress = calculateProgress(topic.id);
             const IconComponent = Icons[topic.icon];
             const isTopicCompleted = progress.completed === progress.total;
             const isUnlocked = isTopicUnlocked(index);
             return (
-              <EnglishCard
+              <MathematicsCard
                 key={index}
                 topic={{ ...topic, iconComponent: IconComponent }}
                 index={index}

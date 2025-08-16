@@ -81,6 +81,14 @@ import SynonymsSprint from './components/games/synonymssprint/SynonymsSprint';
 import ScoreScreen from './components/games/synonymssprint/ScoreScreen';
 import QuizOral from './pages/subjects/english/orals/QuizOral';
 import QuizSpelling from './pages/subjects/english/orals/QuizSpelling';
+import Mathematics from './pages/subjects/mathematics/Mathematics';
+import Indices from './pages/subjects/mathematics/study/algebra/Indices';
+import Sequence from './pages/subjects/mathematics/study/algebra/Sequence';
+import Equations from './pages/subjects/mathematics/study/algebra/Equation';
+import Variation from './pages/subjects/mathematics/study/algebra/Variations';
+import Integration from './pages/subjects/mathematics/study/calculus/Integration';
+import Differentiation from './pages/subjects/mathematics/study/calculus/Differentiation';
+import AppOfCalculus from './pages/subjects/mathematics/study/calculus/AppOfCalculus';
 
 const ProtectedRoute = ({ children }) => {
   const { user, loading } = useAuth();
@@ -198,8 +206,17 @@ function App() {
           <Route path="/quiz-hub/english-quiz/idioms-quiz" element={<ProtectedRoute><QuizIdioms subtopic="idioms_quiz" /></ProtectedRoute>} />
           <Route path="/quiz-hub/english-quiz/word-meanings-quiz" element={<ProtectedRoute><QuizWordMeaning subtopic="word_meanings_quiz" /></ProtectedRoute>} />
           <Route path="/quiz-hub/english-quiz/spelling-quiz" element={<ProtectedRoute><QuizSpelling subtopic="spelling_quiz" /></ProtectedRoute>} />
-
           <Route path="/quiz-hub/english-quiz/oral-quiz" element={<ProtectedRoute><QuizOral subtopic="oral_quiz" /></ProtectedRoute>} />
+
+          {/* Nested Routes for mathematics */}
+           <Route path="/post-utme/mathematics" element={<ProtectedRoute><Mathematics /></ProtectedRoute>} /> 
+          <Route path="/post-utme/mathematics/indices-logarithms" element={<ProtectedRoute><Indices /></ProtectedRoute>} />
+          <Route path="/post-utme/mathematics/sequences-series" element={<ProtectedRoute><Sequence /></ProtectedRoute>} />
+          <Route path="/post-utme/mathematics/equations-inequalities" element={<ProtectedRoute><Equations /></ProtectedRoute>} />
+          <Route path="/post-utme/mathematics/variation" element={<ProtectedRoute><Variation /></ProtectedRoute>} />
+          <Route path="/post-utme/mathematics/integration" element={<ProtectedRoute><Integration/></ProtectedRoute>} />
+          <Route path="/post-utme/mathematics/differentiation" element={<ProtectedRoute><Differentiation /></ProtectedRoute>} />
+          <Route path="/post-utme/mathematics/application-calculus" element={<ProtectedRoute><AppOfCalculus /></ProtectedRoute>} />
 
 
 

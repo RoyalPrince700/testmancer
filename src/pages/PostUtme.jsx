@@ -43,7 +43,7 @@ const PostUtme = () => {
       title: "Mathematics",
       icon: FiDivide,
       description: "Crack numbers! 📚",
-      path: "/mathematics",
+      path: "/post-utme/mathematics",
       totalSubtopics: 20,
       color: "from-teal-400 to-teal-600",
     },

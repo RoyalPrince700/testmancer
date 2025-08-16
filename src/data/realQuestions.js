@@ -109,7 +109,7 @@ const questions = [
     options: [
       { id: 'a', text: "Will" },
       { id: 'b', text: "Would" },
-      { id: 'c', text: "Going to" },
+      { id: 'c', text: "Going to", correct: true },
       { id: 'd', text: "Shall" }
     ],
     correctAnswer: "Going to",
@@ -121,7 +121,7 @@ const questions = [
     text: "Which shows a future action in progress?",
     options: [
       { id: 'a', text: "I will study tonight" },
-      { id: 'b', text: "I will be studying at 8 PM" },
+      { id: 'b', text: "I will be studying at 8 PM", correct: true },
       { id: 'c', text: "I would study if I had time" },
       { id: 'd', text: "I shall study tomorrow" }
     ],
@@ -134,7 +134,7 @@ const questions = [
     text: "'If it rains, we will cancel.' This is:",
     options: [
       { id: 'a', text: "Zero conditional" },
-      { id: 'b', text: "First conditional" },
+      { id: 'b', text: "First conditional", correct: true },
       { id: 'c', text: "Second conditional" },
       { id: 'd', text: "Third conditional" }
     ],
@@ -147,7 +147,7 @@ const questions = [
     text: "'If I had money, I would donate.' This is:",
     options: [
       { id: 'a', text: "First conditional" },
-      { id: 'b', text: "Second conditional" },
+      { id: 'b', text: "Second conditional", correct: true },
       { id: 'c', text: "Third conditional" },
       { id: 'd', text: "Mixed conditional" }
     ],
@@ -159,7 +159,7 @@ const questions = [
     id: 13,
     text: "Which sentence is incorrect?",
     options: [
-      { id: 'a', text: "If I will see him, I will tell him" },
+      { id: 'a', text: "If I will see him, I will tell him", correct: true },
       { id: 'b', text: "If I see him, I will tell him" },
       { id: 'c', text: "I will call if I arrive early" },
       { id: 'd', text: "She will pass if she studies" }
@@ -172,7 +172,7 @@ const questions = [
     id: 14,
     text: "Correct this sentence: 'If I would be rich, I will travel.'",
     options: [
-      { id: 'a', text: "Change 'will travel' to 'would travel'" },
+      { id: 'a', text: "Change 'will travel' to 'would travel'", correct: true },
       { id: 'b', text: "Change 'would be' to 'am'" },
       { id: 'c', text: "Remove 'if'" },
       { id: 'd', text: "No change needed" }
@@ -185,7 +185,7 @@ const questions = [
     id: 15,
     text: "'By 2025, I will have graduated.' This is:",
     options: [
-      { id: 'a', text: "Future perfect" },
+      { id: 'a', text: "Future perfect", correct: true },
       { id: 'b', text: "Future continuous" },
       { id: 'c', text: "Real future" },
       { id: 'd', text: "Unreal future" }
@@ -200,7 +200,7 @@ const questions = [
     options: [
       { id: 'a', text: "Real future" },
       { id: 'b', text: "Unreal present" },
-      { id: 'c', text: "Unreal past" },
+      { id: 'c', text: "Unreal past", correct: true },
       { id: 'd', text: "Mixed conditional" }
     ],
     correctAnswer: "Unreal past",
@@ -213,7 +213,7 @@ const questions = [
     options: [
       { id: 'a', text: "Will" },
       { id: 'b', text: "Would" },
-      { id: 'c', text: "Going to" },
+      { id: 'c', text: "Going to", correct: true },
       { id: 'd', text: "Shall" }
     ],
     correctAnswer: "Going to",
@@ -226,7 +226,7 @@ const questions = [
     options: [
       { id: 'a', text: "Will you help me?" },
       { id: 'b', text: "Would you help me?" },
-      { id: 'c', text: "Will you be helping me?" },
+      { id: 'c', text: "Will you be helping me?", correct: true },
       { id: 'd', text: "Do you help me?" }
     ],
     correctAnswer: "Will you be helping me?",
@@ -238,7 +238,7 @@ const questions = [
     text: "Which is correct Nigerian English?",
     options: [
       { id: 'a', text: "I will be going to market tomorrow" },
-      { id: 'b', text: "I am going to market tomorrow" },
+      { id: 'b', text: "I am going to market tomorrow", correct: true },
       { id: 'c', text: "I would go to market if I have time" },
       { id: 'd', text: "I shall be going to market" }
     ],
@@ -251,7 +251,7 @@ const questions = [
     text: "Correct this: 'If I will see am, I will greet am.'",
     options: [
       { id: 'a', text: "If I see am, I will greet am" },
-      { id: 'b', text: "If I see him, I will greet him" },
+      { id: 'b', text: "If I see him, I will greet him", correct: true },
       { id: 'c', text: "If I would see him, I greet him" },
       { id: 'd', text: "If I seen him, I greet him" }
     ],
@@ -264,7 +264,7 @@ const questions = [
     text: "Identify the real future:",
     options: [
       { id: 'a', text: "If wishes were horses, beggars would ride" },
-      { id: 'b', text: "The UNILAG exams will start in May" },
+      { id: 'b', text: "The UNILAG exams will start in May", correct: true },
       { id: 'c', text: "I would speak better if I practiced" },
       { id: 'd', text: "If I were you, I'd apologize" }
     ],
@@ -277,7 +277,7 @@ const questions = [
     text: "Choose the unreal future:",
     options: [
       { id: 'a', text: "Jollof rice will be served at the party" },
-      { id: 'b', text: "If jollof rice were spicy, I would eat more" },
+      { id: 'b', text: "If jollof rice were spicy, I would eat more", correct: true },
       { id: 'c', text: "The chef is going to prepare it" },
       { id: 'd', text: "We shall eat at 7 PM" }
     ],
@@ -289,7 +289,7 @@ const questions = [
     id: 23,
     text: "Which mixes real and unreal?",
     options: [
-      { id: 'a', text: "I will study medicine, but I would choose law if art paid better" },
+      { id: 'a', text: "I will study medicine, but I would choose law if art paid better", correct: true },
       { id: 'b', text: "If it rains, we will stay home" },
       { id: 'c', text: "She would visit if she had money" },
       { id: 'd', text: "They shall arrive by noon" }
@@ -302,7 +302,7 @@ const questions = [
     id: 24,
     text: "Correct this error: 'If Buhari would be president again, Nigeria will change.'",
     options: [
-      { id: 'a', text: "Change 'will change' to 'would change'" },
+      { id: 'a', text: "Change 'will change' to 'would change'", correct: true },
       { id: 'b', text: "Change 'would be' to 'is'" },
       { id: 'c', text: "Remove 'if'" },
       { id: 'd', text: "No error" }
@@ -317,7 +317,7 @@ const questions = [
     options: [
       { id: 'a', text: "will complete" },
       { id: 'b', text: "will be completing" },
-      { id: 'c', text: "will have completed" },
+      { id: 'c', text: "will have completed", correct: true },
       { id: 'd', text: "would complete" }
     ],
     correctAnswer: "will have completed",
@@ -329,7 +329,7 @@ const questions = [
     text: "For an unlikely future possibility, use:",
     options: [
       { id: 'a', text: "Will" },
-      { id: 'b', text: "Would" },
+      { id: 'b', text: "Would", correct: true },
       { id: 'c', text: "Going to" },
       { id: 'd', text: "Shall" }
     ],
@@ -341,7 +341,7 @@ const questions = [
     id: 27,
     text: "Which question is grammatically correct?",
     options: [
-      { id: 'a', text: "Will you be needing accommodations?" },
+      { id: 'a', text: "Will you be needing accommodations?", correct: true },
       { id: 'b', text: "Would you need accommodations?" },
       { id: 'c', text: "Do you be needing accommodations?" },
       { id: 'd', text: "Are you needing accommodations?" }
@@ -357,7 +357,7 @@ const questions = [
       { id: 'a', text: "I will work" },
       { id: 'b', text: "I will be working" },
       { id: 'c', text: "I will have worked" },
-      { id: 'd', text: "I will have been working" }
+      { id: 'd', text: "I will have been working", correct: true }
     ],
     correctAnswer: "I will have been working",
     explanation: "'Will have been + -ing' shows duration until a future time",
@@ -368,7 +368,7 @@ const questions = [
     text: "'If ___ late, I ___ you.' Complete correctly:",
     options: [
       { id: 'a', text: "I will be, will call" },
-      { id: 'b', text: "I am, will call" },
+      { id: 'b', text: "I am, will call", correct: true },
       { id: 'c', text: "I would be, would call" },
       { id: 'd', text: "I were, would call" }
     ],
@@ -381,7 +381,7 @@ const questions = [
     text: "The sentence 'If I had studied, I would have passed' refers to:",
     options: [
       { id: 'a', text: "Present unreal" },
-      { id: 'b', text: "Past unreal" },
+      { id: 'b', text: "Past unreal", correct: true },
       { id: 'c', text: "Future unreal" },
       { id: 'd', text: "Real past" }
     ],

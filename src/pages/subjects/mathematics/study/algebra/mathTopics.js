@@ -26,7 +26,7 @@ export const MATHEMATICS_TOPICS = [
     ]
   },
   {
-    id: "number-theory",
+    id: "numbertheory",
     title: "Number Theory and Sets",
     icon: "FiHash",
     description: "Master properties of numbers and set operations",

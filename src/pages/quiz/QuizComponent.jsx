@@ -227,9 +227,9 @@ export const QuizComponent = ({
     if (option.correct) {
       const newScore = score + 1;
       setScore(newScore);
-      console.log('Score incremented:', { oldScore: score, newScore, optionCorrect: option.correct });
+      // console.log('Score incremented:', { oldScore: score, newScore, optionCorrect: option.correct });
     } else {
-      console.log('Answer incorrect, score not incremented:', { currentScore: score, optionCorrect: option.correct });
+      // console.log('Answer incorrect, score not incremented:', { currentScore: score, optionCorrect: option.correct });
     }
 
     // Show brief feedback before auto-advancing
