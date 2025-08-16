@@ -198,23 +198,40 @@ export const QuizComponent = ({
   }, [isAuthenticated, user?.id, quizId, leaderboardTable, questions]);
 
   const handleAnswer = (option) => {
+    // FIXED: Prevent answer changes - only allow one answer per question
+    if (userAnswers[currentQuestion]?.answered) {
+      return; // Question already answered, prevent changes
+    }
+
     setSelectedAnswer(option);
 
     const answers = [...userAnswers];
-    const prev = answers[currentQuestion];
-    const wasPrevCorrect = prev?.correct || false;
-
     answers[currentQuestion] = {
       questionId: questions[currentQuestion].id,
       selected: option.text,
       correct: option.correct,
+      answered: true, // Mark as answered to prevent changes
     };
     setUserAnswers(answers);
 
-    let newScore = score;
-    if (wasPrevCorrect && !option.correct) newScore -= 1;
-    if (!wasPrevCorrect && option.correct) newScore += 1;
-    setScore(newScore);
+    // FIXED: Only increment score, never decrement - prevents manipulation
+    if (option.correct) {
+      setScore(score + 1);
+    }
+
+    // Show brief feedback before auto-advancing
+    const button = document.querySelector(`[data-option-id="${option.id}"]`);
+    if (button) {
+      button.classList.add('ring-4', 'ring-green-400', 'scale-105');
+    }
+
+    // Auto-advance to next question after a short delay
+    setTimeout(() => {
+      if (currentQuestion < questions.length - 1) {
+        setCurrentQuestion(currentQuestion + 1);
+        setSelectedAnswer(null);
+      }
+    }, 800); // 800ms delay to show the selection and feedback
   };
 
   // Only navigation, no awarding logic
@@ -248,11 +265,41 @@ export const QuizComponent = ({
   const handleFinish = async () => {
     if (!selectedAnswer) return;
 
-    const wasFirstAttempt = isFirstAttempt;
-    const pointsToAward = wasFirstAttempt ? score : 0;
+    // FIXED: Prevent multiple submissions in the same session
+    if (isCompleted) {
+      console.log("Quiz already completed in this session");
+      setShowResult(true);
+      return;
+    }
 
     try {
       if (isAuthenticated && user) {
+        // FIXED: Server-side validation to prevent multiple tab exploitation
+        // Check if quiz is already completed in database
+        const { data: existingProgress, error: progressError } = await supabase
+          .from("postutme_quiz_progress")
+          .select("completed, attempts, best_score")
+          .eq("user_id", user.id)
+          .eq("quiz_id", quizId)
+          .single();
+
+        if (progressError && !progressError.message.includes('No rows found')) {
+          throw progressError;
+        }
+
+        // If quiz is already completed, don't award points
+        if (existingProgress?.completed) {
+          console.log("Quiz already completed, no points awarded");
+          setPointsAwarded(0);
+          setIsCompleted(true);
+          setShowResult(true);
+          return;
+        }
+
+        const actualAttempts = existingProgress?.attempts || 0;
+        const isActuallyFirstAttempt = actualAttempts === 0;
+        const pointsToAward = isActuallyFirstAttempt ? score : 0;
+
         // Save attempt
         await supabase.from("quiz_attempts").insert({
           user_id: user.id,
@@ -261,26 +308,19 @@ export const QuizComponent = ({
           total_questions: questions.length,
           points_earned: pointsToAward,
           attempted_at: new Date().toISOString(),
-          is_first_attempt: wasFirstAttempt,
+          is_first_attempt: isActuallyFirstAttempt,
         });
 
         // Update progress
-        const { data: existingProgress } = await supabase
-          .from("postutme_quiz_progress")
-          .select("attempts, best_score")
-          .eq("user_id", user.id)
-          .eq("quiz_id", quizId)
-          .single();
-
         await supabase.from("postutme_quiz_progress").upsert(
           {
             user_id: user.id,
             quiz_id: quizId,
             completed: true,
-            first_completed_at: wasFirstAttempt ? new Date().toISOString() : undefined,
+            first_completed_at: isActuallyFirstAttempt ? new Date().toISOString() : undefined,
             last_attempt_at: new Date().toISOString(),
             best_score: Math.max(score, existingProgress?.best_score || 0),
-            attempts: (existingProgress?.attempts || 0) + 1,
+            attempts: actualAttempts + 1,
           },
           { onConflict: "user_id,quiz_id" }
         );
@@ -500,7 +540,7 @@ export const QuizComponent = ({
                 Question <span className="font-semibold">{currentQuestion + 1}</span> of {questions.length}
               </div>
               <div className="text-gray-600">
-                Score: <span className={`font-semibold text-${themeColor}-700`}>{score}</span>
+                Questions Answered: <span className={`font-semibold text-${themeColor}-700`}>{userAnswers.filter(Boolean).length}/{questions.length}</span>
               </div>
             </div>
 
@@ -518,13 +558,32 @@ export const QuizComponent = ({
             animate={{ opacity: 1, y: 0 }}
             className={`bg-white rounded-3xl shadow-xl p-6 mb-6 border-2 border-${themeColor}-50`}
           >
+            {/* Show instructions only on first question */}
+            {currentQuestion === 0 && (
+              <div className="mb-6 p-4 bg-blue-50 rounded-xl border border-blue-200">
+                <div className="flex items-center gap-2 mb-2">
+                  <span className="text-blue-600 text-lg">ℹ️</span>
+                  <h3 className="font-semibold text-blue-800">Important Quiz Rules</h3>
+                </div>
+                <ul className="text-sm text-blue-700 space-y-1">
+                  <li>• You can only answer each question once</li>
+                  <li>• Answers cannot be changed after selection</li>
+                  <li>• Quiz automatically advances to next question</li>
+                  <li>• Choose your answers carefully!</li>
+                </ul>
+              </div>
+            )}
+
             <div className="flex items-start justify-between gap-4">
               <div>
                 <h2 className="text-xl font-bold text-gray-900 mb-2">
                   {questions[currentQuestion].text}
                 </h2>
                 <p className="text-sm text-gray-600">
-                  Pick the best answer — be quick to earn first-attempt gems!
+                  {currentQuestion === 0 
+                    ? "Select your answer below - you'll automatically move to the next question"
+                    : "Select your answer to continue"
+                  }
                 </p>
               </div>
 
@@ -539,20 +598,30 @@ export const QuizComponent = ({
             <div className="grid gap-4 mt-6">
               {questions[currentQuestion].options.map((option) => {
                 const active = selectedAnswer && selectedAnswer.id === option.id;
+                const isAnswered = userAnswers[currentQuestion]?.answered;
+                
                 return (
                   <motion.button
                     key={option.id}
+                    data-option-id={option.id}
                     onClick={() => handleAnswer(option)}
-                    whileTap={{ scale: 0.98 }}
-                    className={`text-left p-4 rounded-2xl border-2 transition-all duration-200 shadow-sm hover:shadow-md flex items-center gap-3 ${
-                      active
+                    disabled={isAnswered}
+                    whileTap={{ scale: isAnswered ? 1 : 0.98 }}
+                    className={`text-left p-4 rounded-2xl border-2 transition-all duration-200 shadow-sm flex items-center gap-3 ${
+                      isAnswered
+                        ? "bg-gray-50 border-gray-300 cursor-not-allowed opacity-80"
+                        : active
                         ? `bg-gradient-to-r from-${themeColor}-50 to-${themeColor}-100 border-${themeColor}-400 transform scale-101`
                         : "bg-white border-transparent hover:bg-teal-50"
                     }`}
                   >
                     <div className="flex items-center gap-3">
                       <div className={`w-9 h-9 rounded-full flex items-center justify-center font-bold ${
-                        active ? `bg-${themeColor}-600 text-white` : `bg-${themeColor}-50 text-${themeColor}-700`
+                        isAnswered
+                          ? "bg-gray-600 text-white"
+                          : active 
+                          ? `bg-${themeColor}-600 text-white` 
+                          : `bg-${themeColor}-50 text-${themeColor}-700`
                       }`}>
                         {option.id.toUpperCase()}
                       </div>
@@ -575,49 +644,29 @@ export const QuizComponent = ({
             />
           </motion.div>
 
-          <div className="flex items-center justify-between gap-4">
-            <button
-              onClick={prevQuestion}
-              disabled={currentQuestion === 0}
-              className={`flex items-center gap-2 px-5 py-3 rounded-full ${
-                currentQuestion === 0
-                  ? "text-gray-400 bg-white/30 cursor-not-allowed"
-                  : `text-${themeColor}-700 bg-white shadow-sm hover:shadow-md`
-              }`}
-            >
-              <FiArrowLeft />
-              Previous
-            </button>
-
-            <div className="flex items-center gap-3">
-              {currentQuestion < questions.length - 1 ? (
-                <button
-                  onClick={nextQuestion}
-                  disabled={!selectedAnswer}
-                  className={`flex items-center gap-2 px-5 py-3 rounded-full ${
-                    !selectedAnswer
-                      ? "text-gray-400 bg-white/30 cursor-not-allowed"
-                      : `bg-gradient-to-r from-${themeColor}-600 to-${themeColor}-800 text-white font-semibold shadow-md hover:shadow-lg`
-                  }`}
-                >
-                  Next
-                  <FiArrowRight />
-                </button>
-              ) : (
-                <button
-                  onClick={handleFinish}
-                  disabled={!selectedAnswer}
-                  className={`flex items-center gap-2 px-5 py-3 rounded-full ${
-                    !selectedAnswer
-                      ? "text-gray-400 bg-white/30 cursor-not-allowed"
-                      : `bg-gradient-to-r from-${themeColor}-600 to-${themeColor}-800 text-white font-semibold shadow-md hover:shadow-lg`
-                  }`}
-                >
-                  Finish Quiz
-                  <FiArrowRight />
-                </button>
-              )}
-            </div>
+          <div className="flex items-center justify-center gap-4">
+            {/* Only show Finish Quiz button on last question */}
+            {currentQuestion === questions.length - 1 && (
+              <button
+                onClick={handleFinish}
+                disabled={!selectedAnswer || isCompleted}
+                className={`flex items-center gap-2 px-6 py-3 rounded-full ${
+                  !selectedAnswer || isCompleted
+                    ? "text-gray-400 bg-white/30 cursor-not-allowed"
+                    : "bg-gradient-to-r from-green-600 to-green-800 text-white font-semibold shadow-md hover:shadow-lg"
+                }`}
+              >
+                {isCompleted ? "Quiz Completed" : "Finish Quiz"}
+                <FiArrowRight />
+              </button>
+            )}
+            
+            {/* Show progress indicator for non-last questions */}
+            {currentQuestion < questions.length - 1 && (
+              <div className="text-sm text-gray-500">
+                Auto-advancing to next question...
+              </div>
+            )}
           </div>
         </div>
       )}

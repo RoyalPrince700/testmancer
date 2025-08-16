@@ -4,7 +4,7 @@ const questions = [
     text: "Which sentence shows a definite future plan?",
     options: [
       { id: 'a', text: "If I were rich, I would travel" },
-      { id: 'b', text: "I will attend the conference next week" },
+      { id: 'b', text: "I will attend the conference next week", correct: true },
       { id: 'c', text: "She would come if invited" },
       { id: 'd', text: "We would win if we practiced" }
     ],
@@ -17,7 +17,7 @@ const questions = [
     text: "What is the formal way to suggest a future action?",
     options: [
       { id: 'a', text: "We will meet tomorrow" },
-      { id: 'b', text: "We shall meet tomorrow" },
+      { id: 'b', text: "We shall meet tomorrow", correct: true },
       { id: 'c', text: "We would meet tomorrow" },
       { id: 'd', text: "We should meet tomorrow" }
     ],
@@ -30,7 +30,7 @@ const questions = [
     text: "Identify the real future sentence:",
     options: [
       { id: 'a', text: "If it rains, we would cancel" },
-      { id: 'b', text: "The plane will land at 8 PM" },
+      { id: 'b', text: "The plane will land at 8 PM", correct: true },
       { id: 'c', text: "I would help if I could" },
       { id: 'd', text: "She would call if she knew" }
     ],
@@ -43,7 +43,7 @@ const questions = [
     text: "Which sentence describes an imaginary situation?",
     options: [
       { id: 'a', text: "I will visit my grandparents" },
-      { id: 'b', text: "If I were president, I would change policies" },
+      { id: 'b', text: "If I were president, I would change policies", correct: true },
       { id: 'c', text: "They are arriving tomorrow" },
       { id: 'd', text: "We shall overcome" }
     ],
@@ -56,7 +56,7 @@ const questions = [
     text: "Choose the correct unreal future construction:",
     options: [
       { id: 'a', text: "If you study, you will pass" },
-      { id: 'b', text: "If you studied, you would pass" },
+      { id: 'b', text: "If you studied, you would pass", correct: true },
       { id: 'c', text: "If you will study, you pass" },
       { id: 'd', text: "If you had studied, you would have passed" }
     ],
@@ -69,7 +69,7 @@ const questions = [
     text: "An example of unreal future is:",
     options: [
       { id: 'a', text: "She will graduate next year" },
-      { id: 'b', text: "If pigs could fly, we would see them" },
+      { id: 'b', text: "If pigs could fly, we would see them", correct: true },
       { id: 'c', text: "I'm meeting the doctor at 3 PM" },
       { id: 'd', text: "They shall return by sunset" }
     ],
@@ -81,7 +81,7 @@ const questions = [
     id: 7,
     text: "Which sentence combines real and unreal future?",
     options: [
-      { id: 'a', text: "I will travel, but I would fly if it were cheaper" },
+      { id: 'a', text: "I will travel, but I would fly if it were cheaper", correct: true },
       { id: 'b', text: "If I were taller, I would play basketball" },
       { id: 'c', text: "They will arrive on time" },
       { id: 'd', text: "She would sing if she had confidence" }
@@ -94,14 +94,14 @@ const questions = [
     id: 8,
     text: "Identify the mixed example:",
     options: [
-      { id: 'a', text: "He will call, but he would visit if he could" },
+      { id: 'a', text: "He will call, but he would visit if he could", correct: true },
       { id: 'b', text: "If it snowed, schools would close" },
       { id: 'c', text: "We shall proceed as planned" },
       { id: 'd', text: "You would win if you trained harder" }
     ],
     correctAnswer: "He will call, but he would visit if he could",
-    explanation: "Combines 'will' (real) and 'would' (unreal)",
-    hint: "Look for a contrast between definite and hypothetical actions"
+    explanation: "Combines definite future with hypothetical alternative",
+    hint: "Look for a sentence with both 'will' and 'would'"
   },
   {
     id: 9,

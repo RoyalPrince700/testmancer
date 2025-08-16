@@ -5,12 +5,12 @@ const questions = [
     passage: "In Ibadan, the cocoa trade has boosted the local economy. Farmers work hard to grow quality beans, which are exported globally. Some farmers also face challenges like poor roads and low prices.",
     options: [
       { id: 'a', text: "The challenges faced by Ibadan farmers" },
-      { id: 'b', text: "The cocoa trade’s impact on Ibadan’s economy" },
+      { id: 'b', text: "The cocoa trade's impact on Ibadan's economy", correct: true },
       { id: 'c', text: "The global export of beans" },
-      { id: 'd', text: "The quality of Ibadan’s roads" }
+      { id: 'd', text: "The quality of Ibadan's roads" }
     ],
-    correctAnswer: "The cocoa trade’s impact on Ibadan’s economy",
-    explanation: "The passage focuses on how the cocoa trade has boosted Ibadan’s economy, with details about farming and exports supporting this main idea.",
+    correctAnswer: "The cocoa trade's impact on Ibadan's economy",
+    explanation: "The passage focuses on how the cocoa trade has boosted Ibadan's economy, with details about farming and exports supporting this main idea.",
     hint: "Look for the central focus of the passage."
   },
   {
@@ -19,12 +19,12 @@ const questions = [
     passage: "In Ibadan, the cocoa trade has boosted the local economy. Farmers work hard to grow quality beans, which are exported globally. Some farmers also face challenges like poor roads and low prices.",
     options: [
       { id: 'a', text: "Weakened significantly" },
-      { id: 'b', text: "Improved greatly" },
+      { id: 'b', text: "Improved greatly", correct: true },
       { id: 'c', text: "Stopped completely" },
       { id: 'd', text: "Ignored entirely" }
     ],
     correctAnswer: "Improved greatly",
-    explanation: "In the context of the economy, 'boosted' means greatly improved, as the cocoa trade strengthens Ibadan’s economy.",
+    explanation: "In the context of the economy, 'boosted' means greatly improved, as the cocoa trade strengthens Ibadan's economy.",
     hint: "Think about the effect of the cocoa trade on the economy."
   },
   {
@@ -33,7 +33,7 @@ const questions = [
     passage: "In Ibadan, the cocoa trade has boosted the local economy. Farmers work hard to grow quality beans, which are exported globally. Some farmers also face challenges like poor roads and low prices.",
     options: [
       { id: 'a', text: "They have no challenges" },
-      { id: 'b', text: "They face issues like poor roads and low prices" },
+      { id: 'b', text: "They face issues like poor roads and low prices", correct: true },
       { id: 'c', text: "They only face labor shortages" },
       { id: 'd', text: "They have modern equipment" }
     ],
@@ -47,7 +47,7 @@ const questions = [
     passage: "In Ibadan, the cocoa trade has boosted the local economy. Farmers work hard to grow quality beans, which are exported globally. Some farmers also face challenges like poor roads and low prices.",
     options: [
       { id: 'a', text: "It involves poor quality beans" },
-      { id: 'b', text: "It includes global exports of cocoa beans" },
+      { id: 'b', text: "It includes global exports of cocoa beans", correct: true },
       { id: 'c', text: "It is limited to local markets" },
       { id: 'd', text: "It faces no challenges" }
     ],
@@ -58,49 +58,49 @@ const questions = [
   {
     id: 5,
     text: "What is the main idea of the passage?",
-    passage: "Ada’s tailoring shop in Aba is thriving. She employs ten workers, designs trendy ankara dresses, and supplies boutiques in Lagos. Her shop is painted blue and opens at 8 AM daily.",
+    passage: "Ada's tailoring shop in Aba is thriving. She employs ten workers, designs trendy ankara dresses, and supplies boutiques in Lagos. Her shop is painted blue and opens at 8 AM daily.",
     options: [
-      { id: 'a', text: "The daily schedule of Ada’s shop" },
-      { id: 'b', text: "Ada’s thriving tailoring business in Aba" },
-      { id: 'c', text: "The painting of Ada’s shop" },
+      { id: 'a', text: "The daily schedule of Ada's shop" },
+      { id: 'b', text: "Ada's thriving tailoring business in Aba", correct: true },
+      { id: 'c', text: "The painting of Ada's shop" },
       { id: 'd', text: "The challenges of tailoring in Aba" }
     ],
-    correctAnswer: "Ada’s thriving tailoring business in Aba",
-    explanation: "The passage centers on the success of Ada’s tailoring shop, with details about her designs and supplies supporting this focus.",
-    hint: "Focus on the overall description of Ada’s shop."
+    correctAnswer: "Ada's thriving tailoring business in Aba",
+    explanation: "The passage centers on the success of Ada's tailoring shop, with details about her designs and supplies supporting this focus.",
+    hint: "Focus on the overall description of Ada's shop."
   },
   {
     id: 6,
-    text: "What does 'thriving' mean in the context of Ada’s tailoring shop?",
-    passage: "Ada’s tailoring shop in Aba is thriving. She employs ten workers, designs trendy ankara dresses, and supplies boutiques in Lagos. Her shop is painted blue and opens at 8 AM daily.",
+    text: "What does 'thriving' mean in the context of Ada's tailoring shop?",
+    passage: "Ada's tailoring shop in Aba is thriving. She employs ten workers, designs trendy ankara dresses, and supplies boutiques in Lagos. Her shop is painted blue and opens at 8 AM daily.",
     options: [
       { id: 'a', text: "Struggling to survive" },
-      { id: 'b', text: "Growing successfully" },
+      { id: 'b', text: "Growing successfully", correct: true },
       { id: 'c', text: "Closing down" },
       { id: 'd', text: "Operating quietly" }
     ],
     correctAnswer: "Growing successfully",
-    explanation: "In the context of the shop, 'thriving' means growing successfully, as shown by Ada’s employment of workers and supplies to Lagos.",
-    hint: "Think about why Ada’s shop is described positively."
+    explanation: "In the context of the shop, 'thriving' means growing successfully, as shown by Ada's employment of workers and supplies to Lagos.",
+    hint: "Think about why Ada's shop is described positively."
   },
   {
     id: 7,
-    text: "What can be inferred about Ada’s tailoring shop’s market reach?",
-    passage: "Ada’s tailoring shop in Aba is thriving. She employs ten workers, designs trendy ankara dresses, and supplies boutiques in Lagos. Her shop is painted blue and opens at 8 AM daily.",
+    text: "What can be inferred about Ada's tailoring shop's market reach?",
+    passage: "Ada's tailoring shop in Aba is thriving. She employs ten workers, designs trendy ankara dresses, and supplies boutiques in Lagos. Her shop is painted blue and opens at 8 AM daily.",
     options: [
       { id: 'a', text: "It only serves Aba customers" },
-      { id: 'b', text: "It supplies boutiques beyond Aba" },
+      { id: 'b', text: "It supplies boutiques beyond Aba", correct: true },
       { id: 'c', text: "It focuses on local workers" },
       { id: 'd', text: "It sells only in Ilorin" }
     ],
     correctAnswer: "It supplies boutiques beyond Aba",
-    explanation: "The passage mentions Ada’s shop supplying boutiques in Lagos, indicating a market reach beyond Aba.",
-    hint: "Look for where Ada’s dresses are sold."
+    explanation: "The passage mentions Ada's shop supplying boutiques in Lagos, indicating a market reach beyond Aba.",
+    hint: "Look for where Ada's dresses are sold."
   },
   {
     id: 8,
     text: "Which detail should be excluded from a summary of the passage?",
-    passage: "Ada’s tailoring shop in Aba is thriving. She employs ten workers, designs trendy ankara dresses, and supplies boutiques in Lagos. Her shop is painted blue and opens at 8 AM daily.",
+    passage: "Ada's tailoring shop in Aba is thriving. She employs ten workers, designs trendy ankara dresses, and supplies boutiques in Lagos. Her shop is painted blue and opens at 8 AM daily.",
     options: [
       { id: 'a', text: "Ada designs trendy ankara dresses" },
       { id: 'b', text: "Her shop is painted blue" },
@@ -114,24 +114,24 @@ const questions = [
   {
     id: 9,
     text: "What is the main idea of the passage?",
-    passage: "The Oba’s palace in Benin City is a cultural landmark. It attracts tourists who admire its ancient architecture and artifacts. The palace also hosts festivals and traditional ceremonies every year.",
+    passage: "The Oba's palace in Benin City is a cultural landmark. It attracts tourists who admire its ancient architecture and artifacts. The palace also hosts festivals and traditional ceremonies every year.",
     options: [
-      { id: 'a', text: "The architecture of the Oba’s palace" },
-      { id: 'b', text: "The Oba’s palace as a cultural landmark" },
+      { id: 'a', text: "The architecture of the Oba's palace" },
+      { id: 'b', text: "The Oba's palace as a cultural landmark", correct: true },
       { id: 'c', text: "The festivals in Benin City" },
       { id: 'd', text: "The challenges of maintaining the palace" }
     ],
-    correctAnswer: "The Oba’s palace as a cultural landmark",
+    correctAnswer: "The Oba's palace as a cultural landmark",
     explanation: "The passage emphasizes the palace’s role as a cultural landmark, supported by details about tourists and festivals.",
-    hint: "Focus on the primary role of the Oba’s palace."
+    hint: "Focus on the primary role of the Oba's palace."
   },
   {
     id: 10,
-    text: "What does 'attracts' mean in the context of the Oba’s palace?",
-    passage: "The Oba’s palace in Benin City is a cultural landmark. It attracts tourists who admire its ancient architecture and artifacts. The palace also hosts festivals and traditional ceremonies every year.",
+    text: "What does 'attracts' mean in the context of the Oba's palace?",
+    passage: "The Oba's palace in Benin City is a cultural landmark. It attracts tourists who admire its ancient architecture and artifacts. The palace also hosts festivals and traditional ceremonies every year.",
     options: [
       { id: 'a', text: "Repels visitors" },
-      { id: 'b', text: "Draws people in" },
+      { id: 'b', text: "Draws people in", correct: true },
       { id: 'c', text: "Hides from view" },
       { id: 'd', text: "Confuses tourists" }
     ],
@@ -141,11 +141,11 @@ const questions = [
   },
   {
     id: 11,
-    text: "Why do tourists visit the Oba’s palace?",
-    passage: "The Oba’s palace in Benin City is a cultural landmark. It attracts tourists who admire its ancient architecture and artifacts. The palace also hosts festivals and traditional ceremonies every year.",
+    text: "Why do tourists visit the Oba's palace?",
+    passage: "The Oba's palace in Benin City is a cultural landmark. It attracts tourists who admire its ancient architecture and artifacts. The palace also hosts festivals and traditional ceremonies every year.",
     options: [
       { id: 'a', text: "To buy artifacts" },
-      { id: 'b', text: "To admire its architecture and artifacts" },
+      { id: 'b', text: "To admire its architecture and artifacts", correct: true },
       { id: 'c', text: "To organize festivals" },
       { id: 'd', text: "To live in the palace" }
     ],
@@ -155,11 +155,11 @@ const questions = [
   },
   {
     id: 12,
-    text: "What can be inferred about the Oba’s palace events?",
-    passage: "The Oba’s palace in Benin City is a cultural landmark. It attracts tourists who admire its ancient architecture and artifacts. The palace also hosts festivals and traditional ceremonies every year.",
+    text: "What can be inferred about the Oba's palace events?",
+    passage: "The Oba's palace in Benin City is a cultural landmark. It attracts tourists who admire its ancient architecture and artifacts. The palace also hosts festivals and traditional ceremonies every year.",
     options: [
       { id: 'a', text: "They are modern concerts" },
-      { id: 'b', text: "They are traditional and cultural" },
+      { id: 'b', text: "They are traditional and cultural", correct: true },
       { id: 'c', text: "They are private events" },
       { id: 'd', text: "They are held monthly" }
     ],
@@ -173,7 +173,7 @@ const questions = [
     passage: "In Kano, the groundnut pyramids were once a symbol of wealth. Farmers stacked bags of groundnuts into huge pyramids for export. Today, the pyramids are gone, but groundnut farming remains vital.",
     options: [
       { id: 'a', text: "The construction of groundnut pyramids" },
-      { id: 'b', text: "The history and importance of groundnut farming in Kano" },
+      { id: 'b', text: "The history and importance of groundnut farming in Kano", correct: true },
       { id: 'c', text: "The export challenges in Kano" },
       { id: 'd', text: "The disappearance of farmers in Kano" }
     ],
@@ -187,7 +187,7 @@ const questions = [
     passage: "In Kano, the groundnut pyramids were once a symbol of wealth. Farmers stacked bags of groundnuts into huge pyramids for export. Today, the pyramids are gone, but groundnut farming remains vital.",
     options: [
       { id: 'a', text: "Unimportant" },
-      { id: 'b', text: "Essential" },
+      { id: 'b', text: "Essential", correct: true },
       { id: 'c', text: "Temporary" },
       { id: 'd', text: "Declining" }
     ],
@@ -201,7 +201,7 @@ const questions = [
     passage: "In Kano, the groundnut pyramids were once a symbol of wealth. Farmers stacked bags of groundnuts into huge pyramids for export. Today, the pyramids are gone, but groundnut farming remains vital.",
     options: [
       { id: 'a', text: "They are still being built" },
-      { id: 'b', text: "They no longer exist" },
+      { id: 'b', text: "They no longer exist", correct: true },
       { id: 'c', text: "They are made of other crops" },
       { id: 'd', text: "They are a tourist attraction" }
     ],
@@ -215,7 +215,7 @@ const questions = [
     passage: "In Kano, the groundnut pyramids were once a symbol of wealth. Farmers stacked bags of groundnuts into huge pyramids for export. Today, the pyramids are gone, but groundnut farming remains vital.",
     options: [
       { id: 'a', text: "They are still built today" },
-      { id: 'b', text: "They were stacked for export" },
+      { id: 'b', text: "They were stacked for export", correct: true },
       { id: 'c', text: "They were made of rice" },
       { id: 'd', text: "They were small structures" }
     ],
@@ -229,7 +229,7 @@ const questions = [
     passage: "In Enugu, coal mining was once a major industry. Miners worked underground, extracting coal for export. Today, coal mining has declined, but the region’s markets remain vibrant with traders selling yam and palm oil.",
     options: [
       { id: 'a', text: "The decline of coal mining in Enugu" },
-      { id: 'b', text: "The history and shift from coal mining to vibrant markets in Enugu" },
+      { id: 'b', text: "The history and shift from coal mining to vibrant markets in Enugu", correct: true },
       { id: 'c', text: "The export of yam in Enugu" },
       { id: 'd', text: "The challenges of miners" }
     ],
@@ -243,7 +243,7 @@ const questions = [
     passage: "In Enugu, coal mining was once a major industry. Miners worked underground, extracting coal for export. Today, coal mining has declined, but the region’s markets remain vibrant with traders selling yam and palm oil.",
     options: [
       { id: 'a', text: "Quiet and empty" },
-      { id: 'b', text: "Lively and active" },
+      { id: 'b', text: "Lively and active", correct: true },
       { id: 'c', text: "Closed and abandoned" },
       { id: 'd', text: "Small and limited" }
     ],
@@ -257,7 +257,7 @@ const questions = [
     passage: "In Enugu, coal mining was once a major industry. Miners worked underground, extracting coal for export. Today, coal mining has declined, but the region’s markets remain vibrant with traders selling yam and palm oil.",
     options: [
       { id: 'a', text: "It depends entirely on coal mining" },
-      { id: 'b', text: "It relies on vibrant market trade" },
+      { id: 'b', text: "It relies on vibrant market trade", correct: true },
       { id: 'c', text: "It has no economic activity" },
       { id: 'd', text: "It focuses on tourism" }
     ],
@@ -285,7 +285,7 @@ const questions = [
     passage: "In Lagos, the danfo bus is a key transport mode. These yellow buses speed through busy streets, carrying students and traders. However, they often get stuck in traffic on routes like Third Mainland Bridge.",
     options: [
       { id: 'a', text: "The challenges of Lagos traffic" },
-      { id: 'b', text: "The role of danfo buses in Lagos transport" },
+      { id: 'b', text: "The role of danfo buses in Lagos transport", correct: true },
       { id: 'c', text: "The design of yellow buses" },
       { id: 'd', text: "The construction of Third Mainland Bridge" }
     ],
@@ -299,7 +299,7 @@ const questions = [
     passage: "In Lagos, the danfo bus is a key transport mode. These yellow buses speed through busy streets, carrying students and traders. However, they often get stuck in traffic on routes like Third Mainland Bridge.",
     options: [
       { id: 'a', text: "Unimportant" },
-      { id: 'b', text: "Essential" },
+      { id: 'b', text: "Essential", correct: true },
       { id: 'c', text: "Temporary" },
       { id: 'd', text: "Expensive" }
     ],
@@ -313,7 +313,7 @@ const questions = [
     passage: "In Lagos, the danfo bus is a key transport mode. These yellow buses speed through busy streets, carrying students and traders. However, they often get stuck in traffic on routes like Third Mainland Bridge.",
     options: [
       { id: 'a', text: "They avoid traffic entirely" },
-      { id: 'b', text: "They face traffic challenges" },
+      { id: 'b', text: "They face traffic challenges", correct: true },
       { id: 'c', text: "They only operate at night" },
       { id: 'd', text: "They are limited to one route" }
     ],
@@ -327,7 +327,7 @@ const questions = [
     passage: "In Lagos, the danfo bus is a key transport mode. These yellow buses speed through busy streets, carrying students and traders. However, they often get stuck in traffic on routes like Third Mainland Bridge.",
     options: [
       { id: 'a', text: "They are painted blue" },
-      { id: 'b', text: "They carry students and traders" },
+      { id: 'b', text: "They carry students and traders", correct: true },
       { id: 'c', text: "They avoid busy streets" },
       { id: 'd', text: "They never face traffic" }
     ],
@@ -341,7 +341,7 @@ const questions = [
     passage: "In Port Harcourt, the oil industry drives economic growth. Workers in oil companies earn high salaries, boosting local businesses. However, oil spills have caused environmental concerns in the region.",
     options: [
       { id: 'a', text: "The environmental issues in Port Harcourt" },
-      { id: 'b', text: "The oil industry’s impact on Port Harcourt’s economy" },
+      { id: 'b', text: "The oil industry’s impact on Port Harcourt’s economy", correct: true },
       { id: 'c', text: "The salaries of oil workers" },
       { id: 'd', text: "The closure of local businesses" }
     ],
@@ -355,7 +355,7 @@ const questions = [
     passage: "In Port Harcourt, the oil industry drives economic growth. Workers in oil companies earn high salaries, boosting local businesses. However, oil spills have caused environmental concerns in the region.",
     options: [
       { id: 'a', text: "Stops completely" },
-      { id: 'b', text: "Powers or fuels" },
+      { id: 'b', text: "Powers or fuels", correct: true },
       { id: 'c', text: "Reduces significantly" },
       { id: 'd', text: "Ignores entirely" }
     ],
@@ -369,7 +369,7 @@ const questions = [
     passage: "In Port Harcourt, the oil industry drives economic growth. Workers in oil companies earn high salaries, boosting local businesses. However, oil spills have caused environmental concerns in the region.",
     options: [
       { id: 'a', text: "It has no environmental impact" },
-      { id: 'b', text: "It causes environmental concerns" },
+      { id: 'b', text: "It causes environmental concerns", correct: true },
       { id: 'c', text: "It improves the environment" },
       { id: 'd', text: "It only affects businesses" }
     ],
@@ -397,7 +397,7 @@ const questions = [
     passage: "In Jos, the tin mining industry has shaped the city’s history. Miners once dug deep tunnels to extract tin, creating jobs. Today, tourism and farming are growing, as tin mining has declined.",
     options: [
       { id: 'a', text: "The decline of tourism in Jos" },
-      { id: 'b', text: "The historical and current economic shifts in Jos" },
+      { id: 'b', text: "The historical and current economic shifts in Jos", correct: true },
       { id: 'c', text: "The challenges of tin miners" },
       { id: 'd', text: "The growth of tin mining today" }
     ],
@@ -411,7 +411,7 @@ const questions = [
     passage: "In Jos, the tin mining industry has shaped the city’s history. Miners once dug deep tunnels to extract tin, creating jobs. Today, tourism and farming are growing, as tin mining has declined.",
     options: [
       { id: 'a', text: "It relies solely on tin mining" },
-      { id: 'b', text: "It is shifting to tourism and farming" },
+      { id: 'b', text: "It is shifting to tourism and farming", correct: true },
       { id: 'c', text: "It has no economic activity" },
       { id: 'd', text: "It focuses on manufacturing" }
     ],
