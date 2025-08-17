@@ -1,11 +1,10 @@
-// Quiz questions for Sets and Venn Diagrams (matching EquationPages.jsx content)
 const questions = [
   {
     id: 1,
     text: "What is a set?",
     options: [
-      { id: 'a', text: "A well-organized collection of unique items or elements", correct: true },
-      { id: 'b', text: "A list of random numbers" },
+      { id: 'a', text: "A list of random numbers" },
+      { id: 'b', text: "A well-organized collection of unique items or elements", correct: true },
       { id: 'c', text: "A mathematical equation" },
       { id: 'd', text: "A type of graph" }
     ],
@@ -17,9 +16,9 @@ const questions = [
     id: 2,
     text: "Which symbol represents the empty set?",
     options: [
-      { id: 'a', text: "∅", correct: true },
-      { id: 'b', text: "∞" },
-      { id: 'c', text: "∪" },
+      { id: 'a', text: "∞" },
+      { id: 'b', text: "∪" },
+      { id: 'c', text: "∅", correct: true },
       { id: 'd', text: "∩" }
     ],
     correctAnswer: "∅",
@@ -30,10 +29,10 @@ const questions = [
     id: 3,
     text: "What is a singleton set?",
     options: [
-      { id: 'a', text: "A set with exactly one element", correct: true },
-      { id: 'b', text: "A set with no elements" },
-      { id: 'c', text: "A set with infinite elements" },
-      { id: 'd', text: "A set with two elements" }
+      { id: 'a', text: "A set with no elements" },
+      { id: 'b', text: "A set with infinite elements" },
+      { id: 'c', text: "A set with two elements" },
+      { id: 'd', text: "A set with exactly one element", correct: true }
     ],
     correctAnswer: "A set with exactly one element",
     explanation: "A singleton set has just one element, like the set of even prime numbers: {2}.",
@@ -56,8 +55,8 @@ const questions = [
     id: 5,
     text: "If A = {2, 4, 6} and B = {4, 8, 12}, what is A ∪ B?",
     options: [
-      { id: 'a', text: "{2, 4, 6, 8, 12}", correct: true },
-      { id: 'b', text: "{4}" },
+      { id: 'a', text: "{4}" },
+      { id: 'b', text: "{2, 4, 6, 8, 12}", correct: true },
       { id: 'c', text: "{2, 6, 8, 12}" },
       { id: 'd', text: "{2, 4, 6} + {4, 8, 12}" }
     ],
@@ -69,9 +68,9 @@ const questions = [
     id: 6,
     text: "What does the symbol ∩ represent?",
     options: [
-      { id: 'a', text: "Intersection (elements in both sets)", correct: true },
-      { id: 'b', text: "Union (elements in either set)" },
-      { id: 'c', text: "Empty set" },
+      { id: 'a', text: "Union (elements in either set)" },
+      { id: 'b', text: "Empty set" },
+      { id: 'c', text: "Intersection (elements in both sets)", correct: true },
       { id: 'd', text: "Universal set" }
     ],
     correctAnswer: "Intersection (elements in both sets)",
@@ -82,10 +81,10 @@ const questions = [
     id: 7,
     text: "What does the symbol ∪ represent?",
     options: [
-      { id: 'a', text: "Union (elements in either set)", correct: true },
-      { id: 'b', text: "Intersection (elements in both sets)" },
-      { id: 'c', text: "Empty set" },
-      { id: 'd', text: "Subset" }
+      { id: 'a', text: "Intersection (elements in both sets)" },
+      { id: 'b', text: "Empty set" },
+      { id: 'c', text: "Subset" },
+      { id: 'd', text: "Union (elements in either set)", correct: true }
     ],
     correctAnswer: "Union (elements in either set)",
     explanation: "∪ is the union symbol - it combines all elements from both sets (the 'or' operation).",
@@ -95,8 +94,8 @@ const questions = [
     id: 8,
     text: "What is the cardinality of the set A = {Green, White}?",
     options: [
-      { id: 'a', text: "2", correct: true },
-      { id: 'b', text: "1" },
+      { id: 'a', text: "1" },
+      { id: 'b', text: "2", correct: true },
       { id: 'c', text: "0" },
       { id: 'd', text: "3" }
     ],
@@ -108,10 +107,10 @@ const questions = [
     id: 9,
     text: "What is the inclusion-exclusion principle formula?",
     options: [
-      { id: 'a', text: "n(A ∪ B) = n(A) + n(B) - n(A ∩ B)", correct: true },
-      { id: 'b', text: "n(A ∪ B) = n(A) + n(B) + n(A ∩ B)" },
-      { id: 'c', text: "n(A ∪ B) = n(A) - n(B) + n(A ∩ B)" },
-      { id: 'd', text: "n(A ∪ B) = n(A) × n(B) - n(A ∩ B)" }
+      { id: 'a', text: "n(A ∪ B) = n(A) + n(B) + n(A ∩ B)" },
+      { id: 'b', text: "n(A ∪ B) = n(A) - n(B) + n(A ∩ B)" },
+      { id: 'c', text: "n(A ∪ B) = n(A) × n(B) - n(A ∩ B)" },
+      { id: 'd', text: "n(A ∪ B) = n(A) + n(B) - n(A ∩ B)", correct: true }
     ],
     correctAnswer: "n(A ∪ B) = n(A) + n(B) - n(A ∩ B)",
     explanation: "This formula prevents double-counting. We add both sets then subtract the overlap to avoid counting common elements twice.",
@@ -121,7 +120,7 @@ const questions = [
     id: 10,
     text: "In a class, 20 like Football, 15 like Basketball, and 8 like both. How many like at least one sport?",
     options: [
-      { id: 'a', text: "27", correct: true },
+      { id: 'a', text: "27", correctKontent: true },
       { id: 'b', text: "35" },
       { id: 'c', text: "43" },
       { id: 'd', text: "23" }
@@ -134,8 +133,8 @@ const questions = [
     id: 11,
     text: "What represents the Universal Set in a Venn diagram?",
     options: [
-      { id: 'a', text: "A rectangle containing all other sets", correct: true },
-      { id: 'b', text: "A circle" },
+      { id: 'a', text: "A circle" },
+      { id: 'b', text: "A rectangle containing all other sets", correct: true },
       { id: 'c', text: "A triangle" },
       { id: 'd', text: "A dot" }
     ],
@@ -147,9 +146,9 @@ const questions = [
     id: 12,
     text: "What type of set has a countable number of elements?",
     options: [
-      { id: 'a', text: "Finite set", correct: true },
-      { id: 'b', text: "Infinite set" },
-      { id: 'c', text: "Empty set" },
+      { id: 'a', text: "Infinite set" },
+      { id: 'b', text: "Empty set" },
+      { id: 'c', text: "Finite set", correct: true },
       { id: 'd', text: "Universal set" }
     ],
     correctAnswer: "Finite set",
@@ -160,10 +159,10 @@ const questions = [
     id: 13,
     text: "What type of set is the set of all whole numbers?",
     options: [
-      { id: 'a', text: "Infinite set", correct: true },
-      { id: 'b', text: "Finite set" },
-      { id: 'c', text: "Empty set" },
-      { id: 'd', text: "Singleton set" }
+      { id: 'a', text: "Finite set" },
+      { id: 'b', text: "Empty set" },
+      { id: 'c', text: "Singleton set" },
+      { id: 'd', text: "Infinite set", correct: true }
     ],
     correctAnswer: "Infinite set",
     explanation: "The set of whole numbers {0, 1, 2, 3, ...} goes on forever, so it's an infinite set.",
@@ -173,8 +172,8 @@ const questions = [
     id: 14,
     text: "In a Venn diagram, where do you show elements that belong to both sets?",
     options: [
-      { id: 'a', text: "In the overlapping region of the circles", correct: true },
-      { id: 'b', text: "Outside both circles" },
+      { id: 'a', text: "Outside both circles" },
+      { id: 'b', text: "In the overlapping region of the circles", correct: true },
       { id: 'c', text: "In the first circle only" },
       { id: 'd', text: "In the second circle only" }
     ],
@@ -186,9 +185,9 @@ const questions = [
     id: 15,
     text: "If A = {1, 3, 5} and B = {2, 4, 6}, what is A ∩ B?",
     options: [
-      { id: 'a', text: "∅ (empty set)", correct: true },
-      { id: 'b', text: "{1, 2, 3, 4, 5, 6}" },
-      { id: 'c', text: "{3}" },
+      { id: 'a', text: "{1, 2, 3, 4, 5, 6}" },
+      { id: 'b', text: "{3}" },
+      { id: 'c', text: "∅ (empty set)", correct: true },
       { id: 'd', text: "{1, 5}" }
     ],
     correctAnswer: "∅ (empty set)",
@@ -199,8 +198,8 @@ const questions = [
     id: 16,
     text: "What is n(∅)?",
     options: [
-      { id: 'a', text: "0", correct: true },
-      { id: 'b', text: "1" },
+      { id: 'a', text: "1" },
+      { id: 'b', text: "0", correct: true },
       { id: 'c', text: "∞" },
       { id: 'd', text: "Undefined" }
     ],
@@ -212,8 +211,8 @@ const questions = [
     id: 17,
     text: "In the formula n(A ∪ B) = n(A) + n(B) - n(A ∩ B), why do we subtract n(A ∩ B)?",
     options: [
-      { id: 'a', text: "To avoid counting common elements twice", correct: true },
-      { id: 'b', text: "To make the formula more complex" },
+      { id: 'a', text: "To make the formula more complex" },
+      { id: 'b', text: "To avoid counting common elements twice", correct: true },
       { id: 'c', text: "To get a smaller answer" },
       { id: 'd', text: "It's a mathematical rule with no reason" }
     ],
@@ -225,9 +224,9 @@ const questions = [
     id: 18,
     text: "What is the best way to visualize set relationships?",
     options: [
-      { id: 'a', text: "Venn diagrams", correct: true },
-      { id: 'b', text: "Bar charts" },
-      { id: 'c', text: "Line graphs" },
+      { id: 'a', text: "Bar charts" },
+      { id: 'b', text: "Line graphs" },
+      { id: 'c', text: "Venn diagrams", correct: true },
       { id: 'd', text: "Pie charts" }
     ],
     correctAnswer: "Venn diagrams",
@@ -243,7 +242,7 @@ const questions = [
       { id: 'c', text: "3" },
       { id: 'd', text: "15" }
     ],
-    correctAnswer: "8",
+    correctionAnswer: "8",
     explanation: "Maximum occurs when A and B have no common elements. Then n(A ∪ B) = 5 + 3 - 0 = 8.",
     hint: "When does the union have the largest number of elements?"
   },
@@ -251,10 +250,10 @@ const questions = [
     id: 20,
     text: "If a set A has 5 elements and set B has 3 elements, what is the minimum possible value of n(A ∪ B)?",
     options: [
-      { id: 'a', text: "5", correct: true },
-      { id: 'b', text: "8" },
-      { id: 'c', text: "3" },
-      { id: 'd', text: "2" }
+      { id: 'a', text: "8" },
+      { id: 'b', text: "3" },
+      { id: 'c', text: "2" },
+      { id: 'd', text: "5", correct: true }
     ],
     correctAnswer: "5",
     explanation: "Minimum occurs when B is completely contained in A. Then n(A ∪ B) = n(A) = 5.",
@@ -264,8 +263,8 @@ const questions = [
     id: 21,
     text: "What does 'well-defined' mean for a set?",
     options: [
-      { id: 'a', text: "You can clearly tell what belongs and what doesn't belong to the set", correct: true },
-      { id: 'b', text: "The set has exactly 10 elements" },
+      { id: 'a', text: "The set has exactly 10 elements" },
+      { id: 'b', text: "You can clearly tell what belongs and what doesn't belong to the set", correct: true },
       { id: 'c', text: "The set contains only numbers" },
       { id: 'd', text: "The set is written in alphabetical order" }
     ],
@@ -277,9 +276,9 @@ const questions = [
     id: 22,
     text: "In set notation, how do you list the elements of a set?",
     options: [
-      { id: 'a', text: "Inside curly braces { }", correct: true },
-      { id: 'b', text: "Inside square brackets [ ]" },
-      { id: 'c', text: "Inside parentheses ( )" },
+      { id: 'a', text: "Inside square brackets [ ]" },
+      { id: 'b', text: "Inside parentheses ( )" },
+      { id: 'c', text: "Inside curly braces { }", correct: true },
       { id: 'd', text: "Inside angle brackets < >" }
     ],
     correctAnswer: "Inside curly braces { }",
@@ -290,8 +289,8 @@ const questions = [
     id: 23,
     text: "Can a set contain duplicate elements?",
     options: [
-      { id: 'a', text: "No, each element appears only once", correct: true },
-      { id: 'b', text: "Yes, elements can be repeated" },
+      { id: 'a', text: "Yes, elements can be repeated" },
+      { id: 'b', text: "No, each element appears only once", correct: true },
       { id: 'c', text: "Only if the set is infinite" },
       { id: 'd', text: "Only numbers can be duplicated" }
     ],
@@ -303,9 +302,9 @@ const questions = [
     id: 24,
     text: "What guaranteed topic appears in POST-UTME mathematics exams?",
     options: [
-      { id: 'a', text: "Sets and Venn diagrams", correct: true },
-      { id: 'b', text: "Advanced calculus" },
-      { id: 'c', text: "Complex number theory" },
+      { id: 'a', text: "Advanced calculus" },
+      { id: 'b', text: "Complex number theory" },
+      { id: 'c', text: "Sets and Venn diagrams", correct: true },
       { id: 'd', text: "Differential equations" }
     ],
     correctAnswer: "Sets and Venn diagrams",
@@ -316,8 +315,8 @@ const questions = [
     id: 25,
     text: "In a survey, 30 students like Math, 25 like Science, and 15 like both. How many like Math or Science?",
     options: [
-      { id: 'a', text: "40", correct: true },
-      { id: 'b', text: "55" },
+      { id: 'a', text: "55" },
+      { id: 'b', text: "40", correct: true },
       { id: 'c', text: "70" },
       { id: 'd', text: "35" }
     ],
@@ -329,8 +328,8 @@ const questions = [
     id: 26,
     text: "What do overlapping circles in a Venn diagram represent?",
     options: [
-      { id: 'a', text: "Elements that belong to multiple sets", correct: true },
-      { id: 'b', text: "Elements that belong to no sets" },
+      { id: 'a', text: "Elements that belong to no sets" },
+      { id: 'b', text: "Elements that belong to multiple sets", correct: true },
       { id: 'c', text: "Elements that are undefined" },
       { id: 'd', text: "Errors in the diagram" }
     ],
@@ -342,9 +341,9 @@ const questions = [
     id: 27,
     text: "If A = {a, b, c, d} and B = {c, d, e, f}, what is n(A ∩ B)?",
     options: [
-      { id: 'a', text: "2", correct: true },
-      { id: 'b', text: "4" },
-      { id: 'c', text: "6" },
+      { id: 'a', text: "4" },
+      { id: 'b', text: "6" },
+      { id: 'c', text: "2", correct: true },
       { id: 'd', text: "8" }
     ],
     correctAnswer: "2",
@@ -355,9 +354,9 @@ const questions = [
     id: 28,
     text: "What is the union of any set A with the empty set ∅?",
     options: [
-      { id: 'a', text: "A", correct: true },
-      { id: 'b', text: "∅" },
-      { id: 'c', text: "Universal set" },
+      { id: 'a', text: "∅" },
+      { id: 'b', text: "Universal set" },
+      { id: 'c', text: "A", correct: true },
       { id: 'd', text: "Cannot be determined" }
     ],
     correctAnswer: "A",
@@ -368,10 +367,10 @@ const questions = [
     id: 29,
     text: "What is the intersection of any set A with the empty set ∅?",
     options: [
-      { id: 'a', text: "∅", correct: true },
-      { id: 'b', text: "A" },
-      { id: 'c', text: "Universal set" },
-      { id: 'd', text: "Cannot be determined" }
+      { id: 'a', text: "A" },
+      { id: 'b', text: "Universal set" },
+      { id: 'c', text: "Cannot be determined" },
+      { id: 'd', text: "∅", correct: true }
     ],
     correctAnswer: "∅",
     explanation: "A ∩ ∅ = ∅ because there are no elements common to A and the empty set.",
@@ -381,9 +380,9 @@ const questions = [
     id: 30,
     text: "Why are sets and Venn diagrams important for logic and problem-solving?",
     options: [
-      { id: 'a', text: "They help organize and analyze relationships between different groups", correct: true },
-      { id: 'b', text: "They make problems more complicated" },
-      { id: 'c', text: "They are only useful for mathematics" },
+      { id: 'a', text: "They make problems more complicated" },
+      { id: 'b', text: "They are only useful for mathematics" },
+      { id: 'c', text: "They help organize and analyze relationships between different groups", correct: true },
       { id: 'd', text: "They replace the need for calculations" }
     ],
     correctAnswer: "They help organize and analyze relationships between different groups",

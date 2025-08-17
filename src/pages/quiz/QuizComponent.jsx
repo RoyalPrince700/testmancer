@@ -8,6 +8,7 @@ import {
   FiX,
   FiBarChart2,
   FiAlertTriangle,
+  FiLoader,
 } from "react-icons/fi";
 import { motion } from "framer-motion";
 import { useAuth } from "../../../provider/AuthContext";
@@ -33,6 +34,7 @@ export const QuizComponent = ({
   const [isCompleted, setIsCompleted] = useState(false);
   const [showResult, setShowResult] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [isFinishing, setIsFinishing] = useState(false);
   const [totalPoints, setTotalPoints] = useState(0);
   const [rank, setRank] = useState(0);
   const [showPreview, setShowPreview] = useState(false);
@@ -276,7 +278,7 @@ export const QuizComponent = ({
 
   // All awarding logic here, only called on finish
   const handleFinish = async () => {
-    if (!selectedAnswer) return;
+    if (!selectedAnswer || isFinishing) return;
 
     // FIXED: Prevent multiple submissions in the same session
     if (isCompleted) {
@@ -284,6 +286,8 @@ export const QuizComponent = ({
       setShowResult(true);
       return;
     }
+
+    setIsFinishing(true); // Start loading animation
 
     try {
       if (isAuthenticated && user) {
@@ -349,6 +353,7 @@ export const QuizComponent = ({
     } catch (error) {
       console.error("Error saving quiz progress:", error);
     } finally {
+      setIsFinishing(false); // Stop loading animation
       setIsCompleted(true);
       setShowResult(true);
       setIsFirstAttempt(false);
@@ -662,15 +667,29 @@ export const QuizComponent = ({
             {currentQuestion === questions.length - 1 && (
               <button
                 onClick={handleFinish}
-                disabled={!selectedAnswer || isCompleted}
-                className={`flex items-center gap-2 px-6 py-3 rounded-full ${
-                  !selectedAnswer || isCompleted
+                disabled={!selectedAnswer || isCompleted || isFinishing}
+                className={`flex items-center gap-2 px-6 py-3 rounded-full transition-all duration-200 ${
+                  !selectedAnswer || isCompleted || isFinishing
                     ? "text-gray-400 bg-white/30 cursor-not-allowed"
                     : "bg-gradient-to-r from-green-600 to-green-800 text-white font-semibold shadow-md hover:shadow-lg"
                 }`}
               >
-                {isCompleted ? "Quiz Completed" : "Finish Quiz"}
-                <FiArrowRight />
+                {isFinishing ? (
+                  <>
+                    Finishing...
+                    <FiLoader className="animate-spin" />
+                  </>
+                ) : isCompleted ? (
+                  <>
+                    Quiz Completed
+                    <FiCheck />
+                  </>
+                ) : (
+                  <>
+                    Finish Quiz
+                    <FiArrowRight />
+                  </>
+                )}
               </button>
             )}
             

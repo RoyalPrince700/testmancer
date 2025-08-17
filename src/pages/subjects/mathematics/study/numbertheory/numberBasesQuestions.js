@@ -1,11 +1,10 @@
-// Quiz questions for Number Bases (matching EquationPages.jsx content)
 const questions = [
   {
     id: 1,
     text: "What does the 'base' in number bases tell you?",
     options: [
-      { id: 'a', text: "How many unique digits you have before carrying over to the next place value", correct: true },
-      { id: 'b', text: "The largest number you can write" },
+      { id: 'a', text: "The largest number you can write" },
+      { id: 'b', text: "How many unique digits you have before carrying over to the next place value", correct: true },
       { id: 'c', text: "The number of decimal places" },
       { id: 'd', text: "The type of operation to perform" }
     ],
@@ -17,9 +16,9 @@ const questions = [
     id: 2,
     text: "What digits are used in base 2 (binary)?",
     options: [
-      { id: 'a', text: "0 and 1 only", correct: true },
-      { id: 'b', text: "0, 1, and 2" },
-      { id: 'c', text: "0 through 9" },
+      { id: 'a', text: "0, 1, and 2" },
+      { id: 'b', text: "0 through 9" },
+      { id: 'c', text: "0 and 1 only", correct: true },
       { id: 'd', text: "A through F" }
     ],
     correctAnswer: "0 and 1 only",
@@ -30,10 +29,10 @@ const questions = [
     id: 3,
     text: "What is 125 in base 10 really representing?",
     options: [
-      { id: 'a', text: "1×10² + 2×10¹ + 5×10⁰", correct: true },
-      { id: 'b', text: "1 + 2 + 5" },
-      { id: 'c', text: "125×10" },
-      { id: 'd', text: "125÷10" }
+      { id: 'a', text: "1 + 2 + 5" },
+      { id: 'b', text: "125×10" },
+      { id: 'c', text: "125÷10" },
+      { id: 'd', text: "1×10² + 2×10¹ + 5×10⁰", correct: true }
     ],
     correctAnswer: "1×10² + 2×10¹ + 5×10⁰",
     explanation: "Every number system works with powers of its base. In base 10: 125 = 1×100 + 2×10 + 5×1.",
@@ -56,8 +55,8 @@ const questions = [
     id: 5,
     text: "What digits are used in base 8 (octal)?",
     options: [
-      { id: 'a', text: "0 to 7", correct: true },
-      { id: 'b', text: "0 to 8" },
+      { id: 'a', text: "0 to 8" },
+      { id: 'b', text: "0 to 7", correct: true },
       { id: 'c', text: "1 to 8" },
       { id: 'd', text: "0 to 9" }
     ],
@@ -69,9 +68,9 @@ const questions = [
     id: 6,
     text: "What digits and letters are used in base 16 (hexadecimal)?",
     options: [
-      { id: 'a', text: "0-9 and A-F", correct: true },
-      { id: 'b', text: "0-9 only" },
-      { id: 'c', text: "A-Z only" },
+      { id: 'a', text: "0-9 only" },
+      { id: 'b', text: "A-Z only" },
+      { id: 'c', text: "0-9 and A-F", correct: true },
       { id: 'd', text: "0-15" }
     ],
     correctAnswer: "0-9 and A-F",
@@ -82,8 +81,8 @@ const questions = [
     id: 7,
     text: "Convert 25₁₀ to base 2 using repeated division.",
     options: [
-      { id: 'a', text: "11001₂", correct: true },
-      { id: 'b', text: "10101₂" },
+      { id: 'a', text: "10101₂" },
+      { id: 'b', text: "11001₂", correct: true },
       { id: 'c', text: "11111₂" },
       { id: 'd', text: "10011₂" }
     ],
@@ -95,8 +94,8 @@ const questions = [
     id: 8,
     text: "What is the method called for converting from base 10 to any other base?",
     options: [
-      { id: 'a', text: "Repeated division", correct: true },
-      { id: 'b', text: "Expansion method" },
+      { id: 'a', text: "Expansion method" },
+      { id: 'b', text: "Repeated division", correct: true },
       { id: 'c', text: "Substitution method" },
       { id: 'd', text: "Addition method" }
     ],
@@ -108,9 +107,9 @@ const questions = [
     id: 9,
     text: "What is the method called for converting from any base to base 10?",
     options: [
-      { id: 'a', text: "Expansion method", correct: true },
+      { id: 'a', text: "Subtraction method" },
       { id: 'b', text: "Repeated division" },
-      { id: 'c', text: "Subtraction method" },
+      { id: 'c', text: "Expansion method", correct: true },
       { id: 'd', text: "Multiplication method" }
     ],
     correctAnswer: "Expansion method",
@@ -121,8 +120,8 @@ const questions = [
     id: 10,
     text: "In base 2 arithmetic, what is 1 + 1?",
     options: [
-      { id: 'a', text: "10₂", correct: true },
-      { id: 'b', text: "2₂" },
+      { id: 'a', text: "2₂" },
+      { id: 'b', text: "10₂", correct: true },
       { id: 'c', text: "11₂" },
       { id: 'd', text: "1₂" }
     ],
@@ -134,9 +133,9 @@ const questions = [
     id: 11,
     text: "What is 1011₂ + 110₂?",
     options: [
-      { id: 'a', text: "10001₂", correct: true },
-      { id: 'b', text: "1101₂" },
-      { id: 'c', text: "1111₂" },
+      { id: 'a', text: "1101₂" },
+      { id: 'b', text: "1111₂" },
+      { id: 'c', text: "10001₂", correct: true },
       { id: 'd', text: "10101₂" }
     ],
     correctAnswer: "10001₂",
@@ -147,10 +146,10 @@ const questions = [
     id: 12,
     text: "Which number base do computers primarily use?",
     options: [
-      { id: 'a', text: "Base 2 (binary)", correct: true },
-      { id: 'b', text: "Base 10 (decimal)" },
-      { id: 'c', text: "Base 8 (octal)" },
-      { id: 'd', text: "Base 16 (hexadecimal)" }
+      { id: 'a', text: "Base 10 (decimal)" },
+      { id: 'b', text: "Base 8 (octal)" },
+      { id: 'c', text: "Base 16 (hexadecimal)" },
+      { id: 'd', text: "Base 2 (binary)", correct: true }
     ],
     correctAnswer: "Base 2 (binary)",
     explanation: "Computers work with base 2 (binary) because electronic circuits can easily represent two states: on (1) and off (0).",
@@ -173,8 +172,8 @@ const questions = [
     id: 14,
     text: "What is 101₂ in base 10?",
     options: [
-      { id: 'a', text: "5", correct: true },
-      { id: 'b', text: "3" },
+      { id: 'a', text: "3" },
+      { id: 'b', text: "5", correct: true },
       { id: 'c', text: "7" },
       { id: 'd', text: "101" }
     ],
@@ -186,9 +185,9 @@ const questions = [
     id: 15,
     text: "In base 8, what comes after 7?",
     options: [
-      { id: 'a', text: "10₈", correct: true },
-      { id: 'b', text: "8₈" },
-      { id: 'c', text: "11₈" },
+      { id: 'a', text: "8₈" },
+      { id: 'b', text: "11₈" },
+      { id: 'c', text: "10₈", correct: true },
       { id: 'd', text: "20₈" }
     ],
     correctAnswer: "10₈",
@@ -199,8 +198,8 @@ const questions = [
     id: 16,
     text: "Convert 64₁₀ to base 2.",
     options: [
-      { id: 'a', text: "1000000₂", correct: true },
-      { id: 'b', text: "1111111₂" },
+      { id: 'a', text: "1111111₂" },
+      { id: 'b', text: "1000000₂", correct: true },
       { id: 'c', text: "0111111₂" },
       { id: 'd', text: "1000001₂" }
     ],
@@ -212,9 +211,9 @@ const questions = [
     id: 17,
     text: "What is the main advantage of understanding number bases for POST-UTME?",
     options: [
-      { id: 'a', text: "Number base questions are guaranteed easy marks", correct: true },
-      { id: 'b', text: "They are the hardest part of the exam" },
-      { id: 'c', text: "They are rarely asked" },
+      { id: 'a', text: "They are the hardest part of the exam" },
+      { id: 'b', text: "They are rarely asked" },
+      { id: 'c', text: "Number base questions are guaranteed easy marks", correct: true },
       { id: 'd', text: "They require advanced mathematics" }
     ],
     correctAnswer: "Number base questions are guaranteed easy marks",
@@ -225,8 +224,8 @@ const questions = [
     id: 18,
     text: "What is 777₈ in base 10?",
     options: [
-      { id: 'a', text: "511", correct: true },
-      { id: 'b', text: "777" },
+      { id: 'a', text: "777" },
+      { id: 'b', text: "511", correct: true },
       { id: 'c', text: "343" },
       { id: 'd', text: "399" }
     ],
@@ -238,10 +237,10 @@ const questions = [
     id: 19,
     text: "When converting 15₁₀ to base 2, what is the correct sequence of divisions?",
     options: [
-      { id: 'a', text: "15÷2=7 R1, 7÷2=3 R1, 3÷2=1 R1, 1÷2=0 R1", correct: true },
-      { id: 'b', text: "15÷2=7 R0, 7÷2=3 R1, 3÷2=1 R1, 1÷2=0 R1" },
-      { id: 'c', text: "15÷2=8 R1, 8÷2=4 R0, 4÷2=2 R0, 2÷2=1 R0" },
-      { id: 'd', text: "15÷2=7 R1, 7÷2=4 R1, 4÷2=2 R0, 2÷2=1 R0" }
+      { id: 'a', text: "15÷2=7 R0, 7÷2=3 R1, 3÷2=1 R1, 1÷2=0 R1" },
+      { id: 'b', text: "15÷2=8 R1, 8÷2=4 R0, 4÷2=2 R0, 2÷2=1 R0" },
+      { id: 'c', text: "15÷2=7 R1, 7÷2=4 R1, 4÷2=2 R0, 2÷2=1 R0" },
+      { id: 'd', text: "15÷2=7 R1, 7÷2=3 R1, 3÷2=1 R1, 1÷2=0 R1", correct: true }
     ],
     correctAnswer: "15÷2=7 R1, 7÷2=3 R1, 3÷2=1 R1, 1÷2=0 R1",
     explanation: "Dividing 15 by 2 repeatedly: 15÷2=7 R1, 7÷2=3 R1, 3÷2=1 R1, 1÷2=0 R1. Reading up: 1111₂.",
@@ -251,8 +250,8 @@ const questions = [
     id: 20,
     text: "What does the subscript notation like 101₂ indicate?",
     options: [
-      { id: 'a', text: "The base of the number system", correct: true },
-      { id: 'b', text: "The number of digits" },
+      { id: 'a', text: "The number of digits" },
+      { id: 'b', text: "The base of the number system", correct: true },
       { id: 'c', text: "The power to raise the number to" },
       { id: 'd', text: "The position of the decimal point" }
     ],
@@ -264,9 +263,9 @@ const questions = [
     id: 21,
     text: "In which base would you write the number 'ten' as 'A'?",
     options: [
-      { id: 'a', text: "Base 16 (hexadecimal)", correct: true },
-      { id: 'b', text: "Base 10 (decimal)" },
-      { id: 'c', text: "Base 8 (octal)" },
+      { id: 'a', text: "Base 10 (decimal)" },
+      { id: 'b', text: "Base 8 (octal)" },
+      { id: 'c', text: "Base 16 (hexadecimal)", correct: true },
       { id: 'd', text: "Base 2 (binary)" }
     ],
     correctAnswer: "Base 16 (hexadecimal)",
@@ -277,10 +276,10 @@ const questions = [
     id: 22,
     text: "What is 1000₂ in base 10?",
     options: [
-      { id: 'a', text: "8", correct: true },
-      { id: 'b', text: "4" },
-      { id: 'c', text: "16" },
-      { id: 'd', text: "1000" }
+      { id: 'a', text: "4" },
+      { id: 'b', text: "16" },
+      { id: 'c', text: "1000" },
+      { id: 'd', text: "8", correct: true }
     ],
     correctAnswer: "8",
     explanation: "1000₂ = (1×2³) + (0×2²) + (0×2¹) + (0×2⁰) = 8 + 0 + 0 + 0 = 8.",
@@ -290,8 +289,8 @@ const questions = [
     id: 23,
     text: "Why is base 2 called 'binary'?",
     options: [
-      { id: 'a', text: "Because it uses exactly two digits", correct: true },
-      { id: 'b', text: "Because it was invented in the 2nd century" },
+      { id: 'a', text: "Because it was invented in the 2nd century" },
+      { id: 'b', text: "Because it uses exactly two digits", correct: true },
       { id: 'c', text: "Because it doubles every position" },
       { id: 'd', text: "Because it's used for two-part systems" }
     ],
@@ -303,9 +302,9 @@ const questions = [
     id: 24,
     text: "What is 12₁₀ in base 5?",
     options: [
-      { id: 'a', text: "22₅", correct: true },
-      { id: 'b', text: "12₅" },
-      { id: 'c', text: "15₅" },
+      { id: 'a', text: "12₅" },
+      { id: 'b', text: "15₅" },
+      { id: 'c', text: "22₅", correct: true },
       { id: 'd', text: "21₅" }
     ],
     correctAnswer: "22₅",
@@ -316,10 +315,10 @@ const questions = [
     id: 25,
     text: "In base 3, what digits are allowed?",
     options: [
-      { id: 'a', text: "0, 1, 2", correct: true },
-      { id: 'b', text: "0, 1, 2, 3" },
-      { id: 'c', text: "1, 2, 3" },
-      { id: 'd', text: "0, 1" }
+      { id: 'a', text: "0, 1, 2, 3" },
+      { id: 'b', text: "1, 2, 3" },
+      { id: 'c', text: "0, 1" },
+      { id: 'd', text: "0, 1, 2", correct: true }
     ],
     correctAnswer: "0, 1, 2",
     explanation: "Base 3 uses digits 0, 1, and 2. When you reach 3, you write it as 10₃.",
@@ -342,9 +341,9 @@ const questions = [
     id: 27,
     text: "Convert 100₂ to base 10.",
     options: [
-      { id: 'a', text: "4", correct: true },
-      { id: 'b', text: "2" },
-      { id: 'c', text: "3" },
+      { id: 'a', text: "2" },
+      { id: 'b', text: "3" },
+      { id: 'c', text: "4", correct: true },
       { id: 'd', text: "100" }
     ],
     correctAnswer: "4",
@@ -355,8 +354,8 @@ const questions = [
     id: 28,
     text: "What happens when you reach the base value in any number system?",
     options: [
-      { id: 'a', text: "You carry over to the next position and start from 0 again", correct: true },
-      { id: 'b', text: "You stop counting" },
+      { id: 'a', text: "You stop counting" },
+      { id: 'b', text: "You carry over to the next position and start from 0 again", correct: true },
       { id: 'c', text: "You switch to a different base" },
       { id: 'd', text: "You add 10 to the current digit" }
     ],
@@ -368,9 +367,9 @@ const questions = [
     id: 29,
     text: "Which base system do we naturally use in everyday life?",
     options: [
-      { id: 'a', text: "Base 10 (decimal)", correct: true },
-      { id: 'b', text: "Base 2 (binary)" },
-      { id: 'c', text: "Base 8 (octal)" },
+      { id: 'a', text: "Base 2 (binary)" },
+      { id: 'b', text: "Base 8 (octal)" },
+      { id: 'c', text: "Base 10 (decimal)", correct: true },
       { id: 'd', text: "Base 16 (hexadecimal)" }
     ],
     correctAnswer: "Base 10 (decimal)",
@@ -381,9 +380,9 @@ const questions = [
     id: 30,
     text: "What makes number base conversion problems good for exams?",
     options: [
-      { id: 'a', text: "They have clear, systematic methods that always work", correct: true },
-      { id: 'b', text: "They require memorizing many formulas" },
-      { id: 'c', text: "They are based on luck and guessing" },
+      { id: 'a', text: "They require memorizing many formulas" },
+      { id: 'b', text: "They are based on luck and guessing" },
+      { id: 'c', text: "They have clear, systematic methods that always work", correct: true },
       { id: 'd', text: "They change rules depending on the situation" }
     ],
     correctAnswer: "They have clear, systematic methods that always work",

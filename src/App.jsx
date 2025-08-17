@@ -89,6 +89,9 @@ import Variation from './pages/subjects/mathematics/study/algebra/Variations';
 import Integration from './pages/subjects/mathematics/study/calculus/Integration';
 import Differentiation from './pages/subjects/mathematics/study/calculus/Differentiation';
 import AppOfCalculus from './pages/subjects/mathematics/study/calculus/AppOfCalculus';
+import SetsVennDiagrams from './pages/subjects/mathematics/study/numbertheory/SetsVennDiagrams';
+import NumberBases from './pages/subjects/mathematics/study/numbertheory/NumberBases';
+import ModularArithmetic from './pages/subjects/mathematics/study/numbertheory/ModularArithmetic';
 import MathematicsQuiz from './pages/quiz/MathematicsQuiz';
 import QuizIndices from './pages/quiz/mathematics/QuizIndices';
 import QuizEquations from './pages/quiz/mathematics/QuizEquations';
@@ -241,6 +244,9 @@ function App() {
           <Route path="/post-utme/mathematics/integration" element={<ProtectedRoute><Integration/></ProtectedRoute>} />
           <Route path="/post-utme/mathematics/differentiation" element={<ProtectedRoute><Differentiation /></ProtectedRoute>} />
           <Route path="/post-utme/mathematics/application-calculus" element={<ProtectedRoute><AppOfCalculus /></ProtectedRoute>} />
+          <Route path="/post-utme/mathematics/sets-venn-diagrams" element={<ProtectedRoute><SetsVennDiagrams /></ProtectedRoute>} />
+          <Route path="/post-utme/mathematics/number-bases" element={<ProtectedRoute><NumberBases /></ProtectedRoute>} />
+          <Route path="/post-utme/mathematics/modular-arithmetic" element={<ProtectedRoute><ModularArithmetic /></ProtectedRoute>} />
 
 
 

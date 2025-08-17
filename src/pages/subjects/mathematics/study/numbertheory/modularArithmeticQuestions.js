@@ -1,11 +1,10 @@
-// Quiz questions for Modular Arithmetic (matching EquationPages.jsx content)
 const questions = [
   {
     id: 1,
     text: "What is modular arithmetic commonly called?",
     options: [
-      { id: 'a', text: "Clock arithmetic", correct: true },
-      { id: 'b', text: "Circle mathematics" },
+      { id: 'a', text: "Circle mathematics" },
+      { id: 'b', text: "Clock arithmetic", correct: true },
       { id: 'c', text: "Time mathematics" },
       { id: 'd', text: "Round arithmetic" }
     ],
@@ -17,9 +16,9 @@ const questions = [
     id: 2,
     text: "What does a ≡ b (mod n) mean?",
     options: [
-      { id: 'a', text: "'a' and 'b' have the same remainder when divided by 'n'", correct: true },
-      { id: 'b', text: "'a' equals 'b' exactly" },
-      { id: 'c', text: "'a' is greater than 'b' by 'n'" },
+      { id: 'a', text: "'a' equals 'b' exactly" },
+      { id: 'b', text: "'a' is greater than 'b' by 'n'" },
+      { id: 'c', text: "'a' and 'b' have the same remainder when divided by 'n'", correct: true },
       { id: 'd', text: "'a' and 'b' are both divisible by 'n'" }
     ],
     correctAnswer: "'a' and 'b' have the same remainder when divided by 'n'",
@@ -30,10 +29,10 @@ const questions = [
     id: 3,
     text: "Why is 15 ≡ 3 (mod 12)?",
     options: [
-      { id: 'a', text: "Both 15 and 3 have remainder 3 when divided by 12", correct: true },
+      { id: 'a', text: "15 ÷ 3 = 5" },
       { id: 'b', text: "15 - 3 = 12" },
       { id: 'c', text: "15 + 3 = 18" },
-      { id: 'd', text: "15 ÷ 3 = 5" }
+      { id: 'd', text: "Both 15 and 3 have remainder 3 when divided by 12", correct: true }
     ],
     correctAnswer: "Both 15 and 3 have remainder 3 when divided by 12",
     explanation: "15 ÷ 12 = 1 R 3, and 3 ÷ 12 = 0 R 3. Both have remainder 3, so 15 ≡ 3 (mod 12).",
@@ -56,8 +55,8 @@ const questions = [
     id: 5,
     text: "What is 4 × 5 (mod 6)?",
     options: [
-      { id: 'a', text: "2", correct: true },
-      { id: 'b', text: "20" },
+      { id: 'a', text: "20" },
+      { id: 'b', text: "2", correct: true },
       { id: 'c', text: "4" },
       { id: 'd', text: "5" }
     ],
@@ -69,9 +68,9 @@ const questions = [
     id: 6,
     text: "What is the modulus in the expression 9 ≡ 2 (mod 7)?",
     options: [
-      { id: 'a', text: "7", correct: true },
-      { id: 'b', text: "9" },
-      { id: 'c', text: "2" },
+      { id: 'a', text: "9" },
+      { id: 'b', text: "2" },
+      { id: 'c', text: "7", correct: true },
       { id: 'd', text: "11" }
     ],
     correctAnswer: "7",
@@ -82,10 +81,10 @@ const questions = [
     id: 7,
     text: "How do you add in modular arithmetic?",
     options: [
-      { id: 'a', text: "Add the numbers, then find the remainder when divided by the modulus", correct: true },
-      { id: 'b', text: "Add the numbers and multiply by the modulus" },
+      { id: 'a', text: "Add the modulus to both numbers" },
+      { id: 'b', text: "Add the numbers, then find the remainder when divided by the modulus", correct: true },
       { id: 'c', text: "Find remainders first, then add" },
-      { id: 'd', text: "Add the modulus to both numbers" }
+      { id: 'd', text: "Add the numbers and multiply by the modulus" }
     ],
     correctAnswer: "Add the numbers, then find the remainder when divided by the modulus",
     explanation: "In modular addition: first add normally, then take the remainder when divided by the modulus.",
@@ -95,8 +94,8 @@ const questions = [
     id: 8,
     text: "What is a modular inverse?",
     options: [
-      { id: 'a', text: "A number 'x' such that ax ≡ 1 (mod n)", correct: true },
-      { id: 'b', text: "The negative of a number" },
+      { id: 'a', text: "The negative of a number" },
+      { id: 'b', text: "A number 'x' such that ax ≡ 1 (mod n)", correct: true },
       { id: 'c', text: "The reciprocal of a number" },
       { id: 'd', text: "A number minus the modulus" }
     ],
@@ -108,9 +107,9 @@ const questions = [
     id: 9,
     text: "What is the inverse of 3 (mod 5)?",
     options: [
-      { id: 'a', text: "2", correct: true },
-      { id: 'b', text: "3" },
-      { id: 'c', text: "5" },
+      { id: 'a', text: "3" },
+      { id: 'b', text: "5" },
+      { id: 'c', text: "2", correct: true },
       { id: 'd', text: "1" }
     ],
     correctAnswer: "2",
@@ -121,10 +120,10 @@ const questions = [
     id: 10,
     text: "When does a modular inverse exist?",
     options: [
-      { id: 'a', text: "When 'a' and 'n' have no common factor greater than 1", correct: true },
-      { id: 'b', text: "When 'a' is larger than 'n'" },
+      { id: 'a', text: "When 'a' is even" },
+      { id: 'b', text: "When 'a' and 'n' have no common factor greater than 1", correct: true },
       { id: 'c', text: "When 'n' is a prime number" },
-      { id: 'd', text: "When 'a' is even" }
+      { id: 'd', text: "When 'a' is larger than 'n'" }
     ],
     correctAnswer: "When 'a' and 'n' have no common factor greater than 1",
     explanation: "A modular inverse exists only when gcd(a,n) = 1, meaning a and n are coprime (no common factors except 1).",
@@ -134,10 +133,10 @@ const questions = [
     id: 11,
     text: "What is 12 - 8 (mod 5)?",
     options: [
-      { id: 'a', text: "4", correct: true },
-      { id: 'b', text: "1" },
-      { id: 'c', text: "3" },
-      { id: 'd', text: "2" }
+      { id: 'a', text: "1" },
+      { id: 'b', text: "3" },
+      { id: 'c', text: "2" },
+      { id: 'd', text: "4", correct: true }
     ],
     correctAnswer: "4",
     explanation: "12 - 8 = 4. Since 4 ÷ 5 = 0 R 4, we have 12 - 8 ≡ 4 (mod 5).",
@@ -160,9 +159,9 @@ const questions = [
     id: 13,
     text: "What real-world system uses modular arithmetic?",
     options: [
-      { id: 'a', text: "Calendar systems and time keeping", correct: true },
-      { id: 'b', text: "Banking interest calculations" },
-      { id: 'c', text: "Distance measurements" },
+      { id: 'a', text: "Banking interest calculations" },
+      { id: 'b', text: "Distance measurements" },
+      { id: 'c', text: "Calendar systems and time keeping", correct: true },
       { id: 'd', text: "Temperature conversions" }
     ],
     correctAnswer: "Calendar systems and time keeping",
@@ -173,8 +172,8 @@ const questions = [
     id: 14,
     text: "If a 40-day course starts on Tuesday, on which day will it end?",
     options: [
-      { id: 'a', text: "Sunday", correct: true },
-      { id: 'b', text: "Tuesday" },
+      { id: 'a', text: "Tuesday" },
+      { id: 'b', text: "Sunday", correct: true },
       { id: 'c', text: "Friday" },
       { id: 'd', text: "Monday" }
     ],
@@ -186,9 +185,9 @@ const questions = [
     id: 15,
     text: "What is 25 (mod 7)?",
     options: [
-      { id: 'a', text: "4", correct: true },
-      { id: 'b', text: "3" },
-      { id: 'c', text: "5" },
+      { id: 'a', text: "3" },
+      { id: 'b', text: "5" },
+      { id: 'c', text: "4", correct: true },
       { id: 'd', text: "6" }
     ],
     correctAnswer: "4",
@@ -199,9 +198,9 @@ const questions = [
     id: 16,
     text: "What field heavily uses modular arithmetic for security?",
     options: [
-      { id: 'a', text: "Cryptography and computer science", correct: true },
-      { id: 'b', text: "Biology and medicine" },
-      { id: 'c', text: "Art and literature" },
+      { id: 'a', text: "Biology and medicine" },
+      { id: 'b', text: "Art and literature" },
+      { id: 'c', text: "Cryptography and computer science", correct: true },
       { id: 'd', text: "Agriculture" }
     ],
     correctAnswer: "Cryptography and computer science",
@@ -225,8 +224,8 @@ const questions = [
     id: 18,
     text: "What happens in modular arithmetic when you 'wrap around'?",
     options: [
-      { id: 'a', text: "You start counting from 0 again after reaching the modulus", correct: true },
-      { id: 'b', text: "You stop calculating" },
+      { id: 'a', text: "You stop calculating" },
+      { id: 'b', text: "You start counting from 0 again after reaching the modulus", correct: true },
       { id: 'c', text: "You switch to regular arithmetic" },
       { id: 'd', text: "You reverse the operation" }
     ],
@@ -238,9 +237,9 @@ const questions = [
     id: 19,
     text: "What is 0 (mod 5)?",
     options: [
-      { id: 'a', text: "0", correct: true },
-      { id: 'b', text: "5" },
-      { id: 'c', text: "1" },
+      { id: 'a', text: "5" },
+      { id: 'b', text: "1" },
+      { id: 'c', text: "0", correct: true },
       { id: 'd', text: "Undefined" }
     ],
     correctAnswer: "0",
@@ -251,8 +250,8 @@ const questions = [
     id: 20,
     text: "In modular arithmetic, what is 8 + 7 (mod 12)?",
     options: [
-      { id: 'a', text: "3", correct: true },
-      { id: 'b', text: "15" },
+      { id: 'a', text: "15" },
+      { id: 'b', text: "3", correct: true },
       { id: 'c', text: "8" },
       { id: 'd', text: "7" }
     ],
@@ -277,9 +276,9 @@ const questions = [
     id: 22,
     text: "What is the result of 100 (mod 3)?",
     options: [
-      { id: 'a', text: "1", correct: true },
-      { id: 'b', text: "0" },
-      { id: 'c', text: "2" },
+      { id: 'a', text: "0" },
+      { id: 'b', text: "2" },
+      { id: 'c', text: "1", correct: true },
       { id: 'd', text: "3" }
     ],
     correctAnswer: "1",
@@ -290,8 +289,8 @@ const questions = [
     id: 23,
     text: "What pattern do you see in powers of 2 modulo 3?",
     options: [
-      { id: 'a', text: "2¹≡2, 2²≡1, 2³≡2, 2⁴≡1, ... (alternating 2,1)", correct: true },
-      { id: 'b', text: "Always equals 2" },
+      { id: 'a', text: "Always equals 2" },
+      { id: 'b', text: "2¹≡2, 2²≡1, 2³≡2, 2⁴≡1, ... (alternating 2,1)", correct: true },
       { id: 'c', text: "Always equals 1" },
       { id: 'd', text: "No clear pattern" }
     ],
@@ -303,9 +302,9 @@ const questions = [
     id: 24,
     text: "How is modular arithmetic used in hash functions?",
     options: [
-      { id: 'a', text: "To distribute data evenly across storage locations", correct: true },
-      { id: 'b', text: "To encrypt passwords" },
-      { id: 'c', text: "To compress files" },
+      { id: 'a', text: "To encrypt passwords" },
+      { id: 'b', text: "To compress files" },
+      { id: 'c', text: "To distribute data evenly across storage locations", correct: true },
       { id: 'd', text: "To sort data" }
     ],
     correctAnswer: "To distribute data evenly across storage locations",
@@ -329,8 +328,8 @@ const questions = [
     id: 26,
     text: "In modular arithmetic, what does congruent mean?",
     options: [
-      { id: 'a', text: "Having the same remainder when divided by the modulus", correct: true },
-      { id: 'b', text: "Being exactly equal" },
+      { id: 'a', text: "Being exactly equal" },
+      { id: 'b', text: "Having the same remainder when divided by the modulus", correct: true },
       { id: 'c', text: "Being approximately equal" },
       { id: 'd', text: "Having the same digits" }
     ],
@@ -342,9 +341,9 @@ const questions = [
     id: 27,
     text: "What is special about arithmetic modulo a prime number?",
     options: [
-      { id: 'a', text: "Every non-zero element has a multiplicative inverse", correct: true },
-      { id: 'b', text: "Addition doesn't work" },
-      { id: 'c', text: "Only even numbers can be used" },
+      { id: 'a', text: "Addition doesn't work" },
+      { id: 'b', text: "Only even numbers can be used" },
+      { id: 'c', text: "Every non-zero element has a multiplicative inverse", correct: true },
       { id: 'd', text: "The results are always prime" }
     ],
     correctAnswer: "Every non-zero element has a multiplicative inverse",
@@ -355,8 +354,8 @@ const questions = [
     id: 28,
     text: "What happens if you try to find the inverse of 6 (mod 9)?",
     options: [
-      { id: 'a', text: "No inverse exists because gcd(6,9) = 3 ≠ 1", correct: true },
-      { id: 'b', text: "The inverse is 3" },
+      { id: 'a', text: "The inverse is 3" },
+      { id: 'b', text: "No inverse exists because gcd(6,9) = 3 ≠ 1", correct: true },
       { id: 'c', text: "The inverse is 6" },
       { id: 'd', text: "The inverse is 9" }
     ],
@@ -368,9 +367,9 @@ const questions = [
     id: 29,
     text: "Why is modular arithmetic called 'clock arithmetic'?",
     options: [
-      { id: 'a', text: "Because numbers wrap around like hours on a clock face", correct: true },
-      { id: 'b', text: "Because it was invented by clockmakers" },
-      { id: 'c', text: "Because it's only used for time calculations" },
+      { id: 'a', text: "Because it's only used for time calculations" },
+      { id: 'b', text: "Because numbers wrap around like hours on a clock face", correct: true },
+      { id: 'c', text: "Because it was invented by clockmakers" },
       { id: 'd', text: "Because it's circular like a clock" }
     ],
     correctAnswer: "Because numbers wrap around like hours on a clock face",
@@ -381,9 +380,9 @@ const questions = [
     id: 30,
     text: "What makes modular arithmetic important for your POST-UTME exam?",
     options: [
-      { id: 'a', text: "It appears regularly and has systematic solution methods", correct: true },
-      { id: 'b', text: "It's the hardest topic in mathematics" },
-      { id: 'c', text: "It's rarely tested" },
+      { id: 'a', text: "It's the hardest topic in mathematics" },
+      { id: 'b', text: "It's rarely tested" },
+      { id: 'c', text: "It appears regularly and has systematic solution methods", correct: true },
       { id: 'd', text: "It requires advanced calculus knowledge" }
     ],
     correctAnswer: "It appears regularly and has systematic solution methods",
