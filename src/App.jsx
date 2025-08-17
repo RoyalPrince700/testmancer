@@ -89,6 +89,17 @@ import Variation from './pages/subjects/mathematics/study/algebra/Variations';
 import Integration from './pages/subjects/mathematics/study/calculus/Integration';
 import Differentiation from './pages/subjects/mathematics/study/calculus/Differentiation';
 import AppOfCalculus from './pages/subjects/mathematics/study/calculus/AppOfCalculus';
+import MathematicsQuiz from './pages/quiz/MathematicsQuiz';
+import QuizIndices from './pages/quiz/mathematics/QuizIndices';
+import QuizEquations from './pages/quiz/mathematics/QuizEquations';
+import QuizSequences from './pages/quiz/mathematics/QuizSequences';
+import QuizVariation from './pages/quiz/mathematics/QuizVariation';
+import QuizDifferentiation from './pages/quiz/mathematics/QuizDifferentiation';
+import QuizIntegration from './pages/quiz/mathematics/QuizIntegration';
+import QuizApplicationCalculus from './pages/quiz/mathematics/QuizApplicationCalculus';
+import QuizSetsVennDiagrams from './pages/quiz/mathematics/QuizSetsVennDiagrams';
+import QuizNumberBases from './pages/quiz/mathematics/QuizNumberBases';
+import QuizModularArithmetic from './pages/quiz/mathematics/QuizModularArithmetic';
 
 const ProtectedRoute = ({ children }) => {
   const { user, loading } = useAuth();
@@ -207,6 +218,19 @@ function App() {
           <Route path="/quiz-hub/english-quiz/word-meanings-quiz" element={<ProtectedRoute><QuizWordMeaning subtopic="word_meanings_quiz" /></ProtectedRoute>} />
           <Route path="/quiz-hub/english-quiz/spelling-quiz" element={<ProtectedRoute><QuizSpelling subtopic="spelling_quiz" /></ProtectedRoute>} />
           <Route path="/quiz-hub/english-quiz/oral-quiz" element={<ProtectedRoute><QuizOral subtopic="oral_quiz" /></ProtectedRoute>} />
+
+          {/* Mathematics Quiz Routes */}
+          <Route path="/quiz-hub/mathematics" element={<ProtectedRoute><MathematicsQuiz /></ProtectedRoute>} />
+          <Route path="/quiz-hub/mathematics/indices-quiz" element={<ProtectedRoute><QuizIndices subtopic="indices_quiz" /></ProtectedRoute>} />
+          <Route path="/quiz-hub/mathematics/equations-quiz" element={<ProtectedRoute><QuizEquations subtopic="equations_quiz" /></ProtectedRoute>} />
+          <Route path="/quiz-hub/mathematics/sequences-quiz" element={<ProtectedRoute><QuizSequences subtopic="sequences_quiz" /></ProtectedRoute>} />
+          <Route path="/quiz-hub/mathematics/variation-quiz" element={<ProtectedRoute><QuizVariation subtopic="variation_quiz" /></ProtectedRoute>} />
+          <Route path="/quiz-hub/mathematics/differentiation-quiz" element={<ProtectedRoute><QuizDifferentiation subtopic="differentiation_quiz" /></ProtectedRoute>} />
+          <Route path="/quiz-hub/mathematics/integration-quiz" element={<ProtectedRoute><QuizIntegration subtopic="integration_quiz" /></ProtectedRoute>} />
+          <Route path="/quiz-hub/mathematics/application-calculus-quiz" element={<ProtectedRoute><QuizApplicationCalculus subtopic="application_calculus_quiz" /></ProtectedRoute>} />
+          <Route path="/quiz-hub/mathematics/sets-venn-diagrams-quiz" element={<ProtectedRoute><QuizSetsVennDiagrams subtopic="sets_venn_diagrams_quiz" /></ProtectedRoute>} />
+          <Route path="/quiz-hub/mathematics/number-bases-quiz" element={<ProtectedRoute><QuizNumberBases subtopic="number_bases_quiz" /></ProtectedRoute>} />
+          <Route path="/quiz-hub/mathematics/modular-arithmetic-quiz" element={<ProtectedRoute><QuizModularArithmetic subtopic="modular_arithmetic_quiz" /></ProtectedRoute>} />
 
           {/* Nested Routes for mathematics */}
            <Route path="/post-utme/mathematics" element={<ProtectedRoute><Mathematics /></ProtectedRoute>} /> 
