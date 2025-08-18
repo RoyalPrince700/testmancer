@@ -13,7 +13,7 @@ const Indices = () => (
     subtopic="Indices-and-Logarithms"
     pages={pages}
     points={3}
-    quizPath="/quiz-hub/mathematics/quiz-indices"
+    quizPath="/quiz-hub/mathematics/indices-quiz"
     backPath="/post-utme/mathematics"
     badges={[
       { name: "Algebra Champion", color: "from-indigo-500 to-indigo-700" },

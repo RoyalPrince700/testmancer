@@ -36,16 +36,4 @@ export const currentAffairsQuizTopics = [
       { name: "Economy & Development", path: "/quiz-hub/currentAffairs/economy-development", quizId: "nigeria_economy_development_quiz" },
     ],
   },
-  {
-    id: "culture",
-    title: "Culture & Society",
-    icon: "FiMessageSquare",
-    description: "Explore Nigeria's rich culture, languages, and traditions",
-    color: "white",
-    subtopics: [
-      { name: "Languages & Ethnic Groups", path: "/quiz-hub/currentAffairs/languages-ethnic", quizId: "nigeria_languages_ethnic_quiz" },
-      { name: "Festivals & Traditions", path: "/quiz-hub/currentAffairs/festivals-traditions", quizId: "nigeria_festivals_traditions_quiz" },
-      { name: "Nigerian Heroes", path: "/quiz-hub/currentAffairs/heroes", quizId: "nigeria_heroes_quiz" },
-    ],
-  },
 ];

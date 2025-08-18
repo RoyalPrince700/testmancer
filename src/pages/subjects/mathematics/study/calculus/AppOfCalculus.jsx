@@ -13,7 +13,7 @@ const AppOfCalculus = () => (
     subtopic="Application-of-Calculus"
     pages={pages}
     points={3}
-    quizPath="/quiz-hub/mathematics/quiz-application-calculus"
+    quizPath="/quiz-hub/mathematics/application-calculus-quiz"
     backPath="/post-utme/mathematics"
     badges={[
       { name: "Algebra Champion", color: "from-indigo-500 to-indigo-700" },

@@ -13,7 +13,7 @@ const Variation = () => (
     subtopic="Variation"
     pages={pages}
     points={3}
-    quizPath="/quiz-hub/mathematics/quiz-variation"
+    quizPath="/quiz-hub/mathematics/variation-quiz"
     backPath="/post-utme/mathematics"
     badges={[
       { name: "Algebra Champion", color: "from-indigo-500 to-indigo-700" },

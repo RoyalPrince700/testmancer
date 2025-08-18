@@ -13,7 +13,7 @@ const Integration = () => (
     subtopic="Integration"
     pages={pages}
     points={3}
-    quizPath="/quiz-hub/mathematics/quiz-integration"
+    quizPath="/quiz-hub/mathematics/integration-quiz"
     backPath="/post-utme/mathematics"
     badges={[
       { name: "Calculus Champion", color: "from-indigo-500 to-indigo-700" },

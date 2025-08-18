@@ -13,7 +13,7 @@ const Sequence = () => (
     subtopic="Sequences-Series"
     pages={pages}
     points={3}
-    quizPath="/quiz-hub/mathematics/quiz-sequence"
+    quizPath="/quiz-hub/mathematics/sequences-quiz"
     backPath="/post-utme/mathematics"
     badges={[
       { name: "Algebra Champion", color: "from-indigo-500 to-indigo-700" },

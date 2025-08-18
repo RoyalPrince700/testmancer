@@ -13,7 +13,7 @@ const Differentiation = () => (
     subtopic="Differentiation"
     pages={pages}
     points={3}
-    quizPath="/quiz-hub/mathematics/quiz-differentiation"
+    quizPath="/quiz-hub/mathematics/differentiation-quiz"
     backPath="/post-utme/mathematics"
     badges={[
       { name: "Calculus Champion", color: "from-indigo-500 to-indigo-700" },

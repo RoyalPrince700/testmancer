@@ -13,7 +13,7 @@ const Equations = () => (
     subtopic="Equations-Inequalities"
     pages={pages}
     points={3}
-    quizPath="/quiz-hub/mathematics/quiz-equations"
+    quizPath="/quiz-hub/mathematics/equations-quiz"
     backPath="/post-utme/mathematics"
     badges={[
       { name: "Algebra Champion", color: "from-indigo-500 to-indigo-700" },
