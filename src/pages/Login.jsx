@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback, Suspense } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { supabase } from "../../supabase/supabaseClient";
 import { useAuth } from "../../provider/AuthContext";
 import { FiLock } from "react-icons/fi";
-import { motion } from "framer-motion";
-import { GoogleLogin } from "@react-oauth/google";
+
+const GoogleLogin = React.lazy(() => import('@react-oauth/google').then(module => ({ default: module.GoogleLogin })));
 
 export const Login = () => {
   const [error, setError] = useState(null);
@@ -17,166 +17,118 @@ export const Login = () => {
 
   useEffect(() => {
     if (user) {
-      // Check if profile exists in Supabase
       checkProfile(user.id);
     }
   }, [user, navigate]);
 
   const checkProfile = async (userId) => {
-    const { data, error } = await supabase
-      .from("profiles")
-      .select("*")
-      .eq("id", userId)
-      .single();
+    try {
+      const { data, error } = await supabase
+        .from("profiles")
+        .select("*")
+        .eq("id", userId)
+        .single();
 
-    if (error || !data) {
-      // No profile exists, redirect to profile setup
-      navigate("/profile-setup", { state: { from } });
-    } else {
-      // Profile exists, navigate to intended page
-      navigate(from, { replace: true });
+      if (error || !data) {
+        navigate("/profile-setup", { state: { from } });
+      } else {
+        navigate(from, { replace: true });
+      }
+    } catch (err) {
+      setError("Failed to check profile. Please try again.");
+      console.error("Profile check error:", err);
     }
   };
 
- const handleGoogleSuccess = async (credentialResponse) => {
-  try {
-    setLoading(true);
-    setError(null);
+  const handleGoogleSuccess = useCallback(async (credentialResponse) => {
+    try {
+      setLoading(true);
+      setError(null);
 
-    const { data, error } = await supabase.auth.signInWithIdToken({
-      provider: "google",
-      token: credentialResponse.credential,
-    });
-
-    if (error) throw error;
-
-    const { user } = data;
-
-    // Check if profile already exists
-    const { data: existingProfile, error: profileError } = await supabase
-      .from("profiles")
-      .select("id")
-      .eq("id", user.id)
-      .single();
-
-    if (profileError && profileError.code !== "PGRST116") {
-      // Real error from Supabase (not "no rows found")
-      throw profileError;
-    }
-
-    if (!existingProfile) {
-      // Insert new profile if doesn't exist
-      const { error: insertError } = await supabase.from("profiles").insert({
-        id: user.id,
-        email: user.email,
+      const { data, error } = await supabase.auth.signInWithIdToken({
+        provider: "google",
+        token: credentialResponse.credential,
       });
-      if (insertError) throw insertError;
 
-      // Redirect to profile setup for first-time users
-      navigate("/profile-setup", { state: { from } });
-    } else {
-      // Existing user, go to intended page
-      navigate(from, { replace: true });
+      if (error) throw error;
+
+      const { user } = data;
+
+      const { data: existingProfile, error: profileError } = await supabase
+        .from("profiles")
+        .select("id")
+        .eq("id", user.id)
+        .single();
+
+      if (profileError && profileError.code !== "PGRST116") {
+        throw profileError;
+      }
+
+      if (!existingProfile) {
+        const { error: insertError } = await supabase
+          .from("profiles")
+          .insert({
+            id: user.id,
+            email: user.email,
+          });
+
+        if (insertError) throw insertError;
+
+        navigate("/profile-setup", { state: { from } });
+      } else {
+        navigate(from, { replace: true });
+      }
+    } catch (err) {
+      console.error("Google login error:", err);
+      setError(err.message || "Failed to log in with Google. Please try again.");
+    } finally {
+      setLoading(false);
     }
-  } catch (err) {
-    console.error("Google signup error:", err);
-    setError(err.message || "Failed to sign up with Google. Please try again.");
-  } finally {
-    setLoading(false);
-  }
-};
-
-
-  const containerVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: "easeOut" } }
-  };
-
-  const iconVariants = {
-    initial: { scale: 1, rotate: 0 },
-    hover: { scale: 1.2, rotate: 10, transition: { duration: 0.3 } }
-  };
-
-  const buttonVariants = {
-    initial: { scale: 1, boxShadow: "0 0 0 rgba(45, 212, 191, 0)" },
-    hover: { 
-      scale: 1.05, 
-      boxShadow: "0 0 15px rgba(45, 212, 191, 0.5)",
-      transition: { duration: 0.3, ease: "easeOut" }
-    },
-    tap: { scale: 0.95, transition: { duration: 0.2 } }
-  };
+  }, []);
 
   return (
-    <section className="min-h-screen flex items-center justify-center bg-teal-50 px-4">
-      <motion.div
-        className="max-w-4xl w-full rounded-2xl flex justify-center"
-        variants={containerVariants}
-        initial="hidden"
-        animate="visible"
-      >
-        {/* SignUp Form */}
-        <div className="w-full md:w-3/5 bg-white backdrop-blur-lg p-10 border border-teal-200/20 rounded-2xl">
-          <div className="text-center mb-10">
-            <motion.div
-              className="bg-gradient-to-br from-teal-400 to-teal-600 rounded-2xl p-4 inline-flex items-center justify-center"
-              variants={iconVariants}
-              initial="initial"
-              whileHover="hover"
-            >
-              <FiLock className="text-white text-3xl" />
-            </motion.div>
-            <motion.h2
-              className="text-3xl font-extrabold text-gray-900 mt-6 mb-2"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.3 }}
-            >
-              Login for TestMancer
-            </motion.h2>
-            <p className="text-gray-500">Resume your learning adventure!</p>
+    <section className="min-h-screen flex items-center justify-center bg-gray-100 px-4">
+      <div className="w-full max-w-md bg-white p-6 border border-gray-200 rounded-lg">
+        <div className="text-center mb-6">
+          <div className="bg-teal-500 rounded-lg p-3 inline-flex items-center justify-center">
+            <FiLock className="text-white text-2xl" />
           </div>
+          <h2 className="text-2xl font-bold text-gray-900 mt-4 mb-2">
+            Login for TestMancer
+          </h2>
+          <p className="text-gray-600">Resume your learning adventure!</p>
+        </div>
 
-          {error && (
-            <motion.div
-              className="mb-6 p-4 bg-red-50/80 text-red-700 rounded-lg text-center backdrop-blur-sm"
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.3 }}
-            >
-              {error}
-            </motion.div>
-          )}
+        {error && (
+          <div className="mb-4 p-3 bg-red-100 text-red-700 rounded text-center">
+            {error}
+          </div>
+        )}
 
-          <div className="space-y-6">
-            {/* Google SignUp Button */}
-            <motion.div
-              className="w-full flex items-center justify-center"
-              variants={buttonVariants}
-              initial="initial"
-              whileHover={!loading ? "hover" : ""}
-              whileTap={!loading ? "tap" : ""}
-            >
+        <div className="space-y-4">
+          <Suspense fallback={<div className="text-center">Loading...</div>}>
+            <div className="w-full flex items-center justify-center">
               <GoogleLogin
                 onSuccess={handleGoogleSuccess}
-                onError={() => setError("Google signup failed. Please try again.")}
+                onError={() => setError("Google login failed. Please try again.")}
                 shape="pill"
                 size="large"
-                text="signup_with"
+                text="signin_with"
+                disabled={loading}
               />
-            </motion.div>
-
-            <div className="mt-8 text-center">
-              <Link 
-                to="/signup" 
-                className="text-teal-400 hover:text-teal-600 text-sm font-semibold"
-              >
-                Don't have an account? Signup
-              </Link>
             </div>
+          </Suspense>
+
+          <div className="text-center">
+            <Link
+              to="/signup"
+              className="text-teal-500 hover:text-teal-700 text-sm font-medium"
+            >
+              Don't have an account? Signup
+            </Link>
           </div>
         </div>
-      </motion.div>
+      </div>
     </section>
   );
 };
