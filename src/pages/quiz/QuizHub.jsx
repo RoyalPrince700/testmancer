@@ -49,7 +49,7 @@ export const QuizHub = () => {
       title: "Current Affairs",
       icon: FiGlobe,
       description: "Stay updated! 🌍",
-      path: "/quiz-hub/currentAffairs",
+      path: "/quiz-hub/current-affairs",
       totalQuizzes: 30,
       color: "from-purple-400 to-purple-600"
     }

@@ -367,25 +367,17 @@ export const EnglishQuiz = () => {
                                 </div>
                               </div>
                             </div>
-                            <GamifiedButton 
+                            <button 
                               onClick={() => handleQuizStart(subtopic)}
                               icon={FiArrowRight}
-                              className={`w-full sm:w-auto ${theme.bg} text-white px-4 py-1.5 text-sm`}
+                              className={`w-full sm:w-auto ${theme.bg} text-white text-sm px-6 py-3 rounded-full font-bold shadow-md hover:shadow-xl transition duration-300`}
                             >
                               {subtopic.attempts > 0 ? "Retake Quiz" : "Start Quiz"}
-                            </GamifiedButton>
+                            </button>
                           </div>
                         ))}
                       </div>
-                      <div className="mt-4 flex justify-end">
-                        <GamifiedButton
-                          onClick={() => handlePracticeAll(topic)}
-                          icon={FiBook}
-                          className={`w-full sm:w-auto ${theme.bg} text-white px-4 py-1.5 text-sm`}
-                        >
-                          Practice All Quizzes
-                        </GamifiedButton>
-                      </div>
+                     
                     </div>
                   </motion.div>
                 )}

@@ -22,7 +22,7 @@ export const CURRENT_AFFAIRS_TOPICS = [
     subtopics: [
       { name: "Constitution-Law", path: "/post-utme/current-affairs/constitution" },
       { name: "Political-Parties", path: "/post-utme/current-affairs/political-parties" },
-      { name: "Elections", path: "/post-utme/current-affairs/election" },
+      { name: "Elections", path: "/post-utme/current-affairs/elections" },
     ]
   },
   {
@@ -32,9 +32,9 @@ export const CURRENT_AFFAIRS_TOPICS = [
     description: "Keep up with recent happenings in Nigeria",
     color: "from-green-500 to-teal-700",
     subtopics: [
-      { name: "University-Of-Ilorin", path: "/post-utme/current-affairs/unilorin" },
-      { name: "State-And-Capital", path: "/post-utme/current-affairs/state-capital" },
-      { name: "World-Leaders", path: "/post-utme/current-affairs/world-leaders" },
+      { name: "University-of-ilorin", path: "/post-utme/current-affairs/economy-development" },
+      { name: "Science-and-Technology", path: "/post-utme/current-affairs/science-technology" },
+      { name: "Sports-and-Awards", path: "/post-utme/current-affairs/sports-awards" },
       { name: "Culture-and-Tradition", path: "/post-utme/current-affairs/culture-tradition" },
     ]
   }

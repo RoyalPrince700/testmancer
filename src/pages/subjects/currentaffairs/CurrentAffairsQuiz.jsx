@@ -18,13 +18,13 @@ import {
   FiHash,
 } from "react-icons/fi";
 import { motion, AnimatePresence } from "framer-motion";
-import { useAuth } from "../../../provider/AuthContext";
-import { supabase } from "../../../supabase/supabaseClient";
-import { mathQuizTopics } from "../../data/mathQuizTopics";
-import GamifiedButton from "../../components/GamifiedButton";
-import QuizTipAndBadge from "../../components/QuizTipAndBadge";
-import WelcomeCard from "../../components/WelcomeCard";
-import TestMancerLoader from "../../components/TestMancer";
+import { useAuth } from "../../../../provider/AuthContext";
+import { supabase } from "../../../../supabase/supabaseClient";
+import { currentAffairsQuizTopics } from "./currentAffairsQuizTopics";
+import GamifiedButton from "../../../components/GamifiedButton";
+import QuizTipAndBadge from "../../../components/QuizTipAndBadge";
+import WelcomeCard from "../../../components/WelcomeCard";
+import TestMancerLoader from "../../../components/TestMancer";
 
 // Color theme mapping
 const colorMap = [
@@ -35,7 +35,7 @@ const colorMap = [
   { bg: 'bg-indigo-500', text: 'text-indigo-500', border: 'border-indigo-500', gradient: 'from-indigo-400 to-indigo-600' }
 ];
 
-export const MathematicsQuiz = () => {
+export const CurrentAffairsQuiz = () => {
   const navigate = useNavigate();
   const { user, isAuthenticated } = useAuth();
   const [expandedTopic, setExpandedTopic] = useState(null);
@@ -60,7 +60,7 @@ export const MathematicsQuiz = () => {
     FiHash,
   };
 
-  const initialTopics = mathQuizTopics.map((topic, index) => ({
+  const initialTopics = currentAffairsQuizTopics.map((topic, index) => ({
     ...topic,
     icon: iconComponents[topic.icon] || FiBook,
     color: colorMap[index % colorMap.length], // Assign unique color theme
@@ -84,7 +84,7 @@ export const MathematicsQuiz = () => {
       .from('postutme_progress')
       .select('topic, subtopic')
       .eq('user_id', userId)
-      .eq('subject', 'Mathematics');
+      .eq('subject', 'Current-Affairs');
 
     if (!error && data) {
       const completedMap = {};
@@ -395,4 +395,4 @@ export const MathematicsQuiz = () => {
   );
 };
 
-export default MathematicsQuiz;
+export default CurrentAffairsQuiz;

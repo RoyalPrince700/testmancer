@@ -386,7 +386,7 @@ const LearningModule = ({
         <div className="flex flex-col sm:flex-row justify-between items-start gap-4 mb-8">
           {/* Left section with arrow and title */}
           <div className="flex flex-col items-start gap-1">
-            <Link className="mb-1" to='/post-utme/mathematics'>
+            <Link className="mb-1" to='/post-utme/current-affairs'>
               <FiArrowLeft className="text-xl" />
             </Link>
             <h1 className="text-2xl font-bold text-gray-900 leading-tight">

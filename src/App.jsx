@@ -103,6 +103,29 @@ import QuizApplicationCalculus from './pages/quiz/mathematics/QuizApplicationCal
 import QuizSetsVennDiagrams from './pages/quiz/mathematics/QuizSetsVennDiagrams';
 import QuizNumberBases from './pages/quiz/mathematics/QuizNumberBases';
 import QuizModularArithmetic from './pages/quiz/mathematics/QuizModularArithmetic';
+import CurrentAffairs from './pages/subjects/currentaffairs/CurrentAffairs';
+import PreColo from './pages/subjects/currentaffairs/study/nigerian-history/PreColo';
+import Colonial from './pages/subjects/currentaffairs/study/nigerian-history/Colonial';
+import PostIndependence from './pages/subjects/currentaffairs/study/nigerian-history/Post-Inde';
+import NigerianLeaders from './pages/subjects/currentaffairs/study/nigerian-history/NigerianLeaders';
+import PoliticalParty from './pages/subjects/currentaffairs/study/government-politics/PoliticalParty';
+import Election from './pages/subjects/currentaffairs/study/government-politics/Elections';
+import ConstitutionLaw from './pages/subjects/currentaffairs/study/government-politics/ConstitutionLaw';
+import CultureTradition from './pages/subjects/currentaffairs/study/current-event/CultureTrad';
+import StateCapital from './pages/subjects/currentaffairs/study/current-event/StateCapital';
+import WorldLeaders from './pages/subjects/currentaffairs/study/current-event/WorldLeaders';
+import Unilorin from './pages/subjects/currentaffairs/study/current-event/Unilorin';
+import CurrentAffairsQuiz from './pages/subjects/currentaffairs/CurrentAffairsQuiz';
+import QuizCulture from './pages/subjects/currentaffairs/study/current-event/QuizCulture';
+import QuizStateAndCapital from './pages/subjects/currentaffairs/study/current-event/QuizStateAndCapital';
+import QuizUnilorin from './pages/subjects/currentaffairs/study/current-event/QuizUnilorin';
+import QuizWorldLeader from './pages/subjects/currentaffairs/study/current-event/QuizWorldLeaders';
+import QuizElection from './pages/subjects/currentaffairs/study/government-politics/QuizElection';
+import QuizConstitution from './pages/subjects/currentaffairs/study/government-politics/QuizConstitution';
+import QuizPoliticalParty from './pages/subjects/currentaffairs/study/government-politics/QuizPoliticalParty';
+import QuizColonial from './pages/subjects/currentaffairs/study/nigerian-history/QuizNigerianLeaders';
+import QuizPostIndependence from './pages/subjects/currentaffairs/study/nigerian-history/QuizPostIndependence';
+import QuizPreColo from './pages/subjects/currentaffairs/study/nigerian-history/QuizPreColonial';
 
 const ProtectedRoute = ({ children }) => {
   const { user, loading } = useAuth();
@@ -247,6 +270,55 @@ function App() {
           <Route path="/post-utme/mathematics/sets-venn-diagrams" element={<ProtectedRoute><SetsVennDiagrams /></ProtectedRoute>} />
           <Route path="/post-utme/mathematics/number-bases" element={<ProtectedRoute><NumberBases /></ProtectedRoute>} />
           <Route path="/post-utme/mathematics/modular-arithmetic" element={<ProtectedRoute><ModularArithmetic /></ProtectedRoute>} />
+
+          {/* Nested Routes for Current Affairs */}
+          <Route path="/post-utme/current-affairs" element={<ProtectedRoute><CurrentAffairs /></ProtectedRoute>} />
+          <Route path="/post-utme/current-affairs/pre-colonial" element={<ProtectedRoute><PreColo /></ProtectedRoute>} />
+          <Route path="/post-utme/current-affairs/colonial" element={<ProtectedRoute><Colonial /></ProtectedRoute>} />
+          <Route path="/post-utme/current-affairs/post-independence" element={<ProtectedRoute><PostIndependence /></ProtectedRoute>} />
+          <Route path="/post-utme/current-affairs/nigerian-leaders" element={<ProtectedRoute><NigerianLeaders /></ProtectedRoute>} />
+          <Route path="/post-utme/current-affairs/political-parties" element={<ProtectedRoute><PoliticalParty /></ProtectedRoute>} />
+          <Route path="/post-utme/current-affairs/election" element={<ProtectedRoute><Election /></ProtectedRoute>} />
+          <Route path="/post-utme/current-affairs/constitution" element={<ProtectedRoute><ConstitutionLaw /></ProtectedRoute>} />
+          <Route path="/post-utme/current-affairs/culture-tradition" element={<ProtectedRoute><CultureTradition /></ProtectedRoute>} />
+          <Route path="/post-utme/current-affairs/state-capital" element={<ProtectedRoute><StateCapital /></ProtectedRoute>} />
+          <Route path="/post-utme/current-affairs/world-leaders" element={<ProtectedRoute><WorldLeaders /></ProtectedRoute>} />
+          <Route path="/post-utme/current-affairs/unilorin" element={<ProtectedRoute><Unilorin /></ProtectedRoute>} />
+
+          {/* Nested Routes for Current Affairs Quiz */}
+          <Route path="/quiz-hub/current-affairs" element={<ProtectedRoute><CurrentAffairsQuiz /></ProtectedRoute>} />
+          <Route path="/quiz-hub/current-affairs/culture-quiz" element={<ProtectedRoute><QuizCulture subtopic="culture_quiz" /></ProtectedRoute>} />
+          <Route path="/quiz-hub/current-affairs/state-and-capital-quiz" element={<ProtectedRoute><QuizStateAndCapital subtopic="state_and_capital_quiz" /></ProtectedRoute>} />
+          <Route path="/quiz-hub/current-affairs/unilorin-quiz" element={<ProtectedRoute><QuizUnilorin subtopic="unilorin_quiz" /></ProtectedRoute>} />
+          <Route path="/quiz-hub/current-affairs/world-leaders-quiz" element={<ProtectedRoute><QuizWorldLeader subtopic="world_leader_quiz" /></ProtectedRoute>} />
+          <Route path="/quiz-hub/current-affairs/elections-quiz" element={<ProtectedRoute><QuizElection subtopic="nigeria_elections_quiz" /></ProtectedRoute>} />
+          <Route path="/quiz-hub/current-affairs/constitution-quiz" element={<ProtectedRoute><QuizConstitution subtopic="nigeria_constitution_quiz" /></ProtectedRoute>} />
+          <Route path="/quiz-hub/current-affairs/political-party-quiz" element={<ProtectedRoute><QuizPoliticalParty subtopic="nigeria_political_parties_quiz" /></ProtectedRoute>} />
+          <Route path="/quiz-hub/current-affairs/colonial-quiz" element={<ProtectedRoute><QuizColonial subtopic="colonial_nigeria_quiz" /></ProtectedRoute>} />
+          <Route path="/quiz-hub/current-affairs/nigeria-leaders-quiz" element={<ProtectedRoute><QuizWorldLeader subtopic="nigerian_leaders_quiz" /></ProtectedRoute>} />
+          <Route path="/quiz-hub/current-affairs/post-independence-quiz" element={<ProtectedRoute><QuizPostIndependence subtopic="post_independence_nigeria_quiz" /></ProtectedRoute>} />
+          <Route path="/quiz-hub/current-affairs/pre-colonial-quiz" element={<ProtectedRoute><QuizPreColo subtopic="pre_colonial_nigeria_quiz" /></ProtectedRoute>} />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+          
+
 
 
 

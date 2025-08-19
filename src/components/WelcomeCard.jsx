@@ -1,3 +1,4 @@
+// WelcomeCard.jsx
 import React, { useEffect, useState } from "react";
 import { FiAward, FiZap, FiBarChart2, FiUser } from "react-icons/fi";
 import { useAuth } from "../../provider/AuthContext";
@@ -16,77 +17,71 @@ const WelcomeCard = () => {
 
   // Update user streak when they log in for the first time in a day
  const updateStreak = async () => {
-  if (!user) return 0; // Return 0 if no user
+  if (!user) return 0;
 
   try {
-    // Get current date in YYYY-MM-DD format (UTC)
-    const today = new Date().toISOString().split('T')[0];
-    
-    // Fetch user's current activity data
+    const today = new Date().toISOString().split("T")[0];
+
     const { data: activityData, error: fetchError } = await supabase
-      .from('user_activity')
-      .select('streak, last_active_at')
-      .eq('user_id', user.id)
+      .from("user_activity")
+      .select("streak, last_active_at")
+      .eq("user_id", user.id)
       .single();
 
-    // Handle fetch errors (except "not found" which we handle below)
-    if (fetchError && fetchError.code !== 'PGRST116') {
+    if (fetchError && fetchError.code !== "PGRST116") {
       throw fetchError;
     }
 
-    let newStreak = 1;
+    let newStreak;
     let shouldUpdate = false;
 
     if (activityData) {
-      // Get the last active date in YYYY-MM-DD format
-      const lastActiveDate = activityData.last_active_at 
-        ? new Date(activityData.last_active_at).toISOString().split('T')[0]
+      const lastActiveDate = activityData.last_active_at
+        ? new Date(activityData.last_active_at).toISOString().split("T")[0]
         : null;
 
-      // Calculate yesterday's date
       const yesterday = new Date();
       yesterday.setDate(yesterday.getDate() - 1);
-      const yesterdayStr = yesterday.toISOString().split('T')[0];
+      const yesterdayStr = yesterday.toISOString().split("T")[0];
 
-      if (lastActiveDate === yesterdayStr) {
-        // Consecutive day login - increment streak
+      if (lastActiveDate === today) {
+        // Already updated today → just return current streak
+        return activityData.streak;
+      } else if (lastActiveDate === yesterdayStr) {
         newStreak = activityData.streak + 1;
         shouldUpdate = true;
-      } else if (lastActiveDate !== today) {
-        // Not consecutive - reset streak
+      } else {
         newStreak = 1;
         shouldUpdate = true;
       }
-      // If lastActiveDate === today, do nothing (already logged in today)
     } else {
-      // No existing record - first time user
+      // first time
+      newStreak = 1;
       shouldUpdate = true;
     }
 
-    // Update database if needed
     if (shouldUpdate) {
       const { error: updateError } = await supabase
-        .from('user_activity')
-        .upsert({
-          user_id: user.id,
-          streak: newStreak,
-          last_active_at: today
-        }, {
-          onConflict: 'user_id'
-        });
+        .from("user_activity")
+        .upsert(
+          {
+            user_id: user.id,
+            streak: newStreak,
+            last_active_at: today,
+          },
+          { onConflict: "user_id" }
+        );
 
-      if (updateError) {
-        console.error('Upsert error:', updateError);
-        throw updateError;
-      }
+      if (updateError) throw updateError;
     }
 
     return newStreak;
   } catch (error) {
-    console.error('Error updating streak:', error);
-    return stats.streak || 1; // Fallback to current streak or 1
+    console.error("Error updating streak:", error);
+    return stats.streak || 1;
   }
 };
+
 
   useEffect(() => {
     if (!isAuthenticated || !user) return;
@@ -198,59 +193,55 @@ const WelcomeCard = () => {
       );
     }
   
-    return (
-      <div className="flex flex-col sm:flex-row justify-between items-center gap-4 mb-8 bg-gradient-to-r from-indigo-50 to-purple-50 p-4 rounded-2xl shadow-sm border border-indigo-100">
-        {/* User Info */}
-        <div className="flex items-center gap-4">
-          {userData?.avatar_url ? (
-            <img
-              src={userData.avatar_url}
-              alt={userData.full_name}
-              className="w-14 h-14 rounded-full border-2 border-indigo-300 object-cover"
-            />
-          ) : (
-            <div className="bg-indigo-100 rounded-full p-3">
-              <FiUser className="text-indigo-600 text-2xl" />
-            </div>
-          )}
-          <div>
-            <h2 className="text-xl font-bold text-gray-800">
-              Welcome back, {firstName}! 👋
-            </h2>
-            <p className="text-gray-600 text-sm">
-              Ready to continue your learning journey?
-            </p>
-          </div>
+  return (
+  <div className="flex flex-col sm:flex-row justify-between items-center gap-4 mb-8 bg-gradient-to-r from-indigo-50 to-purple-50 p-4 rounded-2xl shadow-sm border border-indigo-100">
+    {/* User Info */}
+    <div className="flex items-center gap-2">
+      {userData?.avatar_url ? (
+        <img
+          src={userData.avatar_url}
+          alt={userData.full_name}
+          className="w-14 h-14 rounded-full border-2 border-indigo-300 object-cover"
+        />
+      ) : (
+        <div className="bg-indigo-100 rounded-full p-3">
+          <FiUser className="text-indigo-600 text-2xl" />
         </div>
-  
-        {/* Stats */}
-        <div className="flex flex-wrap justify-center gap-3">
-          <div className="flex items-baseline gap-2 bg-white px-3 py-1 rounded-full shadow-sm">
-               <span className="text-xl">💎</span>
-            <span className="font-bold">{stats.totalPoints}</span>
-            <span className="text-gray-600">gems</span>
-          </div>
-  
-          <div className="flex items-center gap-2 bg-white px-3 py-1 rounded-full shadow-sm">
-            <FiAward className="text-purple-500" />
-            <span className="font-bold">{stats.badges}</span>
-            <span className="text-gray-600">Badges</span>
-          </div>
-  
-          <div className="flex items-center gap-2 bg-white px-3 py-1 rounded-full shadow-sm">
-            <FiZap className="text-yellow-500" />
-            <span className="font-bold">{stats.streak}</span>
-            <span className="text-gray-600">Days</span>
-          </div>
-  
-          <div className="flex items-center gap-2 bg-white px-3 py-1 rounded-full shadow-sm">
-            <FiBarChart2 className="text-indigo-600" />
-            <span className="font-bold">#{stats.rank}</span>
-            <span className="text-gray-600">Rank</span>
-          </div>
-        </div>
+      )}
+      <div className="text-left">
+        <h2 className="text-xl font-bold text-gray-800">Welcome back! 👋</h2>
+        <p className="text-xl font-bold text-gray-800 capitalize">{firstName}</p>
       </div>
-    );
+    </div>
+
+    {/* Stats */}
+    <div className="flex flex-wrap justify-center gap-3">
+      <div className="flex items-baseline gap-2 bg-white px-3 py-1 rounded-full shadow-sm">
+        <span className="text-xl">💎</span>
+        <span className="font-bold">{stats.totalPoints}</span>
+        <span className="text-gray-600">gems</span>
+      </div>
+
+      <div className="flex items-center gap-2 bg-white px-3 py-1 rounded-full shadow-sm">
+        <FiAward className="text-purple-500" />
+        <span className="font-bold">{stats.badges}</span>
+        <span className="text-gray-600">Badges</span>
+      </div>
+
+      <div className="flex items-center gap-2 bg-white px-3 py-1 rounded-full shadow-sm">
+        <FiZap className="text-yellow-500" />
+        <span className="font-bold">{stats.streak}</span>
+        <span className="text-gray-600">Days</span>
+      </div>
+
+      <div className="flex items-center gap-2 bg-white px-3 py-1 rounded-full shadow-sm">
+        <FiBarChart2 className="text-indigo-600" />
+        <span className="font-bold">#{stats.rank}</span>
+        <span className="text-gray-600">Rank</span>
+      </div>
+    </div>
+  </div>
+);
 };
 
 export default WelcomeCard;

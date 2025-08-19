@@ -1,6 +1,6 @@
 // In your route component
 import QuizComponent from "../../../quiz/QuizComponent";
-import questions from "./idiomsQuestion";
+import questions from "./homonymsQuestion";
 
 export const QuizHomonyms =() => {
   return (

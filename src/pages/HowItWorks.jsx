@@ -11,7 +11,7 @@ export const HowItWorks = () => {
     {
       Icon: FiUserPlus,
       title: "Jump In & Create Your Profile",
-      description: "Sign up or log in to join the TestManser community and start your learning adventure. Your progress and gems are saved securely!",
+      description: "Sign up or log in to join the TestMancer community and start your learning adventure. Your progress and gems are saved securely!",
       actionText: isAuthenticated ? "Explore Dashboard" : "Get Started Now",
       actionLink: isAuthenticated ? "/dashboard" : "/signup",
       color: "from-teal-400 to-teal-600"
@@ -35,7 +35,7 @@ export const HowItWorks = () => {
     {
       Icon: FiAward,
       title: "Climb Leaderboards & Collect Badges",
-      description: "Show off your achievements, claim trophies, and compete with friends to become the ultimate TestManser champion!",
+      description: "Show off your achievements, claim trophies, and compete with friends to become the ultimate TestMancer champion!",
       actionText: "See Achievements",
       actionLink: isAuthenticated ? "/achievements" : "/login",
       color: "from-pink-500 to-teal-500"
@@ -74,7 +74,7 @@ export const HowItWorks = () => {
           transition={{ duration: 0.6 }}
         >
           <h2 className="text-4xl md:text-5xl font-extrabold text-teal-800 mb-4">
-            Level Up Your Learning with TestManser
+            Level Up Your Learning with TestMancer
           </h2>
           <p className="text-xl text-pink-600 max-w-3xl mx-auto font-semibold">
             Make studying exciting and rewarding — learn, play, and compete with friends to ace your exams!
@@ -161,7 +161,7 @@ export const HowItWorks = () => {
               to={isAuthenticated ? "/quizzes" : "/signup"}
               className="inline-flex items-center gap-2 bg-gradient-to-r from-teal-600 to-pink-600 hover:from-teal-700 hover:to-pink-700 text-white font-bold rounded-full px-8 py-4 text-lg shadow-xl transition-all"
             >
-              {isAuthenticated ? "Start Gem Hunting Now" : "Join TestManser Today"}
+              {isAuthenticated ? "Start Gem Hunting Now" : "Join TestMancer Today"}
               <FiArrowRight className="text-lg" />
             </Link>
           </motion.div>

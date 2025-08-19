@@ -115,7 +115,7 @@ const Mathematics = () => {
         .from('postutme_badges')
         .select('*', { count: 'exact' })
         .eq('user_id', user.id)
-        .eq('subject', 'English');
+        .eq('subject', 'Mathematics');
       setBadgeCount(badgeCount || 0);
 
       const { data: streakData } = await supabase
@@ -157,7 +157,7 @@ const Mathematics = () => {
         .from('postutme_progress')
         .delete()
         .eq('user_id', user.id)
-        .eq('subject', 'English')
+        .eq('subject', 'Mathematics')
         .eq('topic', category)
         .eq('subtopic', subtopic.name);
       if (error) throw new Error(`Failed to delete progress: ${error.message}`);
@@ -167,7 +167,7 @@ const Mathematics = () => {
         .upsert(
           [{
             user_id: user.id,
-            subject: 'English',
+            subject: 'Mathematics',
             topic: category,
             subtopic: subtopic.name,
             completed: true,
@@ -198,7 +198,7 @@ const Mathematics = () => {
         .from('postutme_badges')
         .select('id')
         .eq('user_id', user.id)
-        .eq('subject', 'English')
+        .eq('subject', 'Mathematics')
         .eq('badge_type', 'bronze');
       if (!existingBadges?.length) {
         await supabase
@@ -206,14 +206,14 @@ const Mathematics = () => {
           .insert([{
             user_id: user.id,
             badge_type: 'bronze',
-            subject: 'English',
+            subject: 'Mathematics',
             topic: category,
             earned_at: new Date().toISOString()
           }]);
         setBadgeCount(prev => prev + 1);
         setShowBadgePopup({
           type: 'bronze',
-          message: `🎉 Congratulations ${firstName}! You've earned the Bronze Badge in English!`
+          message: `🎉 Congratulations ${firstName}! You've earned the Bronze Badge in Mathematics!`
         });
       }
     }
@@ -222,7 +222,7 @@ const Mathematics = () => {
       .from('postutme_badges')
       .select('*', { count: 'exact' })
       .eq('user_id', user.id)
-      .eq('subject', 'English');
+      .eq('subject', 'Mathematics');
     setBadgeCount(updatedBadgeCount || 0);
   } catch (error) {
     console.error('Error in toggleSubTopic:', error.message);

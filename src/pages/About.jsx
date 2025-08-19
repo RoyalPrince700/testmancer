@@ -9,7 +9,7 @@ const AboutUs = () => {
       {/* Hero Section */}
       <section className="py-20 bg-gradient-to-br from-teal-600 to-pink-600 text-white">
         <div className="container mx-auto px-4 max-w-6xl text-center">
-          <h1 className="text-4xl md:text-6xl font-extrabold mb-6">About TestManser</h1>
+          <h1 className="text-4xl md:text-6xl font-extrabold mb-6">About TestMancer</h1>
           <p className="text-xl md:text-2xl max-w-3xl mx-auto mb-10 font-semibold">
             Making exam preparation exciting and rewarding with gamified learning and friendly competition.
           </p>
@@ -46,7 +46,7 @@ const AboutUs = () => {
             <div className="flex-1">
               <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6">Our Mission</h2>
               <p className="text-lg text-gray-700 mb-6">
-                At TestManser, we believe learning should be fun, engaging, and rewarding. Preparing for exams can be stressful, so we bring gamification into education to turn study time into play time.
+                At TestMancer, we believe learning should be fun, engaging, and rewarding. Preparing for exams can be stressful, so we bring gamification into education to turn study time into play time.
               </p>
               <p className="text-lg text-gray-700 mb-8">
                 Our goal is to empower students to learn effectively with interactive courses, quizzes, and a community where they earn gems, badges, and climb leaderboards as they progress.
@@ -145,7 +145,7 @@ const AboutUs = () => {
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Meet the Founder</h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto mb-10">
-              The visionary behind TestManser
+              The visionary behind TestMancer
             </p>
           </div>
           

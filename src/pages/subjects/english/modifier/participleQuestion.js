@@ -4,8 +4,8 @@
     id: 1,
     text: "The boy ___ in the garden is my younger brother.",
     options: [
-      { id: 'a', text: "play", correct: false },
-      { id: 'b', text: "played", correct: false },
+      { id: 'a', text: "play", },
+      { id: 'b', text: "played", },
       { id: 'c', text: "playing", correct: true },
       { id: 'd', text: "plays" }
     ],
@@ -18,8 +18,8 @@
     text: "Having ___ the assignment, she went to bed.",
     options: [
       { id: 'a', text: "finished", correct: true },
-      { id: 'b', text: "finishing", correct: false },
-      { id: 'c', text: "finish", correct: false },
+      { id: 'b', text: "finishing", },
+      { id: 'c', text: "finish", },
       { id: 'd', text: "finishes" }
     ],
     correctAnswer: "finished",
@@ -30,8 +30,8 @@
     id: 3,
     text: "The ___ window let in cold air.",
     options: [
-      { id: 'a', text: "break", correct: false },
-      { id: 'b', text: "breaking", correct: false },
+      { id: 'a', text: "break", },
+      { id: 'b', text: "breaking", },
       { id: 'c', text: "broken", correct: true },
       { id: 'd', text: "broke" }
     ],
@@ -43,9 +43,9 @@
     id: 4,
     text: "___ the instructions, he started the engine.",
     options: [
-      { id: 'a', text: "Read", correct: false },
+      { id: 'a', text: "Read", },
       { id: 'b', text: "Reading", correct: true },
-      { id: 'c', text: "Reads", correct: false },
+      { id: 'c', text: "Reads", },
       { id: 'd', text: "Has read" }
     ],
     correctAnswer: "Reading",
@@ -56,9 +56,9 @@
     id: 5,
     text: "The movie was so ___ that everyone cried.",
     options: [
-      { id: 'a', text: "move", correct: false },
+      { id: 'a', text: "move", },
       { id: 'b', text: "moved", correct: true },
-      { id: 'c', text: "moving", correct: false },
+      { id: 'c', text: "moving", },
       { id: 'd', text: "moves" }
     ],
     correctAnswer: "moved",
@@ -69,8 +69,8 @@
     id: 6,
     text: "She left the pot ___ on the stove.",
     options: [
-      { id: 'a', text: "boil", correct: false },
-      { id: 'b', text: "boiled", correct: false },
+      { id: 'a', text: "boil", },
+      { id: 'b', text: "boiled", },
       { id: 'c', text: "boiling", correct: true },
       { id: 'd', text: "boils" }
     ],
@@ -83,8 +83,8 @@
     text: "___ by the news, he fainted.",
     options: [
       { id: 'a', text: "Shocked", correct: true },
-      { id: 'b', text: "Shocking", correct: false },
-      { id: 'c', text: "Shock", correct: false },
+      { id: 'b', text: "Shocking", },
+      { id: 'c', text: "Shock", },
       { id: 'd', text: "Shocks" }
     ],
     correctAnswer: "Shocked",
@@ -95,9 +95,9 @@
     id: 8,
     text: "The ___ birds flew south for winter.",
     options: [
-      { id: 'a', text: "migration", correct: false },
+      { id: 'a', text: "migration", },
       { id: 'b', text: "migrating", correct: true },
-      { id: 'c', text: "migrated", correct: false },
+      { id: 'c', text: "migrated", },
       { id: 'd', text: "migrate" }
     ],
     correctAnswer: "migrating",
@@ -108,8 +108,8 @@
     id: 9,
     text: "___ the door unlocked, the thief entered easily.",
     options: [
-      { id: 'a', text: "Leaving", correct: false },
-      { id: 'b', text: "Left", correct: false },
+      { id: 'a', text: "Leaving", },
+      { id: 'b', text: "Left", },
       { id: 'c', text: "Having left", correct: true },
       { id: 'd', text: "Leave" }
     ],
@@ -121,8 +121,8 @@
     id: 10,
     text: "The ___ story made the children laugh.",
     options: [
-      { id: 'a', text: "amuse", correct: false },
-      { id: 'b', text: "amused", correct: false },
+      { id: 'a', text: "amuse", },
+      { id: 'b', text: "amused", },
       { id: 'c', text: "amusing", correct: true },
       { id: 'd', text: "amuses" }
     ],
@@ -134,8 +134,8 @@
     id: 11,
     text: "___ the letter, she posted it.",
     options: [
-      { id: 'a', text: "Writing", correct: false },
-      { id: 'b', text: "Written", correct: false },
+      { id: 'a', text: "Writing", },
+      { id: 'b', text: "Written", },
       { id: 'c', text: "Having written", correct: true },
       { id: 'd', text: "Wrote" }
     ],
@@ -147,9 +147,9 @@
     id: 12,
     text: "The ___ student answered all questions.",
     options: [
-      { id: 'a', text: "excite", correct: false },
+      { id: 'a', text: "excite", },
       { id: 'b', text: "excited", correct: true },
-      { id: 'c', text: "exciting", correct: false },
+      { id: 'c', text: "exciting", },
       { id: 'd', text: "excites" }
     ],
     correctAnswer: "excited",
@@ -160,8 +160,8 @@
     id: 13,
     text: "___ through the market, she lost her bag.",
     options: [
-      { id: 'a', text: "Walk", correct: false },
-      { id: 'b', text: "Walked", correct: false },
+      { id: 'a', text: "Walk", },
+      { id: 'b', text: "Walked", },
       { id: 'c', text: "Walking", correct: true },
       { id: 'd', text: "Walks" }
     ],
@@ -173,8 +173,8 @@
     id: 14,
     text: "The ___ cake was eaten quickly.",
     options: [
-      { id: 'a', text: "bake", correct: false },
-      { id: 'b', text: "baking", correct: false },
+      { id: 'a', text: "bake", },
+      { id: 'b', text: "baking", },
       { id: 'c', text: "baked", correct: true },
       { id: 'd', text: "bakes" }
     ],
@@ -186,9 +186,9 @@
     id: 15,
     text: "___ the results, the teacher smiled.",
     options: [
-      { id: 'a', text: "See", correct: false },
+      { id: 'a', text: "See", },
       { id: 'b', text: "Seeing", correct: true },
-      { id: 'c', text: "Seen", correct: false },
+      { id: 'c', text: "Seen", },
       { id: 'd', text: "Saw" }
     ],
     correctAnswer: "Seeing",
@@ -199,9 +199,9 @@
     id: 16,
     text: "The ___ noise came from the generator.",
     options: [
-      { id: 'a', text: "annoy", correct: false },
+      { id: 'a', text: "annoy", },
       { id: 'b', text: "annoying", correct: true },
-      { id: 'c', text: "annoyed", correct: false },
+      { id: 'c', text: "annoyed", },
       { id: 'd', text: "annoys" }
     ],
     correctAnswer: "annoying",
@@ -212,8 +212,8 @@
     id: 17,
     text: "___ the match, they celebrated wildly.",
     options: [
-      { id: 'a', text: "Win", correct: false },
-      { id: 'b', text: "Winning", correct: false },
+      { id: 'a', text: "Win", },
+      { id: 'b', text: "Winning", },
       { id: 'c', text: "Having won", correct: true },
       { id: 'd', text: "Won" }
     ],
@@ -225,9 +225,9 @@
     id: 18,
     text: "The ___ children enjoyed the party.",
     options: [
-      { id: 'a', text: "excite", correct: false },
+      { id: 'a', text: "excite", },
       { id: 'b', text: "excited", correct: true },
-      { id: 'c', text: "exciting", correct: false },
+      { id: 'c', text: "exciting", },
       { id: 'd', text: "excites" }
     ],
     correctAnswer: "excited",
@@ -239,8 +239,8 @@
     text: "___ from the roof, the tiles fell.",
     options: [
       { id: 'a', text: "Loosened", correct: true },
-      { id: 'b', text: "Loosening", correct: false },
-      { id: 'c', text: "Loose", correct: false },
+      { id: 'b', text: "Loosening", },
+      { id: 'c', text: "Loose", },
       { id: 'd', text: "Loses" }
     ],
     correctAnswer: "Loosened",
@@ -251,9 +251,9 @@
     id: 20,
     text: "___ TV, he fell asleep.",
     options: [
-      { id: 'a', text: "Watch", correct: false },
+      { id: 'a', text: "Watch", },
       { id: 'b', text: "Watching", correct: true },
-      { id: 'c', text: "Watched", correct: false },
+      { id: 'c', text: "Watched", },
       { id: 'd', text: "Watches" }
     ],
     correctAnswer: "Watching",
@@ -264,9 +264,9 @@
     id: 21,
     text: "The ___ announcement shocked everyone.",
     options: [
-      { id: 'a', text: "surprise", correct: false },
+      { id: 'a', text: "surprise", },
       { id: 'b', text: "surprising", correct: true },
-      { id: 'c', text: "surprised", correct: false },
+      { id: 'c', text: "surprised", },
       { id: 'd', text: "surprises" }
     ],
     correctAnswer: "surprising",
@@ -278,8 +278,8 @@
     text: "___ the door, he went out.",
     options: [
       { id: 'a', text: "Closing", correct: true },
-      { id: 'b', text: "Closed", correct: false },
-      { id: 'c', text: "Close", correct: false },
+      { id: 'b', text: "Closed", },
+      { id: 'c', text: "Close", },
       { id: 'd', text: "Closes" }
     ],
     correctAnswer: "Closing",
@@ -290,9 +290,9 @@
     id: 23,
     text: "The ___ man was taken to the hospital.",
     options: [
-      { id: 'a', text: "injure", correct: false },
+      { id: 'a', text: "injure", },
       { id: 'b', text: "injured", correct: true },
-      { id: 'c', text: "injuring", correct: false },
+      { id: 'c', text: "injuring", },
       { id: 'd', text: "injures" }
     ],
     correctAnswer: "injured",
@@ -303,8 +303,8 @@
     id: 24,
     text: "___ the homework, the students relaxed.",
     options: [
-      { id: 'a', text: "Finish", correct: false },
-      { id: 'b', text: "Finishing", correct: false },
+      { id: 'a', text: "Finish", },
+      { id: 'b', text: "Finishing", },
       { id: 'c', text: "Having finished", correct: true },
       { id: 'd', text: "Finished" }
     ],
@@ -316,9 +316,9 @@
     id: 25,
     text: "The ___ teacher explained clearly.",
     options: [
-      { id: 'a', text: "tire", correct: false },
+      { id: 'a', text: "tire", },
       { id: 'b', text: "tired", correct: true },
-      { id: 'c', text: "tiring", correct: false },
+      { id: 'c', text: "tiring", },
       { id: 'd', text: "tires" }
     ],
     correctAnswer: "tired",
@@ -329,9 +329,9 @@
     id: 26,
     text: "___ the alarm, she woke up.",
     options: [
-      { id: 'a', text: "Hear", correct: false },
+      { id: 'a', text: "Hear", },
       { id: 'b', text: "Hearing", correct: true },
-      { id: 'c', text: "Heard", correct: false },
+      { id: 'c', text: "Heard", },
       { id: 'd', text: "Hears" }
     ],
     correctAnswer: "Hearing",
@@ -342,8 +342,8 @@
     id: 27,
     text: "The ___ flowers looked beautiful.",
     options: [
-      { id: 'a', text: "pick", correct: false },
-      { id: 'b', text: "picking", correct: false },
+      { id: 'a', text: "pick", },
+      { id: 'b', text: "picking", },
       { id: 'c', text: "picked", correct: true },
       { id: 'd', text: "picks" }
     ],
@@ -355,9 +355,9 @@
     id: 28,
     text: "___ his mistake, he apologized.",
     options: [
-      { id: 'a', text: "Realize", correct: false },
+      { id: 'a', text: "Realize", },
       { id: 'b', text: "Realizing", correct: true },
-      { id: 'c', text: "Realized", correct: false },
+      { id: 'c', text: "Realized", },
       { id: 'd', text: "Realizes" }
     ],
     correctAnswer: "Realizing",
@@ -368,8 +368,8 @@
     id: 29,
     text: "___ the project, they submitted it.",
     options: [
-      { id: 'a', text: "Complete", correct: false },
-      { id: 'b', text: "Completing", correct: false },
+      { id: 'a', text: "Complete", },
+      { id: 'b', text: "Completing", },
       { id: 'c', text: "Having completed", correct: true },
       { id: 'd', text: "Completed" }
     ],
@@ -381,8 +381,8 @@
     id: 30,
     text: "The ___ dog barked at strangers.",
     options: [
-      { id: 'a', text: "frighten", correct: false },
-      { id: 'b', text: "frightened", correct: false },
+      { id: 'a', text: "frighten", },
+      { id: 'b', text: "frightened", },
       { id: 'c', text: "frightening", correct: true },
       { id: 'd', text: "frightens" }
     ],

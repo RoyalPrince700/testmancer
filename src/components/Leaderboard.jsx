@@ -1,4 +1,4 @@
-// Leaderboard.jsx
+//src/components/Leaderboard.jsx
 import { useEffect, useState } from "react";
 import { supabase } from "../../supabase/supabaseClient";
 import { FiAward } from "react-icons/fi";
@@ -125,7 +125,7 @@ export default function Leaderboard({
                   </div>
                 </div>
 
-                {showBadges && (
+                {/* {showBadges && (
                   <div className="flex gap-1">
                     {entry.gold_badges > 0 && (
                       <span className="bg-yellow-100 text-yellow-800 px-2 py-1 rounded-full text-xs font-medium">
@@ -143,7 +143,7 @@ export default function Leaderboard({
                       </span>
                     )}
                   </div>
-                )}
+                )} */}
               </motion.div>
             );
           })}

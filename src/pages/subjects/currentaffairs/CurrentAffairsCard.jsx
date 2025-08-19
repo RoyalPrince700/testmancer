@@ -14,7 +14,7 @@ const colorMap = [
   { bg: 'bg-yellow-500', text: 'text-yellow-500', border: 'border-yellow-500', gradient: 'from-yellow-400 to-amber-500' }
 ];
 
-const MathematicsCard = ({
+const CurrentAffairsCard = ({
   topic,
   index,
   expandedCard,
@@ -181,4 +181,4 @@ const MathematicsCard = ({
   );
 };
 
-export default MathematicsCard;
+export default CurrentAffairsCard;
