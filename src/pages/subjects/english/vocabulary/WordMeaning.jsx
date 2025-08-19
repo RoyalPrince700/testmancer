@@ -10,7 +10,7 @@ const WordMeaning = () => (
     moduleId="wordMeaning"
     subject="English"
     topic="vocabulary"
-    subtopic="Word-Meaning"
+    subtopic="Word-Meanings"
     pages={pages}
     points={3}
     quizPath="/quiz-hub/english-quiz/word-meanings-quiz" 
