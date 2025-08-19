@@ -7,7 +7,7 @@ export const QuizColonial =() => {
     <QuizComponent 
       quizId="colonial_nigeria_quiz"
       questions={questions}
-      quizTitle="Nigeria-History"
+      quizTitle="Colonial Period"
       backPath="/quiz-hub/current-affairs"
     />
   );

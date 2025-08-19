@@ -7,7 +7,7 @@ export const QuizElection =() => {
     <QuizComponent 
       quizId="nigeria_elections_quiz"
       questions={questions}
-      quizTitle="Government-And-Politics"
+      quizTitle="Elections in Nigeria"
       backPath="/quiz-hub/current-affairs"
     />
   );

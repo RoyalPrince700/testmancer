@@ -7,7 +7,7 @@ export const QuizPostIndependence =() => {
     <QuizComponent 
       quizId="post_independence_nigeria_quiz"
       questions={questions}
-      quizTitle="Nigeria-History"
+      quizTitle="Post Independence Period"
       backPath="/quiz-hub/current-affairs"
     />
   );

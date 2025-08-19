@@ -7,7 +7,7 @@ export const QuizConstitution =() => {
     <QuizComponent 
       quizId="nigeria_constitution_quiz"
       questions={questions}
-      quizTitle="Government-And-Politics"
+      quizTitle="Constitutional Law"
       backPath="/quiz-hub/current-affairs"
     />
   );

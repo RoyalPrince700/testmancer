@@ -7,7 +7,7 @@ export const QuizWorldLeader =() => {
     <QuizComponent 
       quizId="world_leader_quiz"
       questions={questions}
-      quizTitle="Unilorin History Quiz"
+      quizTitle="World Leaders"
       backPath="/quiz-hub/current-affairs"
     />
   );

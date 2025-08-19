@@ -7,7 +7,7 @@ export const QuizPreColo =() => {
     <QuizComponent 
       quizId="pre_colonial_nigeria_quiz"
       questions={questions}
-      quizTitle="Nigeria-History"
+      quizTitle="Pre Colonial Period"
       backPath="/quiz-hub/current-affairs"
     />
   );
