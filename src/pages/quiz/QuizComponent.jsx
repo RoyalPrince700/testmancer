@@ -605,12 +605,12 @@ export const QuizComponent = ({
                 </p>
               </div>
 
-              <div className="text-right">
+              {/* <div className="text-right">
                 <div className="text-xs text-gray-500">Answered</div>
                 <div className={`font-semibold text-${themeColor}-700`}>
                   {userAnswers.filter(Boolean).length}/{questions.length}
                 </div>
-              </div>
+              </div> */}
             </div>
 
             <div className="grid gap-4 mt-6">
