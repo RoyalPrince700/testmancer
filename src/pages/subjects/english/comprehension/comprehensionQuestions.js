@@ -1,8 +1,7 @@
 const questions = [
   {
     id: 1,
-    text: "What is the main idea of the passage?",
-    passage: "At the University of Ilorin, students prepare for post-UTME exams in the bustling library. The air is filled with the sound of flipping pages and whispered discussions. Despite the intense study sessions, students remain motivated, aiming for admission into Unilorin's competitive programs.",
+    text: "At the University of Ilorin, students prepare for post-UTME exams in the bustling library. The air is filled with the sound of flipping pages and whispered discussions. Despite the intense study sessions, students remain motivated, aiming for admission into Unilorin's competitive programs. What is the main idea of the passage?",
     options: [
       { id: 'a', text: "The social life at Unilorin" },
       { id: 'b', text: "The intense preparation for Unilorin's post-UTME", correct: true },
@@ -15,8 +14,7 @@ const questions = [
   },
   {
     id: 2,
-    text: "What does 'bustling' mean in the context of Unilorin's library?",
-    passage: "At the University of Ilorin, students prepare for post-UTME exams in the bustling library. The air is filled with the sound of flipping pages and whispered discussions. Despite the intense study sessions, students remain motivated, aiming for admission into Unilorin's competitive programs.",
+    text: "At the University of Ilorin, students prepare for post-UTME exams in the bustling library. The air is filled with the sound of flipping pages and whispered discussions. Despite the intense study sessions, students remain motivated, aiming for admission into Unilorin's competitive programs. What does 'bustling' mean in the context of Unilorin's library?",
     options: [
       { id: 'a', text: "Dark and gloomy" },
       { id: 'b', text: "Cold and silent" },
@@ -29,8 +27,7 @@ const questions = [
   },
   {
     id: 3,
-    text: "Why do students remain motivated in Unilorin's library?",
-    passage: "At the University of Ilorin, students prepare for post-UTME exams in the bustling library. The air is filled with the sound of flipping pages and whispered discussions. Despite the intense study sessions, students remain motivated, aiming for admission into Unilorin's competitive programs.",
+    text: "At the University of Ilorin, students prepare for post-UTME exams in the bustling library. The air is filled with the sound of flipping pages and whispered discussions. Despite the intense study sessions, students remain motivated, aiming for admission into Unilorin's competitive programs. Why do students remain motivated in Unilorin's library?",
     options: [
       { id: 'a', text: "They aim for admission into competitive programs", correct: true },
       { id: 'b', text: "They have free food" },
@@ -43,8 +40,7 @@ const questions = [
   },
   {
     id: 4,
-    text: "What can be inferred about Unilorin's post-UTME programs?",
-    passage: "At the University of Ilorin, students prepare for post-UTME exams in the bustling library. The air is filled with the sound of flipping pages and whispered discussions. Despite the intense study sessions, students remain motivated, aiming for admission into Unilorin's competitive programs.",
+    text: "At the University of Ilorin, students prepare for post-UTME exams in the bustling library. The air is filled with the sound of flipping pages and whispered discussions. Despite the intense study sessions, students remain motivated, aiming for admission into Unilorin's competitive programs. What can be inferred about Unilorin's post-UTME programs?",
     options: [
       { id: 'a', text: "They require no preparation" },
       { id: 'b', text: "They are easy to get into" },
@@ -57,8 +53,7 @@ const questions = [
   },
   {
     id: 5,
-    text: "What is a key detail about Mama Bola's canteen?",
-    passage: "Mama Bola's canteen near Unilorin's main gate serves hot amala and egusi stew to students. Her warm smile and generous portions make it a favorite spot. Despite long queues, students enjoy the lively chatter while waiting.",
+    text: "Mama Bola's canteen near Unilorin's main gate serves hot amala and egusi stew to students. Her warm smile and generous portions make it a favorite spot. Despite long queues, students enjoy the lively chatter while waiting. What is a key detail about Mama Bola's canteen?",
     options: [
       { id: 'a', text: "It has no queues" },
       { id: 'b', text: "It offers hot amala and egusi stew", correct: true },
@@ -71,8 +66,7 @@ const questions = [
   },
   {
     id: 6,
-    text: "What does 'generous' mean in the context of Mama Bola's portions?",
-    passage: "Mama Bola's canteen near Unilorin's main gate serves hot amala and egusi stew to students. Her warm smile and generous portions make it a favorite spot. Despite long queues, students enjoy the lively chatter while waiting.",
+    text: "Mama Bola's canteen near Unilorin's main gate serves hot amala and egusi stew to students. Her warm smile and generous portions make it a favorite spot. Despite long queues, students enjoy the lively chatter while waiting. What does 'generous' mean in the context of Mama Bola's portions?",
     options: [
       { id: 'a', text: "Tasteless and plain" },
       { id: 'b', text: "Small and limited" },
@@ -85,8 +79,7 @@ const questions = [
   },
   {
     id: 7,
-    text: "Why is Mama Bola's canteen a favorite spot for Unilorin students?",
-    passage: "Mama Bola's canteen near Unilorin's main gate serves hot amala and egusi stew to students. Her warm smile and generous portions make it a favorite spot. Despite long queues, students enjoy the lively chatter while waiting.",
+    text: "Mama Bola's canteen near Unilorin's main gate serves hot amala and egusi stew to students. Her warm smile and generous portions make it a favorite spot. Despite long queues, students enjoy the lively chatter while waiting. Why is Mama Bola's canteen a favorite spot for Unilorin students?",
     options: [
       { id: 'a', text: "It serves free food" },
       { id: 'b', text: "Her warm smile and generous portions", correct: true },
@@ -99,8 +92,7 @@ const questions = [
   },
   {
     id: 8,
-    text: "What can be inferred about the atmosphere at Mama Bola's canteen?",
-    passage: "Mama Bola's canteen near Unilorin's main gate serves hot amala and egusi stew to students. Her warm smile and generous portions make it a favorite spot. Despite long queues, students enjoy the lively chatter while waiting.",
+    text: "Mama Bola's canteen near Unilorin's main gate serves hot amala and egusi stew to students. Her warm smile and generous portions make it a favorite spot. Despite long queues, students enjoy the lively chatter while waiting. What can be inferred about the atmosphere at Mama Bola's canteen?",
     options: [
       { id: 'a', text: "It is lively and social", correct: true },
       { id: 'b', text: "It is quiet and boring" },
@@ -113,8 +105,7 @@ const questions = [
   },
   {
     id: 9,
-    text: "What is the main idea of the passage?",
-    passage: "In Ilorin’s Oja-Oba market, traders sell fresh tomatoes and peppers under colorful canopies. The market buzzes with activity as buyers negotiate prices. Many Unilorin students visit to buy ingredients for their meals.",
+    text: "In Ilorin's Oja-Oba market, traders sell fresh tomatoes and peppers under colorful canopies. The market buzzes with activity as buyers negotiate prices. Many Unilorin students visit to buy ingredients for their meals. What is the main idea of the passage?",
     options: [
       { id: 'a', text: "The challenges of market trading" },
       { id: 'b', text: "The farming of tomatoes in Ilorin" },
@@ -127,8 +118,7 @@ const questions = [
   },
   {
     id: 10,
-    text: "What does 'buzzes' mean in the context of Oja-Oba market?",
-    passage: "In Ilorin’s Oja-Oba market, traders sell fresh tomatoes and peppers under colorful canopies. The market buzzes with activity as buyers negotiate prices. Many Unilorin students visit to buy ingredients for their meals.",
+    text: "In Ilorin's Oja-Oba market, traders sell fresh tomatoes and peppers under colorful canopies. The market buzzes with activity as buyers negotiate prices. Many Unilorin students visit to buy ingredients for their meals. What does 'buzzes' mean in the context of Oja-Oba market?",
     options: [
       { id: 'a', text: "Is empty and quiet" },
       { id: 'b', text: "Is full of energy and activity", correct: true },
@@ -141,8 +131,7 @@ const questions = [
   },
   {
     id: 11,
-    text: "Why do Unilorin students visit Oja-Oba market?",
-    passage: "In Ilorin’s Oja-Oba market, traders sell fresh tomatoes and peppers under colorful canopies. The market buzzes with activity as buyers negotiate prices. Many Unilorin students visit to buy ingredients for their meals.",
+    text: "In Ilorin's Oja-Oba market, traders sell fresh tomatoes and peppers under colorful canopies. The market buzzes with activity as buyers negotiate prices. Many Unilorin students visit to buy ingredients for their meals. Why do Unilorin students visit Oja-Oba market?",
     options: [
       { id: 'a', text: "To negotiate canopies" },
       { id: 'b', text: "To sell tomatoes" },
@@ -155,8 +144,7 @@ const questions = [
   },
   {
     id: 12,
-    text: "What can be inferred about the goods sold at Oja-Oba market?",
-    passage: "In Ilorin’s Oja-Oba market, traders sell fresh tomatoes and peppers under colorful canopies. The market buzzes with activity as buyers negotiate prices. Many Unilorin students visit to buy ingredients for their meals.",
+    text: "In Ilorin's Oja-Oba market, traders sell fresh tomatoes and peppers under colorful canopies. The market buzzes with activity as buyers negotiate prices. Many Unilorin students visit to buy ingredients for their meals. What can be inferred about the goods sold at Oja-Oba market?",
     options: [
       { id: 'a', text: "They are fresh and local", correct: true },
       { id: 'b', text: "They are expensive and rare" },
@@ -165,12 +153,11 @@ const questions = [
     ],
     correctAnswer: "They are fresh and local",
     explanation: "The passage mentions 'fresh tomatoes and peppers,' suggesting local and fresh produce.",
-    hint: "Focus on the description of the market’s goods."
+    hint: "Focus on the description of the market's goods."
   },
   {
     id: 13,
-    text: "What is a key detail about Unilorin's lecture halls?",
-    passage: "Unilorin's lecture halls are packed with students during exam season. Lecturers use projectors to display notes, making lessons engaging. Despite the large classes, students focus intensely, hoping to excel in their post-UTME.",
+    text: "Unilorin's lecture halls are packed with students during exam season. Lecturers use projectors to display notes, making lessons engaging. Despite the large classes, students focus intensely, hoping to excel in their post-UTME. What is a key detail about Unilorin's lecture halls?",
     options: [
       { id: 'a', text: "They lack modern equipment" },
       { id: 'b', text: "Lecturers use projectors for notes", correct: true },
@@ -183,8 +170,7 @@ const questions = [
   },
   {
     id: 14,
-    text: "What does 'engaging' mean in the context of Unilorin's lectures?",
-    passage: "Unilorin's lecture halls are packed with students during exam season. Lecturers use projectors to display notes, making lessons engaging. Despite the large classes, students focus intensely, hoping to excel in their post-UTME.",
+    text: "Unilorin's lecture halls are packed with students during exam season. Lecturers use projectors to display notes, making lessons engaging. Despite the large classes, students focus intensely, hoping to excel in their post-UTME. What does 'engaging' mean in the context of Unilorin's lectures?",
     options: [
       { id: 'a', text: "Quiet and serious" },
       { id: 'b', text: "Interesting and interactive", correct: true },
@@ -197,8 +183,7 @@ const questions = [
   },
   {
     id: 15,
-    text: "Why do students focus intensely in Unilorin's lecture halls?",
-    passage: "Unilorin's lecture halls are packed with students during exam season. Lecturers use projectors to display notes, making lessons engaging. Despite the large classes, students focus intensely, hoping to excel in their post-UTME.",
+    text: "Unilorin's lecture halls are packed with students during exam season. Lecturers use projectors to display notes, making lessons engaging. Despite the large classes, students focus intensely, hoping to excel in their post-UTME. Why do students focus intensely in Unilorin's lecture halls?",
     options: [
       { id: 'a', text: "They like the projectors" },
       { id: 'b', text: "They enjoy large classes" },
@@ -211,8 +196,7 @@ const questions = [
   },
   {
     id: 16,
-    text: "What can be inferred about the size of Unilorin's lecture classes?",
-    passage: "Unilorin's lecture halls are packed with students during exam season. Lecturers use projectors to display notes, making lessons engaging. Despite the large classes, students focus intensely, hoping to excel in their post-UTME.",
+    text: "Unilorin's lecture halls are packed with students during exam season. Lecturers use projectors to display notes, making lessons engaging. Despite the large classes, students focus intensely, hoping to excel in their post-UTME. What can be inferred about the size of Unilorin's lecture classes?",
     options: [
       { id: 'a', text: "They are large and crowded", correct: true },
       { id: 'b', text: "They are held outdoors" },
@@ -225,8 +209,7 @@ const questions = [
   },
   {
     id: 17,
-    text: "What is the main idea of the passage?",
-    passage: "In Ilorin, the annual Sallah festival brings joy with colorful durbar parades. Horsemen in vibrant attire gallop through the streets, cheered by crowds. Unilorin students often attend, capturing the event for their social media.",
+    text: "In Ilorin, the annual Sallah festival brings joy with colorful durbar parades. Horsemen in vibrant attire gallop through the streets, cheered by crowds. Unilorin students often attend, capturing the event for their social media. What is the main idea of the passage?",
     options: [
       { id: 'a', text: "The vibrant Sallah festival in Ilorin", correct: true },
       { id: 'b', text: "The history of Sallah in Ilorin" },
@@ -234,13 +217,12 @@ const questions = [
       { id: 'd', text: "The training of horsemen" }
     ],
     correctAnswer: "The vibrant Sallah festival in Ilorin",
-    explanation: "The passage focuses on the lively Sallah festival, describing parades, horsemen, and Unilorin students’ participation.",
+    explanation: "The passage focuses on the lively Sallah festival, describing parades, horsemen, and Unilorin students' participation.",
     hint: "Focus on the main event described in Ilorin."
   },
   {
     id: 18,
-    text: "What does 'gallop' mean in the context of the Sallah festival?",
-    passage: "In Ilorin, the annual Sallah festival brings joy with colorful durbar parades. Horsemen in vibrant attire gallop through the streets, cheered by crowds. Unilorin students often attend, capturing the event for their social media.",
+    text: "In Ilorin, the annual Sallah festival brings joy with colorful durbar parades. Horsemen in vibrant attire gallop through the streets, cheered by crowds. Unilorin students often attend, capturing the event for their social media. What does 'gallop' mean in the context of the Sallah festival?",
     options: [
       { id: 'a', text: "Stand still" },
       { id: 'b', text: "Run quickly on horseback", correct: true },
@@ -253,8 +235,7 @@ const questions = [
   },
   {
     id: 19,
-    text: "Why do Unilorin students attend the Sallah festival?",
-    passage: "In Ilorin, the annual Sallah festival brings joy with colorful durbar parades. Horsemen in vibrant attire gallop through the streets, cheered by crowds. Unilorin students often attend, capturing the event for their social media.",
+    text: "In Ilorin, the annual Sallah festival brings joy with colorful durbar parades. Horsemen in vibrant attire gallop through the streets, cheered by crowds. Unilorin students often attend, capturing the event for their social media. Why do Unilorin students attend the Sallah festival?",
     options: [
       { id: 'a', text: "To sell vibrant attire" },
       { id: 'b', text: "To organize the parade" },
@@ -267,8 +248,7 @@ const questions = [
   },
   {
     id: 20,
-    text: "What can be inferred about the Sallah festival’s atmosphere?",
-    passage: "In Ilorin, the annual Sallah festival brings joy with colorful durbar parades. Horsemen in vibrant attire gallop through the streets, cheered by crowds. Unilorin students often attend, capturing the event for their social media.",
+    text: "In Ilorin, the annual Sallah festival brings joy with colorful durbar parades. Horsemen in vibrant attire gallop through the streets, cheered by crowds. Unilorin students often attend, capturing the event for their social media. What can be inferred about the Sallah festival's atmosphere?",
     options: [
       { id: 'a', text: "It is private and exclusive" },
       { id: 'b', text: "It is joyful and vibrant", correct: true },
@@ -281,8 +261,7 @@ const questions = [
   },
   {
     id: 21,
-    text: "What is a key detail about Chinedu's bookshop?",
-    passage: "Chinedu's bookshop near Unilorin sells affordable JAMB and post-UTME textbooks. His small store is always crowded with students seeking study materials. Despite the limited space, Chinedu organizes books neatly, making it easy to find titles.",
+    text: "Chinedu's bookshop near Unilorin sells affordable JAMB and post-UTME textbooks. His small store is always crowded with students seeking study materials. Despite the limited space, Chinedu organizes books neatly, making it easy to find titles. What is a key detail about Chinedu's bookshop?",
     options: [
       { id: 'a', text: "It sells affordable JAMB textbooks", correct: true },
       { id: 'b', text: "It is located in Kano" },
@@ -295,8 +274,7 @@ const questions = [
   },
   {
     id: 22,
-    text: "What does 'affordable' mean in the context of Chinedu's bookshop?",
-    passage: "Chinedu's bookshop near Unilorin sells affordable JAMB and post-UTME textbooks. His small store is always crowded with students seeking study materials. Despite the limited space, Chinedu organizes books neatly, making it easy to find titles.",
+    text: "Chinedu's bookshop near Unilorin sells affordable JAMB and post-UTME textbooks. His small store is always crowded with students seeking study materials. Despite the limited space, Chinedu organizes books neatly, making it easy to find titles. What does 'affordable' mean in the context of Chinedu's bookshop?",
     options: [
       { id: 'a', text: "Poorly organized" },
       { id: 'b', text: "Very expensive" },
@@ -309,8 +287,7 @@ const questions = [
   },
   {
     id: 23,
-    text: "Why is Chinedu's bookshop always crowded?",
-    passage: "Chinedu's bookshop near Unilorin sells affordable JAMB and post-UTME textbooks. His small store is always crowded with students seeking study materials. Despite the limited space, Chinedu organizes books neatly, making it easy to find titles.",
+    text: "Chinedu's bookshop near Unilorin sells affordable JAMB and post-UTME textbooks. His small store is always crowded with students seeking study materials. Despite the limited space, Chinedu organizes books neatly, making it easy to find titles. Why is Chinedu's bookshop always crowded?",
     options: [
       { id: 'a', text: "It is far from Unilorin" },
       { id: 'b', text: "It sells food items" },
@@ -323,8 +300,7 @@ const questions = [
   },
   {
     id: 24,
-    text: "What can be inferred about the organization of Chinedu's bookshop?",
-    passage: "Chinedu's bookshop near Unilorin sells affordable JAMB and post-UTME textbooks. His small store is always crowded with students seeking study materials. Despite the limited space, Chinedu organizes books neatly, making it easy to find titles.",
+    text: "Chinedu's bookshop near Unilorin sells affordable JAMB and post-UTME textbooks. His small store is always crowded with students seeking study materials. Despite the limited space, Chinedu organizes books neatly, making it easy to find titles. What can be inferred about the organization of Chinedu's bookshop?",
     options: [
       { id: 'a', text: "It is closed most times" },
       { id: 'b', text: "It is neatly organized", correct: true },
@@ -337,22 +313,20 @@ const questions = [
   },
   {
     id: 25,
-    text: "What is the main idea of the passage?",
-    passage: "In Ilorin, the Emir’s palace hosts cultural events that attract Unilorin students. Performers in traditional attire sing Hausa songs, and the aroma of tuwo shinkafa fills the air. The events foster a sense of community pride.",
+    text: "In Ilorin, the Emir's palace hosts cultural events that attract Unilorin students. Performers in traditional attire sing Hausa songs, and the aroma of tuwo shinkafa fills the air. The events foster a sense of community pride. What is the main idea of the passage?",
     options: [
-      { id: 'a', text: "The cultural events at the Emir’s palace", correct: true },
+      { id: 'a', text: "The cultural events at the Emir's palace", correct: true },
       { id: 'b', text: "The preparation of tuwo shinkafa" },
       { id: 'c', text: "The challenges of hosting events" },
-      { id: 'd', text: "The history of the Emir’s palace" }
+      { id: 'd', text: "The history of the Emir's palace" }
     ],
-    correctAnswer: "The cultural events at the Emir’s palace",
-    explanation: "The passage focuses on the cultural events at the Emir’s palace, mentioning performers, songs, and Unilorin students’ attendance.",
-    hint: "Focus on the main activity at the Emir’s palace."
+    correctAnswer: "The cultural events at the Emir's palace",
+    explanation: "The passage focuses on the cultural events at the Emir's palace, mentioning performers, songs, and Unilorin students' attendance.",
+    hint: "Focus on the main activity at the Emir's palace."
   },
   {
     id: 26,
-    text: "What does 'foster' mean in the context of the passage?",
-    passage: "In Ilorin, the Emir’s palace hosts cultural events that attract Unilorin students. Performers in traditional attire sing Hausa songs, and the aroma of tuwo shinkafa fills the air. The events foster a sense of community pride.",
+    text: "In Ilorin, the Emir's palace hosts cultural events that attract Unilorin students. Performers in traditional attire sing Hausa songs, and the aroma of tuwo shinkafa fills the air. The events foster a sense of community pride. What does 'foster' mean in the context of the passage?",
     options: [
       { id: 'a', text: "Encourage and promote", correct: true },
       { id: 'b', text: "Ignore entirely" },
@@ -365,8 +339,7 @@ const questions = [
   },
   {
     id: 27,
-    text: "What is a key detail about the Emir’s palace events?",
-    passage: "In Ilorin, the Emir’s palace hosts cultural events that attract Unilorin students. Performers in traditional attire sing Hausa songs, and the aroma of tuwo shinkenafa fills the air. The events foster a sense of community pride.",
+    text: "In Ilorin, the Emir's palace hosts cultural events that attract Unilorin students. Performers in traditional attire sing Hausa songs, and the aroma of tuwo shinkafa fills the air. The events foster a sense of community pride. What is a key detail about the Emir's palace events?",
     options: [
       { id: 'a', text: "They exclude students" },
       { id: 'b', text: "Performers sing Hausa songs", correct: true },
@@ -379,8 +352,7 @@ const questions = [
   },
   {
     id: 28,
-    text: "What can be inferred about the role of Unilorin students at the Emir’s palace events?",
-    passage: "In Ilorin, the Emir’s palace hosts cultural events that attract Unilorin students. Performers in traditional attire sing Hausa songs, and the aroma of tuwo shinkafa fills the air. The events foster a sense of community pride.",
+    text: "In Ilorin, the Emir's palace hosts cultural events that attract Unilorin students. Performers in traditional attire sing Hausa songs, and the aroma of tuwo shinkafa fills the air. The events foster a sense of community pride. What can be inferred about the role of Unilorin students at the Emir's palace events?",
     options: [
       { id: 'a', text: "They organize the events" },
       { id: 'b', text: "They sell tuwo shinkafa" },
@@ -393,8 +365,7 @@ const questions = [
   },
   {
     id: 29,
-    text: "What does the passage suggest about Amina's study habits?",
-    passage: "Amina, a Unilorin aspirant, studies under a lantern in her village near Ilorin. Her dedication to passing the post-UTME drives her to review past questions daily. Her family supports her, believing she will succeed.",
+    text: "Amina, a Unilorin aspirant, studies under a lantern in her village near Ilorin. Her dedication to passing the post-UTME drives her to review past questions daily. Her family supports her, believing she will succeed. What does the passage suggest about Amina's study habits?",
     options: [
       { id: 'a', text: "She studies in a library" },
       { id: 'b', text: "She is dedicated and reviews daily", correct: true },
@@ -407,8 +378,7 @@ const questions = [
   },
   {
     id: 30,
-    text: "What can be inferred about Amina's study environment?",
-    passage: "Amina, a Unilorin aspirant, studies under a lantern in her village near Ilorin. Her dedication to passing the post-UTME drives her to review past questions daily. Her family supports her, believing she will succeed.",
+    text: "Amina, a Unilorin aspirant, studies under a lantern in her village near Ilorin. Her dedication to passing the post-UTME drives her to review past questions daily. Her family supports her, believing she will succeed. What can be inferred about Amina's study environment?",
     options: [
       { id: 'a', text: "It lacks electricity", correct: true },
       { id: 'b', text: "It is at Unilorin's library" },
