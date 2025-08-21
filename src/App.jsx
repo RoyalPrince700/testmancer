@@ -126,6 +126,7 @@ import QuizPoliticalParty from './pages/subjects/currentaffairs/study/government
 import QuizColonial from './pages/subjects/currentaffairs/study/nigerian-history/QuizNigerianLeaders';
 import QuizPostIndependence from './pages/subjects/currentaffairs/study/nigerian-history/QuizPostIndependence';
 import QuizPreColo from './pages/subjects/currentaffairs/study/nigerian-history/QuizPreColonial';
+import SpellingTiles from './components/games/spellinggame/SpellingTiles';
 
 const ProtectedRoute = ({ children }) => {
   const { user, loading } = useAuth();
@@ -195,6 +196,7 @@ function App() {
         {/* <Route path="/games-hub/gem-quest" element={<ProtectedRoute><GemQuest /></ProtectedRoute>} /> */}
         <Route path="/games-hub/synonyms-sprint" element={<ProtectedRoute><SynonymsSprint /></ProtectedRoute>} />
         <Route path="/games-hub/synonyms-sprint/score" element={<ProtectedRoute><ScoreScreen /></ProtectedRoute>} />
+        <Route path="/games-hub/spelling-tiles" element={<ProtectedRoute><SpellingTiles /></ProtectedRoute>} />
 
 
 
@@ -299,25 +301,6 @@ function App() {
           <Route path="/quiz-hub/current-affairs/post-independence-quiz" element={<ProtectedRoute><QuizPostIndependence subtopic="post_independence_nigeria_quiz" /></ProtectedRoute>} />
           <Route path="/quiz-hub/current-affairs/pre-colonial-quiz" element={<ProtectedRoute><QuizPreColo subtopic="pre_colonial_nigeria_quiz" /></ProtectedRoute>} />
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-          
 
 
 

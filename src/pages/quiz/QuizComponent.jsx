@@ -650,7 +650,7 @@ export const QuizComponent = ({
               })}
             </div>
 
-            <Hint
+            {/* <Hint
               questionHint={questions[currentQuestion].hint}
               userId={user?.id}
               totalPoints={totalPoints}
@@ -659,7 +659,7 @@ export const QuizComponent = ({
               setIsHintTaken={(value) => setHintsTaken((prev) => ({ ...prev, [currentQuestion]: value }))}
               quizId={quizId}
               questionId={questions[currentQuestion].id}
-            />
+            /> */}
           </motion.div>
 
           <div className="flex items-center justify-center gap-4">
